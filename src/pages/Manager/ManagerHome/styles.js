@@ -1,3 +1,6 @@
 import styled from 'styled-components/';
 
-export const Area = styled.div``;
+export const Area = styled.div`
+
+
+`;

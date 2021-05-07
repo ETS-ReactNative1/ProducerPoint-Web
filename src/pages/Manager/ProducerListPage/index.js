@@ -5,8 +5,9 @@ import { Area } from './styles'
 import SideBar from '../../../components/SideBar'
 
 import ProducerList from '../../../components/ProducerList'
+import Footer from '../../../components/Footer'
 
-const ManagerHome = () => {
+const ProducerListPage = () => {
 
     return (
         <Container>
@@ -16,8 +17,9 @@ const ManagerHome = () => {
                     <ProducerList />
                 </Area>
             </Body>
+            <Footer />
         </Container>
     );
 }
 
-export default ManagerHome
+export default ProducerListPage

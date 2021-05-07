@@ -4,17 +4,14 @@ import './App.css'
 
 import AuthProvider from './contexts/AuthContext'
 
-import { Template } from './components/MainStyles'
 import Routes from './routes/Routes'
 
 const App = () => {
 	return (
 		<BrowserRouter>
-			<Template>
-				<AuthProvider>
-					<Routes />
-				</AuthProvider>
-			</Template>
+			<AuthProvider>
+				<Routes />
+			</AuthProvider>
 		</BrowserRouter>
 	);
 }

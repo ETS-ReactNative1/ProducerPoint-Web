@@ -9,11 +9,12 @@ import NotFound from '../pages/NotFound'
 
 // Forms and Lists
 import ProducerForm from '../pages/Manager/ProducerForm'
-import ProducerList from '../pages/Manager/ProducerList'
+import ProducerListPage from '../pages/Manager/ProducerListPage'
 import ActivityForm from '../pages/Manager/ActivityForm'
 import ActivityList from '../pages/Manager/ActivityList'
 import ProductForm from '../pages/Manager/ProductForm'
 import ProductList from '../pages/Manager/ProductList'
+import ProducerDetails from '../pages/Manager/ProducerDetails'
 
 const Routes = () => {
     return (
@@ -26,12 +27,16 @@ const Routes = () => {
                 <ManagerHome />
             </RouteHandler>
 
-            <RouteHandler private path='/home/producer-form'>
+            <RouteHandler private path='/producer-form'>
                 <ProducerForm />
             </RouteHandler>
 
             <RouteHandler private path='/producer-list'>
-                <ProducerList />
+                <ProducerListPage />
+            </RouteHandler>
+
+            <RouteHandler private path='/producer-details'>
+                <ProducerDetails />
             </RouteHandler>
 
             <RouteHandler private path='/product-form'>

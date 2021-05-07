@@ -3,7 +3,7 @@ import * as FaIcons from "react-icons/fa";
 import * as AiIcons from "react-icons/ai";
 import * as GiIcons from "react-icons/gi";
 import * as RiIcons from "react-icons/ri";
-
+import * as MdIcons from "react-icons/md";
 
 export const SidebarData = [
     {
@@ -13,57 +13,57 @@ export const SidebarData = [
     },
     {
         title: 'Produtor',
-        path: '/home',
+        path: '#',
         icon: <FaIcons.FaHatCowboy />,
         iconOpened: <RiIcons.RiArrowUpSFill />,
         iconClosed: <RiIcons.RiArrowDownSFill />,
         subNav: [
             {
-                title: 'Cadastrar Produtor',
-                path: '/home/producer-form',
+                title: 'Cadastrar',
+                path: '/producer-form',
                 icon: <AiIcons.AiOutlinePlusCircle />,
             },
             {
-                title: 'Listar Produtores',
-                path: '/home/producer-list',
+                title: 'Listar',
+                path: '/producer-list',
                 icon: <AiIcons.AiOutlineUnorderedList />,
             },
         ],
     },
     {
         title: 'Produto',
-        path: '/home',
+        path: '#',
         icon: <GiIcons.GiFruitBowl />,
         iconOpened: <RiIcons.RiArrowUpSFill />,
         iconClosed: <RiIcons.RiArrowDownSFill />,
         subNav: [
             {
-                title: 'Cadastrar Produto',
-                path: '/home/product-form',
+                title: 'Cadastrar',
+                path: '/product-form',
                 icon: <AiIcons.AiOutlinePlusCircle />,
             },
             {
-                title: 'Listar Produtos',
-                path: '/home/product-list',
+                title: 'Listar',
+                path: '/product-list',
                 icon: <AiIcons.AiOutlineUnorderedList />,
             },
         ],
     },
     {
         title: 'Atividade',
-        path: '/home',
-        icon: <GiIcons.GiFruitBowl />,
+        path: '#',
+        icon: <MdIcons.MdWork/>,
         iconOpened: <RiIcons.RiArrowUpSFill />,
         iconClosed: <RiIcons.RiArrowDownSFill />,
         subNav: [
             {
-                title: 'Cadastrar Atividade',
-                path: '/home/activity-form',
+                title: 'Cadastrar',
+                path: '/activity-form',
                 icon: <AiIcons.AiOutlinePlusCircle />,
             },
             {
-                title: 'Listar Produtos',
-                path: '/home/activity-list',
+                title: 'Listar',
+                path: '/activity-list',
                 icon: <AiIcons.AiOutlineUnorderedList />,
             },
         ],

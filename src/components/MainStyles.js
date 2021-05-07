@@ -3,7 +3,7 @@ import styled from 'styled-components';
 export const Template = styled.div``;
 
 export const Container = styled.div`
-    max-width: 1000px;
+    max-width: 1366px;
     margin: auto;
 `;
 
@@ -11,7 +11,11 @@ export const Title = styled.h1`
     font-size: 27px;
 `;
 
-export const Body = styled.div``;
+export const Body = styled.div`
+    max-width: 960px;
+    margin: auto;
+    padding: 20px;
+`;
 
 export const ErrorMessage = styled.div`
     margin: 10px 0;
