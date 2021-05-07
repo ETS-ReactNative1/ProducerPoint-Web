@@ -10,11 +10,11 @@ import TableHead from '@material-ui/core/TableHead'
 import TableRow from '@material-ui/core/TableRow'
 import Paper from '@material-ui/core/Paper'
 
-import api from '../../services/api'
+import api from '../../../services/api'
 
 import { Area } from './styles'
 
-const ProducerListPage = () => {
+const ProductDetails = () => {
 
     const [producers, setProducers] = useState([])
 
@@ -86,4 +86,4 @@ const ProducerListPage = () => {
     );
 }
 
-export default ProducerListPage
+export default ProductDetails

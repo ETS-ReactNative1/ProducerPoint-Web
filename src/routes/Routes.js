@@ -14,7 +14,10 @@ import ActivityForm from '../pages/Manager/ActivityForm'
 import ActivityList from '../pages/Manager/ActivityList'
 import ProductForm from '../pages/Manager/ProductForm'
 import ProductList from '../pages/Manager/ProductList'
+
+// Details
 import ProducerDetails from '../pages/Manager/ProducerDetails'
+import ProductDetails from '../pages/Manager/ProductDetails'
 
 const Routes = () => {
     return (
@@ -35,7 +38,7 @@ const Routes = () => {
                 <ProducerListPage />
             </RouteHandler>
 
-            <RouteHandler private path='/producer-details'>
+            <RouteHandler private path='/producer-details/:id'>
                 <ProducerDetails />
             </RouteHandler>
 
@@ -45,6 +48,10 @@ const Routes = () => {
 
             <RouteHandler private path='/product-list'>
                 <ProductList />
+            </RouteHandler>
+
+            <RouteHandler private path='/product-details/:id'>
+                <ProductDetails />
             </RouteHandler>
 
             <RouteHandler private path='/activity-form'>

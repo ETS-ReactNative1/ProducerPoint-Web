@@ -31,4 +31,25 @@ export default {
         }
     },
 
+    getProducerById: async (id) => {
+        try {
+            const request = await fetch(`${API}/producers/${id}`)
+            const response = await request.json()
+            console.log(response)
+            return response
+        } catch (e) {
+            console.log('Erro: getProducerById ' + e)
+        }
+    },
+
+    getAllProducts: async () => {
+        try {
+            const request = await fetch(`${API}/products`)
+            const response = await request.json()
+            return response
+        } catch (e) {
+            console.log('Erro: getAllProducts ' + e)
+        }
+    },
+
 }
