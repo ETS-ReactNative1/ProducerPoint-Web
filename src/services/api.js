@@ -41,6 +41,16 @@ export default {
         }
     },
 
+    deleteProducer: async (id) => {
+        try {
+            const request = await fetch(`${API}/producers/${id}`, { method: 'DELETE' })
+            const response = await request.json()
+            return response
+        } catch (e) {
+            console.log('Erro: deleteProducer ' + e)
+        }
+    },
+
     getAllProducts: async () => {
         try {
             const request = await fetch(`${API}/products`)
@@ -71,7 +81,7 @@ export default {
 
     getProducersByActivity: async (activityName) => {
         try {
-            const request = await fetch(`${BASE.API}/producers/byactivity/${activityName}`, {
+            const request = await fetch(`${API}/producers/byactivity/${activityName}`, {
                 method: 'GET',
                 headers: { 'Content-Type': 'application/json' },
             })

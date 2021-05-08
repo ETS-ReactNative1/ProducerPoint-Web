@@ -20,7 +20,6 @@ import ProducerDetails from '../pages/Manager/ProducerDetails'
 import ProductDetails from '../pages/Manager/ProductDetails'
 import ActivityDetails from '../pages/Manager/ActivityDetails'
 
-
 const Routes = () => {
     return (
         <Switch>

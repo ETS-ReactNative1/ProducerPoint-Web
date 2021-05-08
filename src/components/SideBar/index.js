@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom'
 import * as AiIcons from "react-icons/ai";
 
 import { SidebarData } from './SidebarData'
@@ -10,26 +10,29 @@ import Header from '../Header'
 
 const SideBar = () => {
 
+    const location = useLocation()
     const [sidebar, setSidebar] = useState(false)
 
     const openSidebar = () => setSidebar(!sidebar)
 
     return (
         <>
-            <IconContext.Provider value={{ color: '#000' }}>
-                <Header openSidebar={openSidebar} />
+            {location.pathname !== '/' &&
+                <IconContext.Provider value={{ color: '#000' }}>
+                    <Header openSidebar={openSidebar} />
 
-                <SidebarNav sidebar={sidebar}>
-                    <SidebarWrap>
-                        <NavIcon to='#'>
-                            <AiIcons.AiOutlineClose onClick={openSidebar} />
-                        </NavIcon>
-                        {SidebarData.map((i, k) => {
-                            return <SubMenu data={i} k={k} />
-                        })}
-                    </SidebarWrap>
-                </SidebarNav>
-            </IconContext.Provider>
+                    <SidebarNav sidebar={sidebar}>
+                        <SidebarWrap>
+                            <NavIcon to='#'>
+                                <AiIcons.AiOutlineClose onClick={openSidebar} />
+                            </NavIcon>
+                            {SidebarData.map((i, k) => {
+                                return <SubMenu data={i} k={k} />
+                            })}
+                        </SidebarWrap>
+                    </SidebarNav>
+                </IconContext.Provider>
+            }
         </>
     );
 }

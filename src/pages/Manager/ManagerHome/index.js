@@ -22,15 +22,12 @@ const ManagerHome = () => {
 
     return (
         <Container>
-            <SideBar />
-            <Body>
-                <Area>
-                    <ProducerList
-                        data={producers}
-                        title={'Lista de Produtores'}
-                    />
-                </Area>
-            </Body>
+            <Area>
+                <ProducerList
+                    data={producers}
+                    title={'Lista de Produtores'}
+                />
+            </Area>
         </Container>
     );
 }

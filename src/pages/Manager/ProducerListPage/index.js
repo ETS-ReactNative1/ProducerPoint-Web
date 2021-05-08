@@ -4,10 +4,8 @@ import api from '../../../services/api'
 
 import { Container, Body } from '../../../components/MainStyles'
 import { Area } from './styles'
-import SideBar from '../../../components/SideBar'
 
 import ProducerList from '../../../components/ProducerList'
-import Footer from '../../../components/Footer'
 
 const ProducerListPage = () => {
 
@@ -23,7 +21,6 @@ const ProducerListPage = () => {
 
     return (
         <Container>
-            <SideBar />
             <Body>
                 <Area>
                     <ProducerList 
@@ -32,7 +29,6 @@ const ProducerListPage = () => {
                     />
                 </Area>
             </Body>
-            <Footer />
         </Container>
     );
 }
