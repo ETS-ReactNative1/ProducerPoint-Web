@@ -9,21 +9,12 @@ import { Container, Body } from '../../../components/MainStyles'
 import { Area } from './styles'
 import SideBar from '../../../components/SideBar'
 
-const ProductDetails = () => {
+const ActivityDetails = () => {
 
     const { id } = useParams()
 
     const [producers, setProducers] = useState([])
     const [product, setProduct] = useState([])
-
-    useEffect(() => {
-        const getProduct = async (id) => {
-            const request = await api.getProductById(id)
-            const response = await request.json();
-            setProduct(response)
-        }
-        getProduct(id)
-    }, [])
 
     useEffect(() => {
         const getProducersByProduct = async (id) => {
@@ -41,7 +32,7 @@ const ProductDetails = () => {
                 <Area>
                     <ProducerList
                         data={producers}
-                        title={`Produtores de ${product?.label}`}
+                        title={`Produtores de ${null}`}
                     />
                 </Area>
             </Body>
@@ -49,4 +40,4 @@ const ProductDetails = () => {
     );
 }
 
-export default ProductDetails
+export default ActivityDetails

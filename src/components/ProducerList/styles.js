@@ -17,8 +17,8 @@ export const Area = styled.div`
         align-items: center;
 
         h3 {
-            font-size: 22px;
-            font-variant: small-caps;
+            font-size: 18px;
+            text-transform: uppercase;
         }
 
         .title--search {
@@ -103,6 +103,23 @@ export const Area = styled.div`
             }
         }
 
+    }
+
+    .link--activity {
+        width: 80px;
+        background-color: #DDD;
+        border: none;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        transition-duration: 0.4s;
+        cursor: pointer;
+        padding: 4px 8px;
+        border-radius: 3px;
+
+        &:hover {
+            background-color: rgb(0,0,0,0.3);
+        }
     }
 
     

@@ -35,7 +35,6 @@ export default {
         try {
             const request = await fetch(`${API}/producers/${id}`)
             const response = await request.json()
-            console.log(response)
             return response
         } catch (e) {
             console.log('Erro: getProducerById ' + e)
@@ -49,6 +48,36 @@ export default {
             return response
         } catch (e) {
             console.log('Erro: getAllProducts ' + e)
+        }
+    },
+
+    getProductById: async (id) => {
+        try {
+            const request = await fetch(`${API}/products/${id}`)
+            return request
+        } catch (e) {
+            console.log('Erro: getProductById ' + e)
+        }
+    },
+
+    getProducersByProduct: async (id) => {
+        try {
+            const request = await fetch(`${API}/products/${id}/producers`)
+            return request
+        } catch (e) {
+            console.log('Erro: getProducersByProduct ' + e)
+        }
+    },
+
+    getProducersByActivity: async (activityName) => {
+        try {
+            const request = await fetch(`${BASE.API}/producers/byactivity/${activityName}`, {
+                method: 'GET',
+                headers: { 'Content-Type': 'application/json' },
+            })
+            return request
+        } catch (e) {
+            console.log('Erro: getProducersByActivity ' + e)
         }
     },
 

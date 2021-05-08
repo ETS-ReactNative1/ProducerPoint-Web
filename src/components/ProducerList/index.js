@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import { Link } from 'react-router-dom'
 
 import { makeStyles } from '@material-ui/core/styles'
@@ -10,22 +10,9 @@ import TableHead from '@material-ui/core/TableHead'
 import TableRow from '@material-ui/core/TableRow'
 import Paper from '@material-ui/core/Paper'
 
-import api from '../../services/api'
-
 import { Area } from './styles'
 
-const ProducerListPage = () => {
-
-    const [producers, setProducers] = useState([])
-
-    useEffect(() => {
-        const getProducers = async () => {
-            const response = await api.getAllProducers()
-            setProducers(response)
-        }
-
-        getProducers()
-    }, [])
+const ProducerList = ({ data, title }) => {
 
     const useStyles = makeStyles({
         table: {
@@ -38,7 +25,7 @@ const ProducerListPage = () => {
     return (
         <Area>
             <div className='title--box'>
-                <h3>lista de produtores</h3>
+                <h3>{title}</h3>
                 <div className='title--search'>
                     <input type='text' placeholder='Quem você procura?' />
                     <button onClick={() => alert('prestou')}>Buscar</button>
@@ -56,14 +43,18 @@ const ProducerListPage = () => {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {producers.map((row) => (
+                        {data.map((row) => (
                             <TableRow key={row.id}>
                                 <TableCell component="th" scope="row">
                                     {row.name}
                                 </TableCell>
                                 <TableCell align="center">{row.cpf}</TableCell>
                                 <TableCell align="center">{row.phone}</TableCell>
-                                <TableCell align="center">{row.farmingActivity.activityName}</TableCell>
+                                <TableCell align="center">
+                                    <Link to={`/activity-details/${row.id}`}>
+                                        <button className='link--activity'>{row.farmingActivity?.activityName}</button>
+                                    </Link>
+                                </TableCell>
                                 <TableCell align="right">
                                     <div className='button--group'>
                                         <Link className='link--table' to={`/producer-details/${row.id}`} >
@@ -86,4 +77,4 @@ const ProducerListPage = () => {
     );
 }
 
-export default ProducerListPage
+export default ProducerList

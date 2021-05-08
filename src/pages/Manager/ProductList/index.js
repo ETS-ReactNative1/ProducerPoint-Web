@@ -25,7 +25,6 @@ const ProductList = () => {
             const response = await api.getAllProducts()
             setProducts(response)
         }
-
         getProducts()
     }, [])
 
@@ -43,7 +42,7 @@ const ProductList = () => {
             <Body>
                 <Area>
                     <div className='title--box'>
-                        <h3>lista de produtores</h3>
+                        <h3>lista de produtos</h3>
                         <div className='title--search'>
                             <input type='text' placeholder='Qual produto?' />
                             <button onClick={() => alert('prestou')}>Buscar</button>

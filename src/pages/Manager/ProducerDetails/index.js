@@ -38,6 +38,7 @@ const ProducerDetails = () => {
     });
 
     const classes = useStyles();
+    const currencyReal = producer.farmingActivity?.averageCash.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })
 
     return (
         <Container>
@@ -120,7 +121,7 @@ const ProducerDetails = () => {
                                     <TableCell align="left">{producer.farmingActivity?.activityName}</TableCell>
                                     <TableCell align="left">Agricultor</TableCell>
                                     <TableCell align="left">{producer.farmingActivity?.period}</TableCell>
-                                    <TableCell align="left">{producer.farmingActivity?.averageCash}</TableCell>
+                                    <TableCell align="left">{currencyReal}</TableCell>
                                 </TableRow>
                             </TableBody>
                         </Table>
@@ -137,7 +138,7 @@ const ProducerDetails = () => {
                                 <TableRow>
                                     {producer.products?.map((i) =>
                                         <Link className='product--table' to={`/product-details/${i.value}`}>
-                                            <TableCell  key={i.value} align="left">{i.label}</TableCell>
+                                            <TableCell key={i.value} align="left">{i.label}</TableCell>
                                         </Link>
                                     )}
                                 </TableRow>

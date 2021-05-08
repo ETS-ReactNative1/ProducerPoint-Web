@@ -18,6 +18,8 @@ import ProductList from '../pages/Manager/ProductList'
 // Details
 import ProducerDetails from '../pages/Manager/ProducerDetails'
 import ProductDetails from '../pages/Manager/ProductDetails'
+import ActivityDetails from '../pages/Manager/ActivityDetails'
+
 
 const Routes = () => {
     return (
@@ -60,6 +62,10 @@ const Routes = () => {
 
             <RouteHandler private path='/activity-list'>
                 <ActivityList />
+            </RouteHandler>
+
+            <RouteHandler private path='/activity-details/:id'>
+                <ActivityDetails />
             </RouteHandler>
 
             <RouteHandler path='*'>
