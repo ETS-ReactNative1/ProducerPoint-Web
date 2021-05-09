@@ -25,6 +25,7 @@ export default {
         try {
             const request = await fetch(`${API}/producers`)
             const response = await request.json()
+            console.log()
             return response
         } catch (e) {
             console.log('Erro: getAllProducers ' + e)
@@ -54,8 +55,7 @@ export default {
     getAllProducts: async () => {
         try {
             const request = await fetch(`${API}/products`)
-            const response = await request.json()
-            return response
+            return request
         } catch (e) {
             console.log('Erro: getAllProducts ' + e)
         }
@@ -88,6 +88,15 @@ export default {
             return request
         } catch (e) {
             console.log('Erro: getProducersByActivity ' + e)
+        }
+    },
+
+    getAllActivities: async () => {
+        try {
+            const request = await fetch(`${API}/activities`)
+            return request
+        } catch (e) {
+            console.log('Erro: getAllActivities ' + e)
         }
     },
 

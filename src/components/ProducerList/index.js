@@ -52,7 +52,7 @@ const ProducerList = ({ data, title }) => {
                                 <TableCell align="center">{row.phone}</TableCell>
                                 <TableCell align="center">
                                     <Link to={`/activity-details/${row.id}`}>
-                                        <button className='link--activity'>{row.farmingActivity?.activityName}</button>
+                                        <button className='link--activity'>{row.farmingActivity?.activityName?.label}</button>
                                     </Link>
                                 </TableCell>
                                 <TableCell align="right">

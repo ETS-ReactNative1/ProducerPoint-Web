@@ -2,11 +2,9 @@ import React, { useState, useEffect } from 'react'
 
 import api from '../../../services/api'
 
-import { Container, Body } from '../../../components/MainStyles'
-import { Area } from './styles'
-import SideBar from '../../../components/SideBar'
-
 import ProducerList from '../../../components/ProducerList'
+
+import { Area } from './styles'
 
 const ManagerHome = () => {
 
@@ -21,14 +19,12 @@ const ManagerHome = () => {
     }, [])
 
     return (
-        <Container>
-            <Area>
-                <ProducerList
-                    data={producers}
-                    title={'Lista de Produtores'}
-                />
-            </Area>
-        </Container>
+        <Area>
+            <ProducerList
+                data={producers}
+                title={'Lista de Produtores'}
+            />
+        </Area>
     );
 }
 

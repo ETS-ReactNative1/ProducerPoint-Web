@@ -1,14 +1,5 @@
 import styled from 'styled-components';
 
-import signInBg from '../../assets/images/bgpb.jpg'
-
-export const Container = styled.div`
-    height: 100vh;
-    display: flex;
-    align-items: stretch;
-    max-width: 1351px;
-`;
-
 export const Area = styled.div`
     display: flex;
     flex-direction: column;
@@ -28,7 +19,7 @@ export const Area = styled.div`
     }
 
     form{
-    width: 65%;
+    width: 40%;
     border-radius: 5px;
     padding: 10px;
 
@@ -59,12 +50,13 @@ export const Area = styled.div`
                 background-color: #ccc;
                 width: 100%;
                 height: 45px;
-                font-size: 14px;
+                font-size: 16px;
                 padding: 5px;
                 border: 1px solid #999;
                 border-radius: 5px;
                 outline: 0;
                 transition: all ease 0.4s;
+                padding-left: 10px;
 
                 &:focus {
                     border: 1px solid #333;
@@ -94,8 +86,3 @@ export const Area = styled.div`
 
 `;
 
-export const Background = styled.div`
-    flex: 1;
-    background: url(${signInBg}) no-repeat center;
-    background-size: cover;
-`;

@@ -3,7 +3,7 @@ import React from 'react'
 const ActivityList = () => {
     return (
         <div>
-ActivityList
+            ActivityList
         </div>
     )
 }

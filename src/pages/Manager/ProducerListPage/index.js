@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from 'react'
 
 import api from '../../../services/api'
-
-import { Container, Body } from '../../../components/MainStyles'
-import { Area } from './styles'
-
 import ProducerList from '../../../components/ProducerList'
+
+import { Area } from './styles'
 
 const ProducerListPage = () => {
 
@@ -20,16 +18,12 @@ const ProducerListPage = () => {
     }, [])
 
     return (
-        <Container>
-            <Body>
-                <Area>
-                    <ProducerList 
-                    data={producers}
-                    title={'Lista de Produtores'}
-                    />
-                </Area>
-            </Body>
-        </Container>
+        <Area>
+            <ProducerList
+                data={producers}
+                title={'Lista de Produtores'}
+            />
+        </Area>
     );
 }
 
