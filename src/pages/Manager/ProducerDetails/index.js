@@ -114,7 +114,7 @@ const ProducerDetails = () => {
                         </TableHead>
                         <TableBody>
                             <TableRow>
-                                <TableCell align="left">{producer.farmingActivity?.activityName}</TableCell>
+                                <TableCell align="left">{producer.farmingActivity?.activityName?.label}</TableCell>
                                 <TableCell align="left">Agricultor</TableCell>
                                 <TableCell align="left">{producer.farmingActivity?.period}</TableCell>
                                 <TableCell align="left">{currencyReal}</TableCell>

@@ -24,9 +24,7 @@ export default {
     getAllProducers: async () => {
         try {
             const request = await fetch(`${API}/producers`)
-            const response = await request.json()
-            console.log()
-            return response
+            return request
         } catch (e) {
             console.log('Erro: getAllProducers ' + e)
         }
@@ -42,11 +40,60 @@ export default {
         }
     },
 
+    createProducer: async (
+        name, nickname, birthDate, phone, cpf, email, houseNumber, reference, averageCash,
+        zipCode, city, district, uf, street, activityId, resultList, period
+    ) => {
+        try {
+
+            const headers = new Headers();
+            headers.append("Content-Type", "application/json")
+            headers.append("Accept", 'application/json')
+
+            const data = {
+                name: name,
+                nickname: nickname,
+                birthDate: birthDate,
+                phone: phone,
+                cpf: cpf,
+                email: email,
+                address: {
+                    zipCode: zipCode,
+                    city: city,
+                    uf: uf,
+                    district: district,
+                    street: street,
+                    houseNumber: houseNumber,
+                    reference: reference,
+                },
+                farmingActivity: {
+                    averageCash: parseFloat(averageCash),
+                    activityName: {
+                        value: activityId
+                    },
+                    period: period
+                },
+                products: resultList,
+                manager: {
+                    id: 1,
+                },
+            }
+
+            const request = await fetch(`${API}/producers`, {
+                method: 'POST',
+                headers: headers,
+                body: JSON.stringify(data)
+            })
+            return request
+        } catch (e) {
+            console.log('Erro: createProducer ' + e)
+        }
+    },
+
     deleteProducer: async (id) => {
         try {
             const request = await fetch(`${API}/producers/${id}`, { method: 'DELETE' })
-            const response = await request.json()
-            return response
+            return request
         } catch (e) {
             console.log('Erro: deleteProducer ' + e)
         }

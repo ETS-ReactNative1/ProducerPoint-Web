@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 
 import { makeStyles } from '@material-ui/core/styles'
@@ -10,9 +10,35 @@ import TableHead from '@material-ui/core/TableHead'
 import TableRow from '@material-ui/core/TableRow'
 import Paper from '@material-ui/core/Paper'
 
+import api from '../../services/api'
+
+import ConfimationModal from '../ConfimationModal'
 import { Area } from './styles'
 
 const ProducerList = ({ data, title }) => {
+
+    const [open, setOpen] = useState(false)
+    const [id, setId] = useState(null)
+
+    const handleDelete = (id) => {
+        setId(id)
+        handleOpen()
+    }
+
+    const doDelete = async () => {
+
+        const response = await api.deleteProducer(id)
+        if (response.status === 200) {
+            console.log('Produtor excluído com sucesso!')
+            handleClose()
+        } else {
+            console.log('Erro: ' + response.status)
+            handleClose()
+        }
+    }
+
+    const handleOpen = () => setOpen(true)
+    const handleClose = () => setOpen(false)
 
     const useStyles = makeStyles({
         table: {
@@ -64,7 +90,7 @@ const ProducerList = ({ data, title }) => {
                                             <button className='button--edit'>Editar</button>
                                         </Link>
                                         <Link className='link--table' to={`#`} >
-                                            <button className='button--delete'>Excuir</button>
+                                            <button onClick={() => handleDelete(row.id)} className='button--delete'>Excuir</button>
                                         </Link>
                                     </div>
                                 </TableCell>
@@ -73,6 +99,14 @@ const ProducerList = ({ data, title }) => {
                     </TableBody>
                 </Table>
             </TableContainer>
+            {open &&
+                <ConfimationModal
+                    handleClose={handleClose}
+                    open={open}
+                    doDelete={doDelete}
+                    title='Deseja realmente excluir este produtor?'
+                />
+            }
         </Area>
     );
 }

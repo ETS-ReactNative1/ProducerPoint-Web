@@ -18,17 +18,32 @@ import { periods, ufs } from '../../../enums'
 
 import { Area } from './styles'
 
-
-
 const ProducerForm = () => {
 
     const classes = useStyles();
-    const [uf, setUf] = useState('');
     const [activities, setActivities] = useState([]);
     const [products, setProducts] = useState([]);
     const [productList, setProductList] = useState([]);
     const [selectedActivities, setSelectedActivities] = useState([]);
-    const [period, setPeriod] = useState('');
+    const [period, setPeriod] = useState('Mensal');
+
+    const [name, setName] = useState("");
+    const [nickname, setNickname] = useState("");
+    const [phone, setPhone] = useState("");
+    const [email, setEmail] = useState("");
+    const [cpf, setCpf] = useState("");
+    const [birthDate, setBirthDate] = useState(Date());
+
+    // Address
+    const [zipCode, setZipCode] = useState('')
+    const [city, setCity] = useState('')
+    const [district, setDistrict] = useState('')
+    const [street, setStreet] = useState('')
+    const [uf, setUf] = useState('')
+    const [houseNumber, setHouseNumber] = useState('')
+    const [reference, setReference] = useState('')
+    const [averageCash, setAverageCash] = useState();
+    const [activity, setActivity] = useState('');
 
     useEffect(() => {
         const getProducts = async () => {
@@ -40,9 +55,6 @@ const ProducerForm = () => {
         getProducts()
     }, [])
 
-    console.log(products)
-
-
     useEffect(() => {
         const getActivities = async () => {
             const request = await api.getAllActivities()
@@ -53,29 +65,26 @@ const ProducerForm = () => {
         getActivities()
     }, [])
 
-    const handleChangeUf = (event) => {
-        setUf(event.target.value);
-    };
+    const handleSubmit = async (e) => {
+        e.preventDefault()
 
-    const handleChangePeriod = (event) => {
-        setPeriod(event.target.value);
-    };
+        const response = await api.createProducer(name, nickname, birthDate, phone, cpf, email, houseNumber, reference, averageCash,
+            zipCode, city, district, uf, street, activity, resultList, period)
 
-    const handleChangeActivities = (event) => {
-        setSelectedActivities(event.target.value);
-    };
-
-    const handleChangeProducts = (event) => {
-        setProducts(event.target.value);
-    };
+        if (response != null && response.status >= 200 && response.status <= 205) {
+            console.log('Produtor gravado com sucesso.');
+        } else {
+            console.log('Erro inesperado, tente novamente ou contate o suporte. Status = ' + response.status);
+        }
+    }
 
     const productsList = () => {
         const newArray = []
-        for (let i of products) {
-            const keys = Object.keys(i)
-            for (let key of keys) {
-                if (key === 'value') {
-                    const obj = { value: i[key] }
+        for (let i of productList) {
+            const values = Object.values(i)
+            for (let j of products) {
+                if (values[1] === j) {
+                    const obj = { value: values[0] }
                     newArray.push(obj)
                 }
             }
@@ -90,13 +99,14 @@ const ProducerForm = () => {
             <div className='title--box'>
                 <h3>Cadastro de Produtor</h3>
             </div>
-            <form>
+            <form onSubmit={handleSubmit}>
                 <div className='group--form'>
                     <TextField
                         className='name--form'
                         name='name'
                         label='Nome completo'
                         variant="outlined"
+                        onChange={e => setName(e.target.value)}
                         required
                     />
 
@@ -105,6 +115,7 @@ const ProducerForm = () => {
                         name='nickname'
                         label='Apelido'
                         variant="outlined"
+                        onChange={e => setNickname(e.target.value)}
                     />
                 </div>
 
@@ -114,6 +125,7 @@ const ProducerForm = () => {
                         name='birth'
                         label='Nascimento'
                         variant="outlined"
+                        onChange={e => setBirthDate(e.target.value)}
                         required
                     />
 
@@ -122,6 +134,7 @@ const ProducerForm = () => {
                         name='cpf'
                         label='CPF/CNPJ'
                         variant="outlined"
+                        onChange={e => setCpf(e.target.value)}
                         required
                     />
 
@@ -130,6 +143,7 @@ const ProducerForm = () => {
                         name='phone'
                         label='Telefone'
                         variant="outlined"
+                        onChange={e => setPhone(e.target.value)}
                         required
                     />
 
@@ -138,6 +152,7 @@ const ProducerForm = () => {
                         name='email'
                         label='E-mail'
                         variant="outlined"
+                        onChange={e => setEmail(e.target.value)}
                     />
 
                 </div>
@@ -148,6 +163,7 @@ const ProducerForm = () => {
                         name='zipcode'
                         label='CEP'
                         variant="outlined"
+                        onChange={e => setZipCode(e.target.value)}
                         required
                     />
 
@@ -157,7 +173,7 @@ const ProducerForm = () => {
                             labelId="demo-simple-select-outlined-label"
                             id="demo-simple-select-outlined"
                             value={uf}
-                            onChange={handleChangeUf}
+                            onChange={e => setUf(e.target.value)}
                             label="Estado"
                             required
                         >
@@ -172,6 +188,7 @@ const ProducerForm = () => {
                         name='city'
                         label='Cidade'
                         variant="outlined"
+                        onChange={e => setCity(e.target.value)}
                         required
                     />
 
@@ -180,6 +197,7 @@ const ProducerForm = () => {
                         name='district'
                         label='Bairro'
                         variant="outlined"
+                        onChange={e => setDistrict(e.target.value)}
                         required
                     />
 
@@ -191,6 +209,7 @@ const ProducerForm = () => {
                         name='street'
                         label='Rua'
                         variant="outlined"
+                        onChange={e => setStreet(e.target.value)}
                         required
                     />
 
@@ -199,6 +218,7 @@ const ProducerForm = () => {
                         name='house'
                         label='Nº'
                         variant="outlined"
+                        onChange={e => setHouseNumber(e.target.value)}
                     />
 
                     <TextField
@@ -206,6 +226,7 @@ const ProducerForm = () => {
                         name='city'
                         label='Referência'
                         variant="outlined"
+                        onChange={e => setReference(e.target.value)}
                     />
 
                 </div>
@@ -218,7 +239,7 @@ const ProducerForm = () => {
                             id="demo-mutiple-checkbox"
                             multiple
                             value={selectedActivities}
-                            onChange={handleChangeActivities}
+                            onChange={e => setSelectedActivities(e.target.value)}
                             input={<Input />}
                             renderValue={(selected) => selected.join(', ')}
                             required
@@ -238,7 +259,7 @@ const ProducerForm = () => {
                             labelId="demo-simple-select-outlined-label"
                             id="demo-simple-select-outlined"
                             value={period}
-                            onChange={handleChangePeriod}
+                            onChange={e => setPeriod(e.target.value)}
                             required
                         >
                             {periods.map((i) =>
@@ -255,7 +276,7 @@ const ProducerForm = () => {
                         id="demo-mutiple-checkbox"
                         multiple
                         value={products}
-                        onChange={handleChangeProducts}
+                        onChange={e => setProducts(e.target.value)}
                         input={<Input />}
                         renderValue={(selected) => selected.join(', ')}
                         required
@@ -270,7 +291,7 @@ const ProducerForm = () => {
                     </Select>
                 </FormControl>
 
-                <Button variant="outlined" >Cadastrar</Button>
+                <Button variant="outlined">Cadastrar</Button>
             </form>
 
         </Area>

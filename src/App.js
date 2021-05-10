@@ -3,6 +3,7 @@ import { BrowserRouter } from 'react-router-dom'
 import './App.css'
 
 import AuthProvider from './contexts/AuthContext'
+import RequestProvider from './contexts/RequestContext'
 
 import Routes from './routes/Routes'
 
@@ -16,20 +17,23 @@ const App = () => {
 	return (
 		<BrowserRouter>
 			<AuthProvider>
+				<RequestProvider>
 
-				<Template>
+					<Template>
 
-					<SideBar />
+						<SideBar />
 
-					<Body>
+						<Body>
 
-						<Routes />
+							<Routes />
 
-					</Body>
+						</Body>
 
-					<Footer />
+						<Footer />
 
-				</Template>
+					</Template>
+
+				</RequestProvider>
 			</AuthProvider>
 		</BrowserRouter>
 	);
