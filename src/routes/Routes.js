@@ -11,6 +11,7 @@ import NotFound from '../pages/NotFound'
 import ProducerForm from '../pages/Manager/ProducerForm'
 import ProducerListPage from '../pages/Manager/ProducerListPage'
 import ActivityForm from '../pages/Manager/ActivityForm'
+import ProducerEdit from '../pages/Manager/ProducerEdit'
 import ActivityList from '../pages/Manager/ActivityList'
 import ProductForm from '../pages/Manager/ProductForm'
 import ProductList from '../pages/Manager/ProductList'
@@ -33,6 +34,10 @@ const Routes = () => {
 
             <RouteHandler private path='/producer-form'>
                 <ProducerForm />
+            </RouteHandler>
+
+            <RouteHandler private path='/producer-edit/:id'>
+                <ProducerEdit />
             </RouteHandler>
 
             <RouteHandler private path='/producer-list'>
