@@ -41,9 +41,11 @@ export default {
     },
 
     createProducer: async (
-        name, nickname, birthDate, phone, cpf, email, houseNumber, reference, averageCash,
-        zipCode, city, district, uf, street, activityId, resultList, period
+        name, nickname, birthDate, cpf, phone, email, zipCode,
+        uf, city, district, street, houseNumber, reference,
+        activity, period, averageCash, products, userId
     ) => {
+
         try {
 
             const headers = new Headers();
@@ -54,33 +56,85 @@ export default {
                 name: name,
                 nickname: nickname,
                 birthDate: birthDate,
-                phone: phone,
                 cpf: cpf,
+                phone: phone,
                 email: email,
                 address: {
                     zipCode: zipCode,
-                    city: city,
                     uf: uf,
+                    city: city,
                     district: district,
                     street: street,
                     houseNumber: houseNumber,
                     reference: reference,
                 },
                 farmingActivity: {
-                    averageCash: parseFloat(averageCash),
                     activityName: {
-                        value: activityId
+                        value: activity
                     },
-                    period: period
+                    period: period,
+                    averageCash: parseFloat(averageCash)
                 },
-                products: resultList,
+                products: products,
                 manager: {
-                    id: 1,
+                    id: userId,
                 },
             }
 
             const request = await fetch(`${API}/producers`, {
                 method: 'POST',
+                headers: headers,
+                body: JSON.stringify(data)
+            })
+            return request
+        } catch (e) {
+            console.log('Erro: createProducer ' + e)
+        }
+    },
+
+    updateProducer: async (
+        id, name, nickname, birthDate, cpf, phone, email, zipCode,
+        uf, city, district, street, houseNumber, reference,
+        activity, period, averageCash, products, userId
+    ) => {
+
+        try {
+
+            const headers = new Headers();
+            headers.append("Content-Type", "application/json")
+            headers.append("Accept", 'application/json')
+
+            const data = {
+                name: name,
+                nickname: nickname,
+                birthDate: birthDate,
+                cpf: cpf,
+                phone: phone,
+                email: email,
+                address: {
+                    zipCode: zipCode,
+                    uf: uf,
+                    city: city,
+                    district: district,
+                    street: street,
+                    houseNumber: houseNumber,
+                    reference: reference,
+                },
+                farmingActivity: {
+                    activityName: {
+                        value: activity
+                    },
+                    period: period,
+                    averageCash: parseFloat(averageCash)
+                },
+                products: products,
+                manager: {
+                    id: userId,
+                },
+            }
+
+            const request = await fetch(`${API}/producers/${id}`, {
+                method: 'PUT',
                 headers: headers,
                 body: JSON.stringify(data)
             })

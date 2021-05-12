@@ -39,6 +39,11 @@ export const Area = styled.div`
             align-items: center;
             justify-content: flex-start;
 
+            h3 {
+                margin-left: 10px;
+                font-size: 20px;
+            }
+
             .logo-olx{
                 width: 60px;
             }

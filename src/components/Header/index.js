@@ -32,8 +32,9 @@ const Header = ({ openSidebar }) => {
                         <Link to='/home'>
                             <img className='logo-olx' src={logo} alt='logo olx' />
                         </Link>
+                        <h3>Olá, {user?.name}</h3>
                     </div>
-                   
+
                     <nav>
                         <ul>
                             {logged

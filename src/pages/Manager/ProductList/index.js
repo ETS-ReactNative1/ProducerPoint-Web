@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import { Link } from 'react-router-dom'
 
 import { makeStyles } from '@material-ui/core/styles'
@@ -11,20 +11,13 @@ import TableRow from '@material-ui/core/TableRow'
 import Paper from '@material-ui/core/Paper'
 
 import api from '../../../services/api'
+import { RequestContext } from '../../../contexts/RequestContext'
 
 import { Area } from './styles'
 
 const ProductList = () => {
 
-    const [products, setProducts] = useState([])
-
-    useEffect(() => {
-        const getProducts = async () => {
-            const response = await api.getAllProducts()
-            setProducts(response)
-        }
-        getProducts()
-    }, [])
+    const { products } = useContext(RequestContext)
 
     const useStyles = makeStyles({
         table: {

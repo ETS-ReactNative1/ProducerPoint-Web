@@ -12,20 +12,22 @@ import {
 
 import api from '../../../services/api'
 import { RequestContext } from '../../../contexts/RequestContext'
+import { AuthContext } from '../../../contexts/AuthContext'
 import { periods, ufs } from '../../../enums'
+import { formatarCEP, phoneMask } from '../../../components/Helpers'
 
 const ProducerEdit = () => {
 
     const { products, activities } = useContext(RequestContext)
+    const { user } = useContext(AuthContext)
     const [loading, setLoading] = useState(false)
-
     const { id } = useParams()
-
     const classes = useStyles();
 
     useEffect(() => {
         const getProducerById = async (id) => {
             const response = await api.getProducerById(id)
+
             formik.setFieldValue('name', response.name)
             formik.setFieldValue('nickname', response.nickname)
             formik.setFieldValue('birthDate', response.birthDate)
@@ -109,7 +111,7 @@ const ProducerEdit = () => {
     const formik = useFormik({
         initialValues: initialFormState,
         validationSchema: validationSchema,
-        onSubmit: (values) => {
+        onSubmit: async (values) => {
 
             const productsList = () => {
                 const newArray = []
@@ -128,8 +130,23 @@ const ProducerEdit = () => {
 
             const resultList = productsList()
 
-            console.log(resultList)
+            const response = await api.updateProducer(
+                id, values.name, values.nickname, values.birthDate,
+                values.cpf, values.phone, values.email,
+                values.address.zipCode, values.address.uf,
+                values.address.city, values.address.district,
+                values.address.street, values.address.houseNumber,
+                values.address.reference,
+                values.farmingActivity.activityName.value, values.farmingActivity.period,
+                values.farmingActivity.averageCash, resultList, user?.id
+            )
 
+            if (response && response.status >= 200 && response.status <= 205) {
+                alert('Produtor atualizado!!')
+                window.location.href = '/producer-list'
+            } else {
+                alert('Erro inesperado, tente novamente ou contate o suporte. Status = ' + response.status);
+            }
         }
     })
 
@@ -192,7 +209,7 @@ const ProducerEdit = () => {
                                     />
                                 </Grid>
 
-                                <Grid item xs={2}>
+                                <Grid item xs={3}>
                                     <TextField
                                         fullWidth
                                         variant='outlined'
@@ -221,7 +238,7 @@ const ProducerEdit = () => {
                                     />
                                 </Grid>
 
-                                <Grid item xs={5}>
+                                <Grid item xs={4}>
                                     <TextField
                                         fullWidth
                                         variant='outlined'
@@ -449,7 +466,12 @@ const useStyles = makeStyles((theme) => ({
 
     },
     button: {
-        marginTop: 20
+        marginTop: 20,
+        backgroundColor: '#070',
+
+        '&:hover': {
+            background: '#005200'
+        },
     },
     titleBox: {
         height: 50,

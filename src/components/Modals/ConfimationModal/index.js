@@ -1,10 +1,6 @@
-import React, { useState } from 'react'
+import React from 'react'
 
-import { makeStyles } from '@material-ui/core/styles';
-import Modal from '@material-ui/core/Modal';
-import Backdrop from '@material-ui/core/Backdrop';
-import Fade from '@material-ui/core/Fade';
-
+import { makeStyles, Modal, Backdrop, Fade } from '@material-ui/core';
 import { Container } from './styles'
 
 const ConfimationModal = ({ open, handleClose, title, doDelete }) => {

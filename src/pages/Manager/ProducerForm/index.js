@@ -1,78 +1,25 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useContext } from 'react'
 import { useFormik } from 'formik'
 import * as yup from 'yup'
 
 import { makeStyles } from '@material-ui/core/styles';
 import {
     Grid, TextField, Button, MenuItem, Select,
-    Input, InputLabel, ListItemText, Checkbox
+    Input, InputLabel, ListItemText, Checkbox,
 } from '@material-ui/core';
 
 import api from '../../../services/api'
+import { RequestContext } from '../../../contexts/RequestContext'
+import { AuthContext } from '../../../contexts/AuthContext'
+
 import { periods, ufs } from '../../../enums'
 
 const ProducerForm = () => {
 
-    const classes = useStyles();
-    const [activities, setActivities] = useState([]);
-    const [products, setProducts] = useState([]);
-    const [productList, setProductList] = useState([]);
-    const [selectedActivities, setSelectedActivities] = useState([]);
-    const [period, setPeriod] = useState('Mensal');
-
-    const [name, setName] = useState("");
-    const [nickname, setNickname] = useState("");
-    const [phone, setPhone] = useState("");
-    const [email, setEmail] = useState("");
-    const [cpf, setCpf] = useState("");
-    const [birthDate, setBirthDate] = useState(Date());
-
-    // Address
-    const [zipCode, setZipCode] = useState('')
-    const [city, setCity] = useState('')
-    const [district, setDistrict] = useState('')
-    const [street, setStreet] = useState('')
-    const [uf, setUf] = useState('')
-    const [houseNumber, setHouseNumber] = useState('')
-    const [reference, setReference] = useState('')
-    const [averageCash, setAverageCash] = useState();
-    const [activity, setActivity] = useState('');
-
-    useEffect(() => {
-        const getProducts = async () => {
-            const request = await api.getAllProducts()
-            const response = await request.json();
-            setProductList(response);
-        }
-
-        getProducts()
-    }, [])
-
-    useEffect(() => {
-        const getActivities = async () => {
-            const request = await api.getAllActivities()
-            const response = await request.json();
-            setActivities(response);
-        }
-
-        getActivities()
-    }, [])
-
-    const productsList = () => {
-        const newArray = []
-        for (let i of productList) {
-            const values = Object.values(i)
-            for (let j of products) {
-                if (values[1] === j) {
-                    const obj = { value: values[0] }
-                    newArray.push(obj)
-                }
-            }
-        }
-        return newArray
-    }
-
-    const resultList = productsList()
+    const { products, activities } = useContext(RequestContext)
+    const { user } = useContext(AuthContext)
+    const [loading, setLoading] = useState(false)
+    const classes = useStyles()
 
     const initialFormState = {
         name: '',
@@ -124,9 +71,42 @@ const ProducerForm = () => {
     const formik = useFormik({
         initialValues: initialFormState,
         validationSchema: validationSchema,
-        onSubmit: (values) => {
+        onSubmit: async (values) => {
 
-            console.log(values)
+            const productsList = () => {
+                const newArray = []
+                const productList = [...values.products]
+                for (let i of products) {
+                    const values = Object.values(i)
+                    for (let j of productList) {
+                        if (values[1] === j) {
+                            const obj = { value: values[0] }
+                            newArray.push(obj)
+                        }
+                    }
+                }
+                return newArray
+            }
+
+            const resultList = productsList()
+
+            const response = await api.createProducer(
+                values.name, values.nickname, values.birthDate,
+                values.cpf, values.phone, values.email,
+                values.address.zipCode, values.address.uf,
+                values.address.city, values.address.district,
+                values.address.street, values.address.houseNumber,
+                values.address.reference,
+                values.farmingActivity.activityName.value, values.farmingActivity.period,
+                values.farmingActivity.averageCash, resultList, user?.id
+            )
+
+            if (response && response.status >= 200 && response.status <= 205) {
+                alert('Produtor salvo!')
+                window.location.href = '/producer-list'
+            } else {
+                alert('Erro inesperado, tente novamente ou contate o suporte. Status = ' + response.status);
+            }
         }
     })
 
@@ -189,7 +169,7 @@ const ProducerForm = () => {
                                     />
                                 </Grid>
 
-                                <Grid item xs={2}>
+                                <Grid item xs={3}>
                                     <TextField
                                         fullWidth
                                         variant='outlined'
@@ -218,7 +198,7 @@ const ProducerForm = () => {
                                     />
                                 </Grid>
 
-                                <Grid item xs={5}>
+                                <Grid item xs={4}>
                                     <TextField
                                         fullWidth
                                         variant='outlined'
@@ -387,7 +367,6 @@ const ProducerForm = () => {
                                         label="Renda"
                                         value={formik.values.farmingActivity?.averageCash}
                                         onChange={formik.handleChange}
-                                        required
                                         error={formik.touched.farmingActivity?.averageCash && Boolean(formik.errors.farmingActivity?.averageCash)}
                                         helperText={formik.touched.farmingActivity?.averageCash && formik.errors.farmingActivity?.averageCash}
                                     />
@@ -410,7 +389,7 @@ const ProducerForm = () => {
                                         fullWidth
                                         required
                                     >
-                                        {productList.map((i) => (
+                                        {products.map((i) => (
                                             <MenuItem key={i.value} value={i.label}>
                                                 <Checkbox checked={formik.values.products.indexOf(i.label) > -1} />
                                                 <ListItemText primary={i.label} />
@@ -426,7 +405,7 @@ const ProducerForm = () => {
                                     variant="contained"
                                     fullWidth
                                     type="submit">
-                                    Salvar
+                                    Cadastrar
                                 </Button>
                             </Grid>
 
@@ -447,7 +426,12 @@ const useStyles = makeStyles((theme) => ({
         marginBottom: theme.spacing(8),
     },
     button: {
-        marginTop: 20
+        marginTop: 20,
+        backgroundColor: '#070',
+
+        '&:hover': {
+            background: '#005200'
+        },
     },
     titleBox: {
         height: 50,

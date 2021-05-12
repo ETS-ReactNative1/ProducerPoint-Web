@@ -12,13 +12,14 @@ import Paper from '@material-ui/core/Paper'
 
 import api from '../../services/api'
 
-import ConfimationModal from '../ConfimationModal'
+import ConfimationModal from '../Modals/ConfimationModal'
 import { Area } from './styles'
 
 const ProducerList = ({ data, title }) => {
 
     const [open, setOpen] = useState(false)
     const [id, setId] = useState(null)
+    const classes = useStyles();
 
     const handleDelete = (id) => {
         setId(id)
@@ -39,14 +40,6 @@ const ProducerList = ({ data, title }) => {
 
     const handleOpen = () => setOpen(true)
     const handleClose = () => setOpen(false)
-
-    const useStyles = makeStyles({
-        table: {
-            minWidth: 650,
-        },
-    });
-
-    const classes = useStyles();
 
     return (
         <Area>
@@ -112,3 +105,9 @@ const ProducerList = ({ data, title }) => {
 }
 
 export default ProducerList
+
+const useStyles = makeStyles({
+    table: {
+        minWidth: 650,
+    },
+});
