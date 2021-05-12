@@ -6,34 +6,39 @@ export const RequestContext = createContext({})
 
 const RequestProvider = ({ children }) => {
 
-    const [loading, setLoading] = useState(false)
     const [producers, setProducers] = useState([])
     const [products, setProducts] = useState([])
+    const [activities, setActivities] = useState([])
 
     const loadProducers = async () => {
-        setLoading(true)
-        const response = await api.getAllProducers()
+        const request = await api.getAllProducers()
+        const response = await request.json()
         setProducers(response)
-        setLoading(false)
     }
 
     const loadProducts = async () => {
-        setLoading(true)
-        const response = await api.getAllProducts()
+        const request = await api.getAllProducts()
+        const response = await request.json()
         setProducts(response)
-        setLoading(false)
+    }
+
+    const loadActivities = async () => {
+        const request = await api.getAllActivities()
+        const response = await request.json()
+        setActivities(response)
     }
 
     useEffect(() => {
         loadProducers()
         loadProducts()
+        loadActivities()
     }, [])
 
     return (
         <RequestContext.Provider value={{
-            loading, setLoading,
             producers, loadProducers,
             products, loadProducts,
+            activities, loadActivities
         }}>
             {children}
         </RequestContext.Provider>

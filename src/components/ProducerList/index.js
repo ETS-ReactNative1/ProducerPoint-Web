@@ -69,7 +69,7 @@ const ProducerList = ({ data, title }) => {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {data.map((row) => (
+                        {data?.map((row) => (
                             <TableRow key={row.id}>
                                 <TableCell component="th" scope="row">
                                     {row.name}
