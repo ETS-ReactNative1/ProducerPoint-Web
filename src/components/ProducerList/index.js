@@ -1,14 +1,10 @@
-import React, { useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 
-import { makeStyles } from '@material-ui/core/styles'
-import Table from '@material-ui/core/Table'
-import TableBody from '@material-ui/core/TableBody'
-import TableCell from '@material-ui/core/TableCell'
-import TableContainer from '@material-ui/core/TableContainer'
-import TableHead from '@material-ui/core/TableHead'
-import TableRow from '@material-ui/core/TableRow'
-import Paper from '@material-ui/core/Paper'
+import {
+    makeStyles, Table, TableBody, TableCell, TableContainer,
+    TableHead, TableRow, Paper, TablePagination
+} from '@material-ui/core'
 
 import api from '../../services/api'
 
@@ -19,7 +15,19 @@ const ProducerList = ({ data, title }) => {
 
     const [open, setOpen] = useState(false)
     const [id, setId] = useState(null)
-    const classes = useStyles();
+    const [search, setSearch] = useState('')
+    const [filteredSearch, setFilteredSearch] = useState([])
+
+    const [page, setPage] = useState(0)
+    const [rowsPerPage, setRowsPerPage] = useState(10)
+    const classes = useStyles()
+
+    useMemo(() => {
+        const lowerSearch = search.toLowerCase()
+        setFilteredSearch(
+            data.filter((i) => i.name.toLowerCase().includes(lowerSearch))
+        )
+    }, [search, data])
 
     const handleDelete = (id) => {
         setId(id)
@@ -27,15 +35,25 @@ const ProducerList = ({ data, title }) => {
     }
 
     const doDelete = async () => {
-
         const response = await api.deleteProducer(id)
         if (response.status === 200) {
-            console.log('Produtor excluído com sucesso!')
+
+            setFilteredSearch(
+                filteredSearch.filter((i) => i.id !== id)
+            )
+            alert('Produtor excluído com sucesso!')
             handleClose()
         } else {
             console.log('Erro: ' + response.status)
             handleClose()
         }
+    }
+
+    const handleChangePage = (event, newPage) => { setPage(newPage) }
+
+    const handleChangeRowsPerPage = (event) => {
+        setRowsPerPage(parseInt(event.target.value, 10))
+        setPage(0)
     }
 
     const handleOpen = () => setOpen(true)
@@ -46,8 +64,7 @@ const ProducerList = ({ data, title }) => {
             <div className='title--box'>
                 <h3>{title}</h3>
                 <div className='title--search'>
-                    <input type='text' placeholder='Quem você procura?' />
-                    <button onClick={() => alert('prestou')}>Buscar</button>
+                    <input type='text' value={search} onChange={ev => setSearch(ev.target.value)} placeholder='Quem você procura?' />
                 </div>
             </div>
             <TableContainer component={Paper}>
@@ -62,7 +79,10 @@ const ProducerList = ({ data, title }) => {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {data?.map((row) => (
+                        {(rowsPerPage > 0
+                            ? filteredSearch.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                            : filteredSearch
+                        ).map((row) => (
                             <TableRow key={row.id}>
                                 <TableCell component="th" scope="row">
                                     {row.name}
@@ -70,7 +90,7 @@ const ProducerList = ({ data, title }) => {
                                 <TableCell align="center">{row.cpf}</TableCell>
                                 <TableCell align="center">{row.phone}</TableCell>
                                 <TableCell align="center">
-                                    <Link to={`/activity-details/${row.id}`}>
+                                    <Link to={`/activity-details/${row.farmingActivity?.activityName?.value}`}>
                                         <button className='link--activity'>{row.farmingActivity?.activityName?.label}</button>
                                     </Link>
                                 </TableCell>
@@ -92,6 +112,16 @@ const ProducerList = ({ data, title }) => {
                     </TableBody>
                 </Table>
             </TableContainer>
+            <TablePagination
+                labelRowsPerPage='Itens por página'
+                rowsPerPageOptions={[10, 15, 20]}
+                component="div"
+                count={filteredSearch.length}
+                rowsPerPage={rowsPerPage}
+                page={page}
+                onChangePage={handleChangePage}
+                onChangeRowsPerPage={handleChangeRowsPerPage}
+            />
             {open &&
                 <ConfimationModal
                     handleClose={handleClose}

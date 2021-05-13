@@ -153,6 +153,48 @@ export default {
         }
     },
 
+    createProduct: async (label) => {
+        try {
+            const headers = new Headers();
+            headers.append("Content-Type", "application/json")
+            headers.append("Accept", 'application/json')
+
+            const data = { label: label }
+
+            const request = await fetch(`${API}/products`, {
+                method: 'POST',
+                headers: headers,
+                body: JSON.stringify(data)
+            })
+            return request
+        } catch (e) {
+            console.log('Erro: createProduct ' + e)
+        }
+    },
+
+    updateProduct: async (id, label) => {
+        try {
+
+            const headers = new Headers();
+            headers.append("Content-Type", "application/json")
+            headers.append("Accept", 'application/json')
+
+            const data = {
+                value: id,
+                label: label
+            }
+
+            const request = await fetch(`${API}/products/${id}`, {
+                method: 'PUT',
+                headers: headers,
+                body: JSON.stringify(data)
+            })
+            return request
+        } catch (e) {
+            console.log('Erro: updateProduct ' + e)
+        }
+    },
+
     getAllProducts: async () => {
         try {
             const request = await fetch(`${API}/products`)
@@ -180,15 +222,54 @@ export default {
         }
     },
 
-    getProducersByActivity: async (activityName) => {
+    deleteProduct: async (id) => {
         try {
-            const request = await fetch(`${API}/producers/byactivity/${activityName}`, {
-                method: 'GET',
-                headers: { 'Content-Type': 'application/json' },
+            const request = await fetch(`${API}/products/${id}`, { method: 'DELETE' })
+            return request
+        } catch (e) {
+            console.log('Erro: deleteProduct ' + e)
+        }
+    },
+
+    createActivity: async (label) => {
+        try {
+            const headers = new Headers();
+            headers.append("Content-Type", "application/json")
+            headers.append("Accept", 'application/json')
+
+            const data = { label: label }
+
+            const request = await fetch(`${API}/activities`, {
+                method: 'POST',
+                headers: headers,
+                body: JSON.stringify(data)
             })
             return request
         } catch (e) {
-            console.log('Erro: getProducersByActivity ' + e)
+            console.log('Erro: createProduct ' + e)
+        }
+    },
+
+    updateActivity: async (id, label) => {
+        try {
+
+            const headers = new Headers();
+            headers.append("Content-Type", "application/json")
+            headers.append("Accept", 'application/json')
+
+            const data = {
+                value: id,
+                label: label
+            }
+
+            const request = await fetch(`${API}/activities/${id}`, {
+                method: 'PUT',
+                headers: headers,
+                body: JSON.stringify(data)
+            })
+            return request
+        } catch (e) {
+            console.log('Erro: updateActivity ' + e)
         }
     },
 
@@ -198,6 +279,24 @@ export default {
             return request
         } catch (e) {
             console.log('Erro: getAllActivities ' + e)
+        }
+    },
+
+    getActivityById: async (id) => {
+        try {
+            const request = await fetch(`${API}/activities/${id}`)
+            return request
+        } catch (e) {
+            console.log('Erro: getProductById ' + e)
+        }
+    },
+
+    getProducersByActivity: async (id) => {
+        try {
+            const request = await fetch(`${API}/producers/findByActivity/${id}`)
+            return request
+        } catch (e) {
+            console.log('Erro: getProducersByActivity ' + e)
         }
     },
 

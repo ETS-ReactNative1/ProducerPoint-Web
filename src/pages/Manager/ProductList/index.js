@@ -1,39 +1,72 @@
-import React, { useState, useEffect, useContext } from 'react'
+import React, { useState, useMemo, useContext } from 'react'
 import { Link } from 'react-router-dom'
 
-import { makeStyles } from '@material-ui/core/styles'
-import Table from '@material-ui/core/Table'
-import TableBody from '@material-ui/core/TableBody'
-import TableCell from '@material-ui/core/TableCell'
-import TableContainer from '@material-ui/core/TableContainer'
-import TableHead from '@material-ui/core/TableHead'
-import TableRow from '@material-ui/core/TableRow'
-import Paper from '@material-ui/core/Paper'
+import {
+    makeStyles, Table, TableBody, TableCell, TableContainer,
+    TableHead, TableRow, Paper, TablePagination
+} from '@material-ui/core'
 
 import api from '../../../services/api'
 import { RequestContext } from '../../../contexts/RequestContext'
 
+import ConfimationModal from '../../../components/Modals/ConfimationModal'
 import { Area } from './styles'
 
 const ProductList = () => {
 
     const { products } = useContext(RequestContext)
+    const [open, setOpen] = useState(false)
+    const [value, setValue] = useState(null)
+    const [search, setSearch] = useState('')
+    const [filteredSearch, setFilteredSearch] = useState([])
 
-    const useStyles = makeStyles({
-        table: {
-            minWidth: 650,
-        },
-    });
+    const [page, setPage] = useState(0)
+    const [rowsPerPage, setRowsPerPage] = useState(10)
+    const classes = useStyles()
 
-    const classes = useStyles();
+    useMemo(() => {
+        const lowerSearch = search.toLowerCase()
+        setFilteredSearch(
+            products.filter((i) => i.label.toLowerCase().includes(lowerSearch))
+        )
+    }, [search, products])
+
+    const handleDelete = (value) => {
+        setValue(value)
+        handleOpen()
+    }
+
+    const doDelete = async () => {
+        const response = await api.deleteProduct(value)
+        if (response.status === 200) {
+
+            setFilteredSearch(
+                filteredSearch.filter((i) => i.value !== value)
+            )
+            alert('Produto excluído com sucesso!')
+            handleClose()
+        } else {
+            console.log('Erro: ' + response.status)
+            handleClose()
+        }
+    }
+
+    const handleChangePage = (event, newPage) => { setPage(newPage) }
+
+    const handleChangeRowsPerPage = (event) => {
+        setRowsPerPage(parseInt(event.target.value, 10))
+        setPage(0)
+    }
+
+    const handleOpen = () => setOpen(true)
+    const handleClose = () => setOpen(false)
 
     return (
         <Area>
             <div className='title--box'>
                 <h3>lista de produtos</h3>
                 <div className='title--search'>
-                    <input type='text' placeholder='Qual produto?' />
-                    <button onClick={() => alert('prestou')}>Buscar</button>
+                    <input type='text' value={search} onChange={ev => setSearch(ev.target.value)} placeholder='Qual produto procura?' />
                 </div>
             </div>
             <TableContainer component={Paper}>
@@ -46,7 +79,10 @@ const ProductList = () => {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {products.map((row) => (
+                        {(rowsPerPage > 0
+                            ? filteredSearch.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                            : filteredSearch
+                        ).map((row) => (
                             <TableRow key={row.value}>
                                 <TableCell component="th" scope="row">{row.value}</TableCell>
                                 <TableCell scope="row">{row.label}</TableCell>
@@ -59,7 +95,7 @@ const ProductList = () => {
                                             <button className='button--edit'>Editar</button>
                                         </Link>
                                         <Link className='link--table' to={`#`} >
-                                            <button className='button--delete'>Excuir</button>
+                                            <button onClick={() => handleDelete(row.value)} className='button--delete'>Excuir</button>
                                         </Link>
                                     </div>
                                 </TableCell>
@@ -68,8 +104,32 @@ const ProductList = () => {
                     </TableBody>
                 </Table>
             </TableContainer>
+            <TablePagination
+                labelRowsPerPage='Itens por página'
+                rowsPerPageOptions={[10, 15, 20]}
+                component="div"
+                count={filteredSearch.length}
+                rowsPerPage={rowsPerPage}
+                page={page}
+                onChangePage={handleChangePage}
+                onChangeRowsPerPage={handleChangeRowsPerPage}
+            />
+            {open &&
+                <ConfimationModal
+                    handleClose={handleClose}
+                    open={open}
+                    doDelete={doDelete}
+                    title='Deseja realmente excluir este produto?'
+                />
+            }
         </Area>
     );
 }
 
 export default ProductList
+
+const useStyles = makeStyles({
+    table: {
+        minWidth: 650,
+    },
+});

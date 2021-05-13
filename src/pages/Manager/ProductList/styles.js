@@ -15,6 +15,7 @@ export const Area = styled.div`
         border-top-right-radius: 5px;
         justify-content: space-between;
         align-items: center;
+        margin-bottom: 10px;
 
         h3 {
             font-size: 22px;
@@ -25,7 +26,8 @@ export const Area = styled.div`
             align-items: center;
 
             input {
-                height: 25px;
+                height: 30px;
+                width: 300px;
                 border: 0;
                 border-radius: 5px;
                 outline: 0;

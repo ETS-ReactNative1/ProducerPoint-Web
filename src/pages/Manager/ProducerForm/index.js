@@ -41,8 +41,8 @@ const ProducerForm = () => {
             activityName: {
                 value: ''
             },
+            period: '',
             averageCash: '',
-            period: ''
         },
         products: [],
     }
@@ -64,6 +64,7 @@ const ProducerForm = () => {
                 value: yup.string().required('Atividade é obrigatório!')
             }),
             period: yup.string().required('Período é obrigatório!'),
+            averageCash: yup.string().required('Renda é obrigatória!')
         }),
         products: yup.array().min(1, 'ERROR').required('Selecione pelo menos um produto!')
     })
@@ -369,6 +370,7 @@ const ProducerForm = () => {
                                         onChange={formik.handleChange}
                                         error={formik.touched.farmingActivity?.averageCash && Boolean(formik.errors.farmingActivity?.averageCash)}
                                         helperText={formik.touched.farmingActivity?.averageCash && formik.errors.farmingActivity?.averageCash}
+                                        required
                                     />
                                 </Grid>
 
@@ -398,15 +400,19 @@ const ProducerForm = () => {
                                     </Select>
                                 </Grid>
 
-                                <Button
-                                    onClick={formik.handleSubmit}
-                                    className={classes.button}
-                                    color="primary"
-                                    variant="contained"
-                                    fullWidth
-                                    type="submit">
-                                    Cadastrar
+                                <Grid item xs={12}>
+                                    <Button
+                                        onClick={formik.handleSubmit}
+                                        className={classes.button}
+                                        color="primary"
+                                        variant="contained"
+                                        fullWidth
+                                        type="submit">
+                                        Cadastrar
                                 </Button>
+                                </Grid>
+
+
                             </Grid>
 
                         </form>
@@ -426,7 +432,6 @@ const useStyles = makeStyles((theme) => ({
         marginBottom: theme.spacing(8),
     },
     button: {
-        marginTop: 20,
         backgroundColor: '#070',
 
         '&:hover': {

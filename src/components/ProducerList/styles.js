@@ -26,24 +26,15 @@ export const Area = styled.div`
             align-items: center;
 
             input {
-                height: 25px;
+                height: 30px;
+                width: 300px;
                 border: 0;
                 border-radius: 5px;
                 outline: 0;
                 font-size: 14px;
                 color: #000;
                 padding: 0 5px;
-                background-color: #eee;
-            }
-
-            button {
-                height: 25px;
-                border-radius: 5px;
-                margin-left: 5px;
-                background-color: #0096c7;
-                color: #fff;
-                border: 0;
-                cursor: pointer;
+                background-color: #fff;
             }
         }
     }

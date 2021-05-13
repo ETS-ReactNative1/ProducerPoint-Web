@@ -9,11 +9,13 @@ import NotFound from '../pages/NotFound'
 
 // Forms and Lists
 import ProducerForm from '../pages/Manager/ProducerForm'
+import ProducerEdit from '../pages/Manager/ProducerEdit'
 import ProducerListPage from '../pages/Manager/ProducerListPage'
 import ActivityForm from '../pages/Manager/ActivityForm'
-import ProducerEdit from '../pages/Manager/ProducerEdit'
+import ActivityEdit from '../pages/Manager/ActivityEdit'
 import ActivityList from '../pages/Manager/ActivityList'
 import ProductForm from '../pages/Manager/ProductForm'
+import ProductEdit from '../pages/Manager/ProductEdit'
 import ProductList from '../pages/Manager/ProductList'
 
 // Details
@@ -52,6 +54,10 @@ const Routes = () => {
                 <ProductForm />
             </RouteHandler>
 
+            <RouteHandler private path='/product-edit/:id'>
+                <ProductEdit />
+            </RouteHandler>
+
             <RouteHandler private path='/product-list'>
                 <ProductList />
             </RouteHandler>
@@ -62,6 +68,10 @@ const Routes = () => {
 
             <RouteHandler private path='/activity-form'>
                 <ActivityForm />
+            </RouteHandler>
+
+            <RouteHandler private path='/activity-edit/:id'>
+                <ActivityEdit />
             </RouteHandler>
 
             <RouteHandler private path='/activity-list'>

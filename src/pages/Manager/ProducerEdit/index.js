@@ -437,15 +437,18 @@ const ProducerEdit = () => {
                                     </Select>
                                 </Grid>
 
-                                <Button
-                                    onClick={formik.handleSubmit}
-                                    className={classes.button}
-                                    color="primary"
-                                    variant="contained"
-                                    fullWidth
-                                    type="submit">
-                                    Salvar
-                                </Button>
+                                <Grid item xs={12}>
+                                    <Button
+                                        onClick={formik.handleSubmit}
+                                        className={classes.button}
+                                        color="primary"
+                                        variant="contained"
+                                        fullWidth
+                                        type="submit">
+                                        Salvar
+                                        </Button>
+                                </Grid>
+
                             </Grid>
 
                         </form>
@@ -466,7 +469,6 @@ const useStyles = makeStyles((theme) => ({
 
     },
     button: {
-        marginTop: 20,
         backgroundColor: '#070',
 
         '&:hover': {
