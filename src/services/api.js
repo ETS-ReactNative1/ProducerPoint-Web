@@ -1,3 +1,5 @@
+import moment from 'moment'
+
 const API = 'https://apiproducers.serviceapp.net.br/api'
 //const API = 'http://192.168.1.128:8080/api'
 //const API = 'https://producersapi.herokuapp.com/api'
@@ -306,6 +308,92 @@ export default {
             return request
         } catch (e) {
             console.log('Erro: deleteProduct ' + e)
+        }
+    },
+
+    createTask: async (description, date, id) => {
+        try {
+            const headers = new Headers();
+            headers.append("Content-Type", "application/json")
+            headers.append("Accept", 'application/json')
+
+            const formatDate = moment(date).format('yyyy/MM/DD')
+
+            const data = {
+                description: description,
+                status: false,
+                date: formatDate,
+                manager: {
+                    id: id,
+                },
+            }
+
+            const request = await fetch(`${API}/tasks`, {
+                method: 'POST',
+                headers: headers,
+                body: JSON.stringify(data)
+            })
+            return request
+        } catch (e) {
+            console.log('Erro: createTask ' + e)
+        }
+    },
+
+    getAllTasks: async () => {
+        try {
+            const request = await fetch(`${API}/tasks`)
+            return request
+        } catch (e) {
+            console.log('Erro: getAllTasks ' + e)
+        }
+    },
+
+    getAllTodayTasks: async () => {
+        try {
+            const request = await fetch(`${API}/tasks/todaytasks`) || []
+            return request
+        } catch (e) {
+            console.log('Erro: getAllTodayTasks ' + e)
+        }
+    },
+
+    getAllFutureTasks: async () => {
+        try {
+            const request = await fetch(`${API}/tasks/futuretasks`) || []
+            return request
+        } catch (e) {
+            console.log('Erro: getAllFutureTasks ' + e)
+        }
+    },
+
+    setStateTasks: async (id, status) => {
+        try {
+
+            const headers = new Headers();
+            headers.append("Content-Type", "application/json")
+            headers.append("Accept", 'application/json')
+
+            const data = { status: status }
+
+            const request = await fetch(`${API}/tasks/${id}`,
+                {
+                    method: 'PUT',
+                    headers: headers,
+                    body: JSON.stringify(data)
+                }
+            )
+            return request
+        } catch (e) {
+            console.log('Erro: setStateTasks ' + e)
+        }
+    },
+
+    deleteTask: async (id) => {
+        try {
+            const request = await fetch(`${API}/tasks/${id}`, { method: 'DELETE' })
+            return request
+        } catch (e) {
+            console.log('Erro: deleteTask ' + e)
         }
     },
 

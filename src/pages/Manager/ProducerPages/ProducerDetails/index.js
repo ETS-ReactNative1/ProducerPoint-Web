@@ -25,12 +25,6 @@ const ProducerDetails = () => {
         getProducer(id)
     }, [])
 
-    const useStyles = makeStyles({
-        table: {
-            minWidth: 650,
-        },
-    });
-
     const classes = useStyles();
     const currencyReal = producer.farmingActivity?.averageCash.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })
 
@@ -143,3 +137,9 @@ const ProducerDetails = () => {
 }
 
 export default ProducerDetails
+
+const useStyles = makeStyles({
+    table: {
+        minWidth: 650,
+    },
+})

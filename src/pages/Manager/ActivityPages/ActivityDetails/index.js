@@ -4,8 +4,6 @@ import { useParams } from 'react-router-dom'
 import api from '../../../../services/api'
 import ProducersList from '../../../../components/ProducersList'
 
-import { Area } from './styles'
-
 const ActivityDetails = () => {
 
     const { id } = useParams()
@@ -32,12 +30,10 @@ const ActivityDetails = () => {
     }, [])
 
     return (
-        <Area>
-            <ProducersList
-                data={producers}
-                title={`Todos da Categoria: ${activity?.label}`}
-            />
-        </Area>
+        <ProducersList
+            data={producers}
+            title={`Todos da Categoria: ${activity?.label}`}
+        />
     );
 }
 
