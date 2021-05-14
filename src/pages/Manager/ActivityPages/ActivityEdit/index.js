@@ -1,18 +1,39 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
+import { useParams } from 'react-router-dom'
 import { useFormik } from 'formik'
 import * as yup from 'yup'
 
-import { makeStyles, Grid, TextField, Button } from '@material-ui/core';
+import { makeStyles, Grid, TextField, Button } from '@material-ui/core'
+import api from '../../../../services/api'
 
-import api from '../../../services/api'
+import WarningModal from '../../../../components/Modals/WarningModal'
+import Success from '../../../../assets/lotties/success.json'
+import Fail from '../../../../assets/lotties/fail.json'
 
-const ActivityForm = () => {
+const ActivityEdit = () => {
 
     const [loading, setLoading] = useState(false)
+    const { id } = useParams()
     const classes = useStyles()
 
+    const [warningModal, setWarningModal] = useState(false)
+    const [message, setMessage] = useState(true)
+    const [lottie, setLottie] = useState('')
+    const handleOpenWarningModal = () => setWarningModal(true)
+    const handleCloseWarningModal = () => setWarningModal(false)
+
+    useEffect(() => {
+        const getActivityById = async (id) => {
+            const request = await api.getActivityById(id)
+            const response = await request.json()
+            formik.setFieldValue('label', response.label)
+        }
+        getActivityById(id)
+    }, [])
+
+
     const validationSchema = yup.object().shape({
-        label: yup.string().required('Nome da atividade é obrigatória!'),
+        label: yup.string().required('Nome é obrigatório!'),
     })
 
     const formik = useFormik({
@@ -20,13 +41,19 @@ const ActivityForm = () => {
         validationSchema: validationSchema,
         onSubmit: async (values) => {
 
-            const response = await api.createActivity(values.label)
+            const response = await api.updateActivity(id, values.label)
 
             if (response && response.status >= 200 && response.status <= 205) {
-                alert('Produto salvo!')
-                window.location.href = '/activity-list'
+                setLottie(Success)
+                setMessage('Atividade atualizada com sucesso!')
+                handleOpenWarningModal()
+                setTimeout(() => {
+                    window.location.href = '/activity-list'
+                }, 2500);
             } else {
-                alert('Erro inesperado, tente novamente ou contate o suporte. Status = ' + response.status);
+                setLottie(Fail)
+                setMessage(`Falha inesperada! Erro: ${response.status}`)
+                handleOpenWarningModal()
             }
         }
     })
@@ -34,7 +61,7 @@ const ActivityForm = () => {
     return (
         <>
             <div className={classes.titleBox}>
-                <h3 className={classes.title}>Cadastrar Atividade</h3>
+                <h3 className={classes.title}>Editar Atividade</h3>
             </div>
             <Grid container>
                 <Grid item xs={12}>
@@ -65,8 +92,8 @@ const ActivityForm = () => {
                                         variant="contained"
                                         fullWidth
                                         type="submit">
-                                        Cadastrar
-                                    </Button>
+                                        Salvar
+                                        </Button>
                                 </Grid>
 
                             </Grid>
@@ -76,19 +103,28 @@ const ActivityForm = () => {
                 </Grid>
 
             </Grid>
+            {warningModal &&
+                <WarningModal
+                    handleClose={handleCloseWarningModal}
+                    open={warningModal}
+                    message={message}
+                    lottie={lottie}
+                />
+            }
         </ >
     );
 }
 
-export default ActivityForm
+export default ActivityEdit
 
 const useStyles = makeStyles((theme) => ({
     formWrapper: {
         marginTop: theme.spacing(1),
         marginBottom: theme.spacing(8),
+
     },
     button: {
-        backgroundColor: '#007200',
+        backgroundColor: '#070',
 
         '&:hover': {
             background: '#005200'

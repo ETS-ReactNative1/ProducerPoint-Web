@@ -1,65 +1,33 @@
-import React, { useState, useEffect, useContext } from 'react'
-import { useParams } from 'react-router-dom'
+import React, { useState, useContext } from 'react'
 import { useFormik } from 'formik'
 import * as yup from 'yup'
 
-import { makeStyles } from '@material-ui/core/styles';
 import {
-    Grid, TextField, Button, MenuItem, Select,
+    makeStyles, Grid, TextField, Button, MenuItem, Select,
     Input, InputLabel, ListItemText, Checkbox,
-    CircularProgress, LinearProgress
 } from '@material-ui/core';
 
-import api from '../../../services/api'
-import { RequestContext } from '../../../contexts/RequestContext'
-import { AuthContext } from '../../../contexts/AuthContext'
-import { periods, ufs } from '../../../enums'
-import { formatarCEP, phoneMask } from '../../../components/Helpers'
+import api from '../../../../services/api'
+import { RequestContext } from '../../../../contexts/RequestContext'
+import { AuthContext } from '../../../../contexts/AuthContext'
 
-const ProducerEdit = () => {
+import { periods, ufs } from '../../../../enums'
+import WarningModal from '../../../../components/Modals/WarningModal'
+import Success from '../../../../assets/lotties/success.json'
+import Fail from '../../../../assets/lotties/fail.json'
+
+const ProducerForm = () => {
 
     const { products, activities } = useContext(RequestContext)
     const { user } = useContext(AuthContext)
     const [loading, setLoading] = useState(false)
-    const { id } = useParams()
-    const classes = useStyles();
+    const classes = useStyles()
 
-    useEffect(() => {
-        const getProducerById = async (id) => {
-            const response = await api.getProducerById(id)
-
-            formik.setFieldValue('name', response.name)
-            formik.setFieldValue('nickname', response.nickname)
-            formik.setFieldValue('birthDate', response.birthDate)
-            formik.setFieldValue('cpf', response.cpf)
-            formik.setFieldValue('phone', response.phone)
-            formik.setFieldValue('email', response.email)
-            formik.setFieldValue('address.zipCode', response.address?.zipCode)
-            formik.setFieldValue('address.uf', response.address.uf)
-            formik.setFieldValue('address.city', response.address.city)
-            formik.setFieldValue('address.district', response.address.district)
-            formik.setFieldValue('address.street', response.address.street)
-            formik.setFieldValue('address.houseNumber', response.address.houseNumber)
-            formik.setFieldValue('address.reference', response.address.reference)
-            formik.setFieldValue('farmingActivity.activityName.value', response.farmingActivity?.activityName?.value)
-            formik.setFieldValue('farmingActivity.period', response.farmingActivity.period)
-            formik.setFieldValue('farmingActivity.averageCash', response.farmingActivity.averageCash)
-
-            const productsList = () => {
-                const newArray = []
-                for (let i of response.products) {
-                    const values = Object.values(i)
-                    newArray.push(values[1])
-                }
-                return newArray
-            }
-
-            const resultList = productsList()
-
-            formik.setFieldValue('products', resultList)
-        }
-        getProducerById(id)
-    }, [])
+    const [warningModal, setWarningModal] = useState(false)
+    const [message, setMessage] = useState(true)
+    const [lottie, setLottie] = useState('')
+    const handleOpenWarningModal = () => setWarningModal(true)
+    const handleCloseWarningModal = () => setWarningModal(false)
 
     const initialFormState = {
         name: '',
@@ -81,8 +49,8 @@ const ProducerEdit = () => {
             activityName: {
                 value: ''
             },
+            period: '',
             averageCash: '',
-            period: ''
         },
         products: [],
     }
@@ -104,8 +72,9 @@ const ProducerEdit = () => {
                 value: yup.string().required('Atividade é obrigatório!')
             }),
             period: yup.string().required('Período é obrigatório!'),
+            averageCash: yup.string().required('Renda é obrigatória!')
         }),
-        products: yup.array().min(1, 'Selecione pelo menos um produto!')
+        products: yup.array().min(1, 'ERROR').required('Selecione pelo menos um produto!')
     })
 
     const formik = useFormik({
@@ -130,8 +99,8 @@ const ProducerEdit = () => {
 
             const resultList = productsList()
 
-            const response = await api.updateProducer(
-                id, values.name, values.nickname, values.birthDate,
+            const response = await api.createProducer(
+                values.name, values.nickname, values.birthDate,
                 values.cpf, values.phone, values.email,
                 values.address.zipCode, values.address.uf,
                 values.address.city, values.address.district,
@@ -142,10 +111,16 @@ const ProducerEdit = () => {
             )
 
             if (response && response.status >= 200 && response.status <= 205) {
-                alert('Produtor atualizado!!')
-                window.location.href = '/producer-list'
+                setLottie(Success)
+                setMessage('Produtor cadastrado com sucesso!')
+                handleOpenWarningModal()
+                setTimeout(() => {
+                    window.location.href = '/producer-list'
+                }, 2500);
             } else {
-                alert('Erro inesperado, tente novamente ou contate o suporte. Status = ' + response.status);
+                setLottie(Fail)
+                setMessage(`Falha inesperada! Erro: ${response.status}`)
+                handleOpenWarningModal()
             }
         }
     })
@@ -153,7 +128,7 @@ const ProducerEdit = () => {
     return (
         <>
             <div className={classes.titleBox}>
-                <h3 className={classes.title}>Editar Produtor</h3>
+                <h3 className={classes.title}>Cadastrar Produtor</h3>
             </div>
             <Grid container>
                 <Grid item xs={12}>
@@ -409,11 +384,12 @@ const ProducerEdit = () => {
                                         onChange={formik.handleChange}
                                         error={formik.touched.farmingActivity?.averageCash && Boolean(formik.errors.farmingActivity?.averageCash)}
                                         helperText={formik.touched.farmingActivity?.averageCash && formik.errors.farmingActivity?.averageCash}
+                                        required
                                     />
                                 </Grid>
 
                                 <Grid item xs={12}>
-                                    <InputLabel id="demo-mutiple-checkbox-label">Selecione pelo menos um produto</InputLabel>
+                                    <InputLabel id="products">Selecione pelo menos um produto</InputLabel>
                                     <Select
                                         id="products"
                                         name="products"
@@ -422,13 +398,14 @@ const ProducerEdit = () => {
                                         value={formik.values.products}
                                         onChange={formik.handleChange}
                                         input={<Input />}
+                                        variant="outlined"
                                         renderValue={(selected) => selected.join(', ')}
                                         error={formik.touched.products && Boolean(formik.errors.products)}
                                         helperText={formik.touched.products && formik.errors.products}
                                         fullWidth
                                         required
                                     >
-                                        {products?.map((i) => (
+                                        {products.map((i) => (
                                             <MenuItem key={i.value} value={i.label}>
                                                 <Checkbox checked={formik.values.products.indexOf(i.label) > -1} />
                                                 <ListItemText primary={i.label} />
@@ -445,9 +422,10 @@ const ProducerEdit = () => {
                                         variant="contained"
                                         fullWidth
                                         type="submit">
-                                        Salvar
-                                        </Button>
+                                        Cadastrar
+                                </Button>
                                 </Grid>
+
 
                             </Grid>
 
@@ -456,17 +434,24 @@ const ProducerEdit = () => {
                 </Grid>
 
             </Grid>
+            {warningModal &&
+                <WarningModal
+                    handleClose={handleCloseWarningModal}
+                    open={warningModal}
+                    message={message}
+                    lottie={lottie}
+                />
+            }
         </ >
     );
 }
 
-export default ProducerEdit
+export default ProducerForm
 
 const useStyles = makeStyles((theme) => ({
     formWrapper: {
         marginTop: theme.spacing(1),
         marginBottom: theme.spacing(8),
-
     },
     button: {
         backgroundColor: '#070',

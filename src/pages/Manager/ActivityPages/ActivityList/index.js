@@ -6,10 +6,14 @@ import {
     TableHead, TableRow, Paper, TablePagination
 } from '@material-ui/core'
 
-import api from '../../../services/api'
-import { RequestContext } from '../../../contexts/RequestContext'
+import api from '../../../../services/api'
+import { RequestContext } from '../../../../contexts/RequestContext'
 
-import ConfimationModal from '../../../components/Modals/ConfimationModal'
+import ConfimationModal from '../../../../components/Modals/ConfimationModal'
+import WarningModal from '../../../../components/Modals/WarningModal'
+import Success from '../../../../assets/lotties/success.json'
+import Fail from '../../../../assets/lotties/fail.json'
+
 import { Area } from './styles'
 
 const ActivityList = () => {
@@ -24,10 +28,16 @@ const ActivityList = () => {
     const [rowsPerPage, setRowsPerPage] = useState(10)
     const classes = useStyles()
 
+    const [warningModal, setWarningModal] = useState(false)
+    const [message, setMessage] = useState(true)
+    const [lottie, setLottie] = useState('')
+    const handleOpenWarningModal = () => setWarningModal(true)
+    const handleCloseWarningModal = () => setWarningModal(false)
+
     useMemo(() => {
-        const lowerSearch = search.toLowerCase()
+        const lowerSearch = search?.toLowerCase()
         setFilteredSearch(
-            activities.filter((i) => i.label.toLowerCase().includes(lowerSearch))
+            activities?.filter((i) => i.label?.toLowerCase().includes(lowerSearch))
         )
     }, [search, activities])
 
@@ -37,17 +47,21 @@ const ActivityList = () => {
     }
 
     const doDelete = async () => {
-        const response = await api.deleteProduct(value)
+        const response = await api.deleteActivity(value)
         if (response.status === 200) {
-
+            handleClose()
             setFilteredSearch(
-                filteredSearch.filter((i) => i.value !== value)
+                filteredSearch?.filter((i) => i.value !== value)
             )
-            alert('Produto excluído com sucesso!')
-            handleClose()
+            setLottie(Success)
+            setMessage('Atividade excluída com sucesso!')
+            handleOpenWarningModal()
+
         } else {
-            console.log('Erro: ' + response.status)
             handleClose()
+            setLottie(Fail)
+            setMessage(`Falha inesperada! Erro: ${response.status}`)
+            handleOpenWarningModal()
         }
     }
 
@@ -120,6 +134,14 @@ const ActivityList = () => {
                     open={open}
                     doDelete={doDelete}
                     title='Deseja realmente excluir este produto?'
+                />
+            }
+            {warningModal &&
+                <WarningModal
+                    handleClose={handleCloseWarningModal}
+                    open={warningModal}
+                    message={message}
+                    lottie={lottie}
                 />
             }
         </Area>

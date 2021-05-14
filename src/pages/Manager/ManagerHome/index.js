@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 
 import api from '../../../services/api'
 
-import ProducerList from '../../../components/ProducerList'
+import ProducersList from '../../../components/ProducersList'
 
 import { Area } from './styles'
 
@@ -21,7 +21,7 @@ const ManagerHome = () => {
 
     return (
         <Area>
-            <ProducerList
+            <ProducersList
                 data={producers}
                 title={'Lista de Produtores'}
             />

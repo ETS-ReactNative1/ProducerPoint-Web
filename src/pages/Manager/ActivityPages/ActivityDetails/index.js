@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 
-import api from '../../../services/api'
-import ProducerList from '../../../components/ProducerList'
+import api from '../../../../services/api'
+import ProducersList from '../../../../components/ProducersList'
 
 import { Area } from './styles'
 
@@ -33,7 +33,7 @@ const ActivityDetails = () => {
 
     return (
         <Area>
-            <ProducerList
+            <ProducersList
                 data={producers}
                 title={`Todos da Categoria: ${activity?.label}`}
             />

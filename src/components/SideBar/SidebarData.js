@@ -70,7 +70,7 @@ export const SidebarData = [
     },
     {
         title: 'Sair',
-        path: '/home',
+        path: '/',
         icon: <GiIcons.GiExitDoor />,
     },
 ]

@@ -1,50 +1,64 @@
 import React from 'react';
-import { makeStyles, Modal } from '@material-ui/core';
+import { makeStyles, Modal, Backdrop, Fade } from '@material-ui/core'
+import Lottie from 'react-lottie'
 
-const useStyles = makeStyles((theme) => ({
-    paper: {
-        position: 'absolute',
-        width: 400,
-        backgroundColor: theme.palette.background.paper,
-        border: '2px solid #000',
-        boxShadow: theme.shadows[5],
-        padding: theme.spacing(2, 4, 3),
-    },
-}));
+import Success from '../../../assets/lotties/success.json'
 
-export default function SimpleModal() {
-    const classes = useStyles();
-    const [open, setOpen] = React.useState(false);
+const WarningModal = ({ open, handleClose, message, lottie }) => {
 
-    const handleOpen = () => { setOpen(true) }
+    const classes = useStyles()
 
-    const handleClose = () => {
-        setOpen(false);
-    };
+    setTimeout(() => {
+        handleClose()
+    }, lottie === Success ? 3000 : 5000);
 
-    const body = (
-        <div style={modalStyle} className={classes.paper}>
-            <h2 id="simple-modal-title">Text in a modal</h2>
-            <p id="simple-modal-description">
-                Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
-      </p>
-            <SimpleModal />
-        </div>
-    );
+    const lottieConfig = {
+        loop: true,
+        autoplay: true,
+        animationData: lottie ? lottie : Success,
+    }
 
     return (
-        <div>
-            <button type="button" onClick={handleOpen}>
-                Open Modal
-      </button>
-            <Modal
-                open={open}
-                onClose={handleClose}
-                aria-labelledby="simple-modal-title"
-                aria-describedby="simple-modal-description"
-            >
-                {body}
-            </Modal>
-        </div>
+        <Modal
+            className={classes.modal}
+            open={open}
+            onClose={handleClose}
+            closeAfterTransition
+            BackdropComponent={Backdrop}
+            BackdropProps={{
+                timeout: 500,
+            }}
+        >
+            <Fade in={open}>
+                <div className={classes.paper}>
+                    <Lottie
+                        options={lottieConfig}
+                        height={50}
+                        width={50} />
+                    <h3>{message}</h3>
+                </div>
+            </Fade>
+        </Modal>
     );
 }
+
+export default WarningModal
+
+const useStyles = makeStyles((theme) => ({
+    modal: {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    paper: {
+        display: 'flex',
+        flexDirection: 'column',
+        backgroundColor: theme.palette.background.paper,
+        boxShadow: theme.shadows[5],
+        padding: theme.spacing(2, 2),
+        borderRadius: 8,
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
+
+}));

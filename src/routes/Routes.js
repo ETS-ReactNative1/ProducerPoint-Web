@@ -8,20 +8,20 @@ import SignIn from '../pages/SignIn'
 import NotFound from '../pages/NotFound'
 
 // Forms and Lists
-import ProducerForm from '../pages/Manager/ProducerForm'
-import ProducerEdit from '../pages/Manager/ProducerEdit'
-import ProducerListPage from '../pages/Manager/ProducerListPage'
-import ActivityForm from '../pages/Manager/ActivityForm'
-import ActivityEdit from '../pages/Manager/ActivityEdit'
-import ActivityList from '../pages/Manager/ActivityList'
-import ProductForm from '../pages/Manager/ProductForm'
-import ProductEdit from '../pages/Manager/ProductEdit'
-import ProductList from '../pages/Manager/ProductList'
+import ProducerForm from '../pages/Manager/ProducerPages/ProducerForm'
+import ProducerEdit from '../pages/Manager/ProducerPages/ProducerEdit'
+import ProducerList from '../pages/Manager/ProducerPages/ProducerList'
+import ProducerDetails from '../pages/Manager/ProducerPages/ProducerDetails'
 
-// Details
-import ProducerDetails from '../pages/Manager/ProducerDetails'
-import ProductDetails from '../pages/Manager/ProductDetails'
-import ActivityDetails from '../pages/Manager/ActivityDetails'
+import ActivityForm from '../pages/Manager/ActivityPages/ActivityForm'
+import ActivityEdit from '../pages/Manager/ActivityPages/ActivityEdit'
+import ActivityList from '../pages/Manager/ActivityPages/ActivityList'
+import ActivityDetails from '../pages/Manager/ActivityPages/ActivityDetails'
+
+import ProductForm from '../pages/Manager/ProductPages/ProductForm'
+import ProductEdit from '../pages/Manager/ProductPages/ProductEdit'
+import ProductList from '../pages/Manager/ProductPages/ProductList'
+import ProductDetails from '../pages/Manager/ProductPages/ProductDetails'
 
 const Routes = () => {
     return (
@@ -43,7 +43,7 @@ const Routes = () => {
             </RouteHandler>
 
             <RouteHandler private path='/producer-list'>
-                <ProducerListPage />
+                <ProducerList />
             </RouteHandler>
 
             <RouteHandler private path='/producer-details/:id'>

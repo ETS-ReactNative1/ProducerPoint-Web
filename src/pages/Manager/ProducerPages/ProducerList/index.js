@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react'
 
-import api from '../../../services/api'
-import ProducerList from '../../../components/ProducerList'
+import api from '../../../../services/api'
+import ProducersList from '../../../../components/ProducersList'
 
 import { Area } from './styles'
 
-const ProducerListPage = () => {
+const ProducerList = () => {
 
     const [producers, setProducers] = useState([])
 
@@ -20,7 +20,7 @@ const ProducerListPage = () => {
 
     return (
         <Area>
-            <ProducerList
+            <ProducersList
                 data={producers}
                 title={'Lista de Produtores'}
             />
@@ -28,4 +28,4 @@ const ProducerListPage = () => {
     );
 }
 
-export default ProducerListPage
+export default ProducerList

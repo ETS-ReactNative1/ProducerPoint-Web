@@ -1,35 +1,32 @@
 import React from 'react'
 
-import { makeStyles, Modal, Backdrop, Fade } from '@material-ui/core';
-import { Container } from './styles'
+import { makeStyles, Modal, Backdrop, Fade } from '@material-ui/core'
 
 const ConfimationModal = ({ open, handleClose, title, doDelete }) => {
 
     const classes = useStyles();
 
     return (
-        <Container>
-            <Modal
-                className={classes.modal}
-                open={open}
-                onClose={handleClose}
-                closeAfterTransition
-                BackdropComponent={Backdrop}
-                BackdropProps={{
-                    timeout: 500,
-                }}
-            >
-                <Fade in={open}>
-                    <div className={classes.paper}>
-                        <h2>{title}</h2>
-                        <div className={classes.buttons}>
-                            <button onClick={handleClose} className={classes.noButton}>Não</button>
-                            <button onClick={doDelete} className={classes.yesButton}>Sim</button>
-                        </div>
+        <Modal
+            className={classes.modal}
+            open={open}
+            onClose={handleClose}
+            closeAfterTransition
+            BackdropComponent={Backdrop}
+            BackdropProps={{
+                timeout: 500,
+            }}
+        >
+            <Fade in={open}>
+                <div className={classes.paper}>
+                    <h2>{title}</h2>
+                    <div className={classes.buttons}>
+                        <button onClick={handleClose} className={classes.noButton}>Não</button>
+                        <button onClick={doDelete} className={classes.yesButton}>Sim</button>
                     </div>
-                </Fade>
-            </Modal>
-        </Container>
+                </div>
+            </Fade>
+        </Modal>
     )
 }
 

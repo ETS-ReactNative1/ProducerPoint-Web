@@ -4,15 +4,25 @@ import * as yup from 'yup'
 
 import { makeStyles, Grid, TextField, Button } from '@material-ui/core';
 
-import api from '../../../services/api'
+import api from '../../../../services/api'
 
-const ProductForm = () => {
+import WarningModal from '../../../../components/Modals/WarningModal'
+import Success from '../../../../assets/lotties/success.json'
+import Fail from '../../../../assets/lotties/fail.json'
+
+const ActivityForm = () => {
 
     const [loading, setLoading] = useState(false)
     const classes = useStyles()
 
+    const [warningModal, setWarningModal] = useState(false)
+    const [message, setMessage] = useState(true)
+    const [lottie, setLottie] = useState('')
+    const handleOpenWarningModal = () => setWarningModal(true)
+    const handleCloseWarningModal = () => setWarningModal(false)
+
     const validationSchema = yup.object().shape({
-        label: yup.string().required('Nome do produto é obrigatório!'),
+        label: yup.string().required('Nome da atividade é obrigatória!'),
     })
 
     const formik = useFormik({
@@ -20,13 +30,19 @@ const ProductForm = () => {
         validationSchema: validationSchema,
         onSubmit: async (values) => {
 
-            const response = await api.createProduct(values.label)
+            const response = await api.createActivity(values.label)
 
             if (response && response.status >= 200 && response.status <= 205) {
-                alert('Produto salvo!')
-                window.location.href = '/product-list'
+                setLottie(Success)
+                setMessage('Atividade cadastrada com sucesso!')
+                handleOpenWarningModal()
+                setTimeout(() => {
+                    window.location.href = '/activity-list'
+                }, 2500);
             } else {
-                alert('Erro inesperado, tente novamente ou contate o suporte. Status = ' + response.status);
+                setLottie(Fail)
+                setMessage(`Falha inesperada! Erro: ${response.status}`)
+                handleOpenWarningModal()
             }
         }
     })
@@ -34,7 +50,7 @@ const ProductForm = () => {
     return (
         <>
             <div className={classes.titleBox}>
-                <h3 className={classes.title}>Cadastrar Produto</h3>
+                <h3 className={classes.title}>Cadastrar Atividade</h3>
             </div>
             <Grid container>
                 <Grid item xs={12}>
@@ -48,7 +64,7 @@ const ProductForm = () => {
                                         variant='outlined'
                                         id="label"
                                         name="label"
-                                        label="Nome do produto"
+                                        label="Nome da atividade"
                                         value={formik.values.label}
                                         onChange={formik.handleChange}
                                         error={formik.touched.label && Boolean(formik.errors.label)}
@@ -76,11 +92,19 @@ const ProductForm = () => {
                 </Grid>
 
             </Grid>
+            {warningModal &&
+                <WarningModal
+                    handleClose={handleCloseWarningModal}
+                    open={warningModal}
+                    message={message}
+                    lottie={lottie}
+                />
+            }
         </ >
     );
 }
 
-export default ProductForm
+export default ActivityForm
 
 const useStyles = makeStyles((theme) => ({
     formWrapper: {

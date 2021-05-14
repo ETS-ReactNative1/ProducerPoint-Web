@@ -300,4 +300,13 @@ export default {
         }
     },
 
+    deleteActivity: async (id) => {
+        try {
+            const request = await fetch(`${API}/activities/${id}`, { method: 'DELETE' })
+            return request
+        } catch (e) {
+            console.log('Erro: deleteProduct ' + e)
+        }
+    },
+
 }

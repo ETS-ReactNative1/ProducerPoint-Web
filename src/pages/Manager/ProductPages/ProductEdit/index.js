@@ -1,17 +1,27 @@
-import React, { useState, useEffect, useContext } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { useFormik } from 'formik'
 import * as yup from 'yup'
 
 import { makeStyles, Grid, TextField, Button } from '@material-ui/core'
 
-import api from '../../../services/api'
+import api from '../../../../services/api'
+
+import WarningModal from '../../../../components/Modals/WarningModal'
+import Success from '../../../../assets/lotties/success.json'
+import Fail from '../../../../assets/lotties/fail.json'
 
 const ProductEdit = () => {
 
     const [loading, setLoading] = useState(false)
     const { id } = useParams()
-    const classes = useStyles();
+    const classes = useStyles()
+
+    const [warningModal, setWarningModal] = useState(false)
+    const [message, setMessage] = useState(true)
+    const [lottie, setLottie] = useState('')
+    const handleOpenWarningModal = () => setWarningModal(true)
+    const handleCloseWarningModal = () => setWarningModal(false)
 
     useEffect(() => {
         const getProductById = async (id) => {
@@ -35,10 +45,16 @@ const ProductEdit = () => {
             const response = await api.updateProduct(id, values.label)
 
             if (response && response.status >= 200 && response.status <= 205) {
-                alert('Produtor atualizado!!')
-                window.location.href = '/product-list'
+                setLottie(Success)
+                setMessage('Produto atualizado com sucesso!')
+                handleOpenWarningModal()
+                setTimeout(() => {
+                    window.location.href = '/product-list'
+                }, 2500);
             } else {
-                alert('Erro inesperado, tente novamente ou contate o suporte. Status = ' + response.status);
+                setLottie(Fail)
+                setMessage(`Falha inesperada! Erro: ${response.status}`)
+                handleOpenWarningModal()
             }
         }
     })
@@ -86,8 +102,15 @@ const ProductEdit = () => {
                         </form>
                     </div>
                 </Grid>
-
             </Grid>
+            {warningModal &&
+                <WarningModal
+                    handleClose={handleCloseWarningModal}
+                    open={warningModal}
+                    message={message}
+                    lottie={lottie}
+                />
+            }
         </ >
     );
 }

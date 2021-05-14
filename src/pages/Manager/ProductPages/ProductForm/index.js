@@ -1,30 +1,18 @@
-import React, { useState, useEffect, useContext } from 'react'
-import { useParams } from 'react-router-dom'
+import React, { useState } from 'react'
 import { useFormik } from 'formik'
 import * as yup from 'yup'
 
-import { makeStyles, Grid, TextField, Button } from '@material-ui/core'
+import { makeStyles, Grid, TextField, Button } from '@material-ui/core';
 
-import api from '../../../services/api'
+import api from '../../../../services/api'
 
-const ActivityEdit = () => {
+const ProductForm = () => {
 
     const [loading, setLoading] = useState(false)
-    const { id } = useParams()
-    const classes = useStyles();
-
-    useEffect(() => {
-        const getActivityById = async (id) => {
-            const request = await api.getActivityById(id)
-            const response = await request.json()
-            formik.setFieldValue('label', response.label)
-        }
-        getActivityById(id)
-    }, [])
-
+    const classes = useStyles()
 
     const validationSchema = yup.object().shape({
-        label: yup.string().required('Nome é obrigatório!'),
+        label: yup.string().required('Nome do produto é obrigatório!'),
     })
 
     const formik = useFormik({
@@ -32,11 +20,11 @@ const ActivityEdit = () => {
         validationSchema: validationSchema,
         onSubmit: async (values) => {
 
-            const response = await api.updateActivity(id, values.label)
+            const response = await api.createProduct(values.label)
 
             if (response && response.status >= 200 && response.status <= 205) {
-                alert('Produtor atualizado!!')
-                window.location.href = '/activity-list'
+                alert('Produto salvo!')
+                window.location.href = '/product-list'
             } else {
                 alert('Erro inesperado, tente novamente ou contate o suporte. Status = ' + response.status);
             }
@@ -46,7 +34,7 @@ const ActivityEdit = () => {
     return (
         <>
             <div className={classes.titleBox}>
-                <h3 className={classes.title}>Editar Atividade</h3>
+                <h3 className={classes.title}>Cadastrar Produto</h3>
             </div>
             <Grid container>
                 <Grid item xs={12}>
@@ -60,7 +48,7 @@ const ActivityEdit = () => {
                                         variant='outlined'
                                         id="label"
                                         name="label"
-                                        label="Nome da atividade"
+                                        label="Nome do produto"
                                         value={formik.values.label}
                                         onChange={formik.handleChange}
                                         error={formik.touched.label && Boolean(formik.errors.label)}
@@ -77,8 +65,8 @@ const ActivityEdit = () => {
                                         variant="contained"
                                         fullWidth
                                         type="submit">
-                                        Salvar
-                                        </Button>
+                                        Cadastrar
+                                    </Button>
                                 </Grid>
 
                             </Grid>
@@ -92,16 +80,15 @@ const ActivityEdit = () => {
     );
 }
 
-export default ActivityEdit
+export default ProductForm
 
 const useStyles = makeStyles((theme) => ({
     formWrapper: {
         marginTop: theme.spacing(1),
         marginBottom: theme.spacing(8),
-
     },
     button: {
-        backgroundColor: '#070',
+        backgroundColor: '#007200',
 
         '&:hover': {
             background: '#005200'

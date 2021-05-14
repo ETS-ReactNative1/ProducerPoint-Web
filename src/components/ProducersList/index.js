@@ -9,9 +9,12 @@ import {
 import api from '../../services/api'
 
 import ConfimationModal from '../Modals/ConfimationModal'
+import WarningModal from '../../components/Modals/WarningModal'
+import Success from '../../assets/lotties/success.json'
+import Fail from '../../assets/lotties/fail.json'
 import { Area } from './styles'
 
-const ProducerList = ({ data, title }) => {
+const ProducersList = ({ data, title }) => {
 
     const [open, setOpen] = useState(false)
     const [id, setId] = useState(null)
@@ -21,6 +24,12 @@ const ProducerList = ({ data, title }) => {
     const [page, setPage] = useState(0)
     const [rowsPerPage, setRowsPerPage] = useState(10)
     const classes = useStyles()
+
+    const [warningModal, setWarningModal] = useState(false)
+    const [message, setMessage] = useState(true)
+    const [lottie, setLottie] = useState('')
+    const handleOpenWarningModal = () => setWarningModal(true)
+    const handleCloseWarningModal = () => setWarningModal(false)
 
     useMemo(() => {
         const lowerSearch = search.toLowerCase()
@@ -37,15 +46,18 @@ const ProducerList = ({ data, title }) => {
     const doDelete = async () => {
         const response = await api.deleteProducer(id)
         if (response.status === 200) {
-
+            handleClose()
             setFilteredSearch(
                 filteredSearch.filter((i) => i.id !== id)
             )
-            alert('Produtor excluído com sucesso!')
-            handleClose()
+            setLottie(Success)
+            setMessage('Prorutor excluído com sucesso!')
+            handleOpenWarningModal()
         } else {
-            console.log('Erro: ' + response.status)
             handleClose()
+            setLottie(Fail)
+            setMessage(`Falha inesperada! Erro: ${response.status}`)
+            handleOpenWarningModal()
         }
     }
 
@@ -130,11 +142,19 @@ const ProducerList = ({ data, title }) => {
                     title='Deseja realmente excluir este produtor?'
                 />
             }
+            {warningModal &&
+                <WarningModal
+                    handleClose={handleCloseWarningModal}
+                    open={warningModal}
+                    message={message}
+                    lottie={lottie}
+                />
+            }
         </Area>
     );
 }
 
-export default ProducerList
+export default ProducersList
 
 const useStyles = makeStyles({
     table: {
