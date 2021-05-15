@@ -34,7 +34,7 @@ const ProducersList = ({ data, title }) => {
     useMemo(() => {
         const lowerSearch = search.toLowerCase()
         setFilteredSearch(
-            data.filter((i) => i.name.toLowerCase().includes(lowerSearch))
+            data?.filter((i) => i.name.toLowerCase().includes(lowerSearch))
         )
     }, [search, data])
 
@@ -47,9 +47,8 @@ const ProducersList = ({ data, title }) => {
         const response = await api.deleteProducer(id)
         if (response.status === 200) {
             handleClose()
-            setFilteredSearch(
-                filteredSearch.filter((i) => i.id !== id)
-            )
+            const filtered = filteredSearch?.filter((i) => i.id !== id)
+            setFilteredSearch(filtered)
             setLottie(Success)
             setMessage('Prorutor excluído com sucesso!')
             handleOpenWarningModal()
@@ -92,9 +91,9 @@ const ProducersList = ({ data, title }) => {
                     </TableHead>
                     <TableBody>
                         {(rowsPerPage > 0
-                            ? filteredSearch.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                            ? filteredSearch?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                             : filteredSearch
-                        ).map((row) => (
+                        )?.map((row) => (
                             <TableRow key={row.id}>
                                 <TableCell component="th" scope="row">
                                     {row.name}
@@ -128,7 +127,7 @@ const ProducersList = ({ data, title }) => {
                 labelRowsPerPage='Itens por página'
                 rowsPerPageOptions={[10, 15, 20]}
                 component="div"
-                count={filteredSearch.length}
+                count={filteredSearch?.length}
                 rowsPerPage={rowsPerPage}
                 page={page}
                 onChangePage={handleChangePage}

@@ -20,7 +20,7 @@ const ProducerDetails = () => {
     useEffect(() => {
         const getProducer = async (id) => {
             const response = await api.getProducerById(id)
-            setProducer(response)
+            setProducer(response.data)
         }
         getProducer(id)
     }, [])

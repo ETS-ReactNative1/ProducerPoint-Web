@@ -37,7 +37,7 @@ const ProductList = () => {
     useMemo(() => {
         const lowerSearch = search.toLowerCase()
         setFilteredSearch(
-            products.filter((i) => i.label.toLowerCase().includes(lowerSearch))
+            products?.filter((i) => i.label.toLowerCase().includes(lowerSearch))
         )
     }, [search, products])
 
@@ -48,11 +48,11 @@ const ProductList = () => {
 
     const doDelete = async () => {
         const response = await api.deleteProduct(value)
+
         if (response.status === 200) {
             handleClose()
-            setFilteredSearch(
-                filteredSearch.filter((i) => i.value !== value)
-            )
+            const filtered = filteredSearch?.filter((i) => i.value !== value)
+            setFilteredSearch(filtered)
             setLottie(Success)
             setMessage('Produto excluído com sucesso!')
             handleOpenWarningModal()
@@ -93,9 +93,9 @@ const ProductList = () => {
                     </TableHead>
                     <TableBody>
                         {(rowsPerPage > 0
-                            ? filteredSearch.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                            ? filteredSearch?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                             : filteredSearch
-                        ).map((row) => (
+                        )?.map((row) => (
                             <TableRow key={row.value}>
                                 <TableCell component="th" scope="row">{row.value}</TableCell>
                                 <TableCell scope="row">{row.label}</TableCell>
@@ -121,7 +121,7 @@ const ProductList = () => {
                 labelRowsPerPage='Itens por página'
                 rowsPerPageOptions={[10, 15, 20]}
                 component="div"
-                count={filteredSearch.length}
+                count={filteredSearch?.length}
                 rowsPerPage={rowsPerPage}
                 page={page}
                 onChangePage={handleChangePage}

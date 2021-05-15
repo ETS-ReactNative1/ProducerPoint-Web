@@ -11,9 +11,8 @@ const ProducerList = () => {
 
     useEffect(() => {
         const getProducers = async () => {
-            const request = await api.getAllProducers()
-            const response = await request.json()
-            setProducers(response)
+            const response = await api.getAllProducers()
+            setProducers(response.data)
         }
         getProducers()
     }, [])

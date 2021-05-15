@@ -24,9 +24,8 @@ const ActivityEdit = () => {
 
     useEffect(() => {
         const getActivityById = async (id) => {
-            const request = await api.getActivityById(id)
-            const response = await request.json()
-            formik.setFieldValue('label', response.label)
+            const response = await api.getActivityById(id)
+            formik.setFieldValue('label', response.data.label)
         }
         getActivityById(id)
     }, [])
@@ -43,7 +42,7 @@ const ActivityEdit = () => {
 
             const response = await api.updateActivity(id, values.label)
 
-            if (response && response.status >= 200 && response.status <= 205) {
+            if (response.data) {
                 setLottie(Success)
                 setMessage('Atividade atualizada com sucesso!')
                 handleOpenWarningModal()

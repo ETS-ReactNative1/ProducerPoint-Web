@@ -7,7 +7,6 @@ import { makeStyles } from '@material-ui/core/styles';
 import {
     Grid, TextField, Button, MenuItem, Select,
     Input, InputLabel, ListItemText, Checkbox,
-    CircularProgress, LinearProgress
 } from '@material-ui/core';
 
 import api from '../../../../services/api'
@@ -37,27 +36,28 @@ const ProducerEdit = () => {
     useEffect(() => {
         const getProducerById = async (id) => {
             const response = await api.getProducerById(id)
+            const { data } = response
 
-            formik.setFieldValue('name', response.name)
-            formik.setFieldValue('nickname', response.nickname)
-            formik.setFieldValue('birthDate', response.birthDate)
-            formik.setFieldValue('cpf', response.cpf)
-            formik.setFieldValue('phone', response.phone)
-            formik.setFieldValue('email', response.email)
-            formik.setFieldValue('address.zipCode', response.address?.zipCode)
-            formik.setFieldValue('address.uf', response.address.uf)
-            formik.setFieldValue('address.city', response.address.city)
-            formik.setFieldValue('address.district', response.address.district)
-            formik.setFieldValue('address.street', response.address.street)
-            formik.setFieldValue('address.houseNumber', response.address.houseNumber)
-            formik.setFieldValue('address.reference', response.address.reference)
-            formik.setFieldValue('farmingActivity.activityName.value', response.farmingActivity?.activityName?.value)
-            formik.setFieldValue('farmingActivity.period', response.farmingActivity.period)
-            formik.setFieldValue('farmingActivity.averageCash', response.farmingActivity.averageCash)
+            formik.setFieldValue('name', data.name)
+            formik.setFieldValue('nickname', data.nickname)
+            formik.setFieldValue('birthDate', data.birthDate)
+            formik.setFieldValue('cpf', data.cpf)
+            formik.setFieldValue('phone', data.phone)
+            formik.setFieldValue('email', data.email)
+            formik.setFieldValue('address.zipCode', data.address?.zipCode)
+            formik.setFieldValue('address.uf', data.address.uf)
+            formik.setFieldValue('address.city', data.address.city)
+            formik.setFieldValue('address.district', data.address.district)
+            formik.setFieldValue('address.street', data.address.street)
+            formik.setFieldValue('address.houseNumber', data.address.houseNumber)
+            formik.setFieldValue('address.reference', data.address.reference)
+            formik.setFieldValue('farmingActivity.activityName.value', data.farmingActivity?.activityName?.value)
+            formik.setFieldValue('farmingActivity.period', data.farmingActivity.period)
+            formik.setFieldValue('farmingActivity.averageCash', data.farmingActivity.averageCash)
 
             const productsList = () => {
                 const newArray = []
-                for (let i of response.products) {
+                for (let i of data.products) {
                     const values = Object.values(i)
                     newArray.push(values[1])
                 }
@@ -140,18 +140,9 @@ const ProducerEdit = () => {
 
             const resultList = productsList()
 
-            const response = await api.updateProducer(
-                id, values.name, values.nickname, values.birthDate,
-                values.cpf, values.phone, values.email,
-                values.address.zipCode, values.address.uf,
-                values.address.city, values.address.district,
-                values.address.street, values.address.houseNumber,
-                values.address.reference,
-                values.farmingActivity.activityName.value, values.farmingActivity.period,
-                values.farmingActivity.averageCash, resultList, user?.id
-            )
+            const response = await api.updateProducer(id, values, resultList, user?.id)
 
-            if (response && response.status >= 200 && response.status <= 205) {
+            if (response.data) {
                 setLottie(Success)
                 setMessage('Produtor atualizado com sucesso!')
                 handleOpenWarningModal()

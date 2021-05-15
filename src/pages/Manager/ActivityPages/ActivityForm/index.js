@@ -32,7 +32,7 @@ const ActivityForm = () => {
 
             const response = await api.createActivity(values.label)
 
-            if (response && response.status >= 200 && response.status <= 205) {
+            if (response.data) {
                 setLottie(Success)
                 setMessage('Atividade cadastrada com sucesso!')
                 handleOpenWarningModal()

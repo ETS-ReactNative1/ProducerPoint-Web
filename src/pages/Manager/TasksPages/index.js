@@ -4,6 +4,7 @@ import { makeStyles, Tabs, Tab, Typography, Box, Button } from '@material-ui/cor
 import AddIcon from '@material-ui/icons/Add';
 
 import TaskList from '../../../components/TaskList'
+import AddModal from '../../../components/Modals/AddModal'
 
 import api from '../../../services/api'
 
@@ -14,22 +15,20 @@ const NavTabs = () => {
     const [todayTasks, setTodayTasks] = useState([])
     const [futureTasks, setFutureTasks] = useState([])
 
-    useEffect(() => {
+    useEffect(async () => {
         const getTasks = async () => {
-            const request = await api.getAllTodayTasks()
-            const response = await request.json()
-            setTodayTasks(response)
+            const response = await api.getAllTodayTasks()
+            setTodayTasks(response.data)
         }
-        getTasks()
+        await getTasks()
     }, [])
 
-    useEffect(() => {
+    useEffect(async () => {
         const getTasks = async () => {
-            const request = await api.getAllFutureTasks()
-            const response = await request.json()
-            setFutureTasks(response)
+            const response = await api.getAllFutureTasks()
+            setFutureTasks(response.data)
         }
-        getTasks()
+        await getTasks()
     }, [])
 
     const handleChange = (event, newValue) => {

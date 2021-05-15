@@ -32,7 +32,7 @@ const ProductForm = () => {
 
             const response = await api.createProduct(values.label)
 
-            if (response && response.status >= 200 && response.status <= 205) {
+            if (response) {
                 setLottie(Success)
                 setMessage('Produto cadastrado com sucesso!')
                 handleOpenWarningModal()

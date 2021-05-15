@@ -13,18 +13,16 @@ const ActivityDetails = () => {
 
     useEffect(() => {
         const getActivity = async (id) => {
-            const request = await api.getActivityById(id)
-            const response = await request.json();
-            setActivity(response)
+            const response = await api.getActivityById(id)
+            setActivity(response.data)
         }
         getActivity(id)
     }, [])
 
     useEffect(() => {
         const getProducersByActivity = async (id) => {
-            const request = await api.getProducersByActivity(id)
-            const response = await request.json();
-            setProducers(response)
+            const response = await api.getProducersByActivity(id)
+            setProducers(response.data)
         }
         getProducersByActivity(id)
     }, [])

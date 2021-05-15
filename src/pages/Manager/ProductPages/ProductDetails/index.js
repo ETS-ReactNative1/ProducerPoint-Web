@@ -13,18 +13,16 @@ const ProductDetails = () => {
 
     useEffect(() => {
         const getProduct = async (id) => {
-            const request = await api.getProductById(id)
-            const response = await request.json();
-            setProduct(response)
+            const response = await api.getProductById(id)
+            setProduct(response.data)
         }
         getProduct(id)
     }, [])
 
     useEffect(() => {
         const getProducersByProduct = async (id) => {
-            const request = await api.getProducersByProduct(id)
-            const response = await request.json();
-            setProducers(response)
+            const response = await api.getProducersByProduct(id)
+            setProducers(response.data)
         }
         getProducersByProduct(id)
     }, [])

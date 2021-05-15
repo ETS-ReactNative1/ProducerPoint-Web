@@ -25,9 +25,8 @@ const ProductEdit = () => {
 
     useEffect(() => {
         const getProductById = async (id) => {
-            const request = await api.getProductById(id)
-            const response = await request.json()
-            formik.setFieldValue('label', response.label)
+            const response = await api.getProductById(id)
+            formik.setFieldValue('label', response.data.label)
         }
         getProductById(id)
     }, [])
@@ -44,7 +43,7 @@ const ProductEdit = () => {
 
             const response = await api.updateProduct(id, values.label)
 
-            if (response && response.status >= 200 && response.status <= 205) {
+            if (response.data) {
                 setLottie(Success)
                 setMessage('Produto atualizado com sucesso!')
                 handleOpenWarningModal()

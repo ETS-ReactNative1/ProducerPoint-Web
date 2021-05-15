@@ -30,15 +30,14 @@ const AuthProvider = ({ children }) => {
             const response = await Api.onSignIn(email, password)
 
             try {
-                if (response.status === 200) {
-                    const data = await response.json()
-                    setUser(data)
-                    storageUser(data)
+                if (response.data) {
+                    setUser(response.data)
+                    storageUser(response.data)
                     window.location.href = '/home'
                     setLoadingAuth(false)
                     return
                 } else {
-                    alert('Deu ruim!')
+                    alert('Erro inesperado!' + response.status)
                     setLoadingAuth(false)
                     return
                 }
@@ -67,4 +66,3 @@ const AuthProvider = ({ children }) => {
 }
 
 export default AuthProvider
-

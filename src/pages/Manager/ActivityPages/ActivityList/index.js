@@ -50,9 +50,8 @@ const ActivityList = () => {
         const response = await api.deleteActivity(value)
         if (response.status === 200) {
             handleClose()
-            setFilteredSearch(
-                filteredSearch?.filter((i) => i.value !== value)
-            )
+            const filtered = filteredSearch?.filter((i) => i.value !== value)
+            setFilteredSearch(filtered)
             setLottie(Success)
             setMessage('Atividade excluída com sucesso!')
             handleOpenWarningModal()
@@ -94,9 +93,9 @@ const ActivityList = () => {
                     </TableHead>
                     <TableBody>
                         {(rowsPerPage > 0
-                            ? filteredSearch.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                            ? filteredSearch?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                             : filteredSearch
-                        ).map((row) => (
+                        )?.map((row) => (
                             <TableRow key={row.value}>
                                 <TableCell component="th" scope="row">{row.value}</TableCell>
                                 <TableCell scope="row">{row.label}</TableCell>
@@ -122,7 +121,7 @@ const ActivityList = () => {
                 labelRowsPerPage='Itens por página'
                 rowsPerPageOptions={[10, 15, 20]}
                 component="div"
-                count={filteredSearch.length}
+                count={filteredSearch?.length}
                 rowsPerPage={rowsPerPage}
                 page={page}
                 onChangePage={handleChangePage}

@@ -84,7 +84,7 @@ const ProducerForm = () => {
 
             const productsList = () => {
                 const newArray = []
-                const productList = [...values.products]
+                const productList = [...values?.products]
                 for (let i of products) {
                     const values = Object.values(i)
                     for (let j of productList) {
@@ -98,19 +98,10 @@ const ProducerForm = () => {
             }
 
             const resultList = productsList()
+            
+            const response = await api.createProducer(values, resultList, user?.id)
 
-            const response = await api.createProducer(
-                values.name, values.nickname, values.birthDate,
-                values.cpf, values.phone, values.email,
-                values.address.zipCode, values.address.uf,
-                values.address.city, values.address.district,
-                values.address.street, values.address.houseNumber,
-                values.address.reference,
-                values.farmingActivity.activityName.value, values.farmingActivity.period,
-                values.farmingActivity.averageCash, resultList, user?.id
-            )
-
-            if (response && response.status >= 200 && response.status <= 205) {
+            if (response.data) {
                 setLottie(Success)
                 setMessage('Produtor cadastrado com sucesso!')
                 handleOpenWarningModal()

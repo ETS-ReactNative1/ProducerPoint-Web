@@ -4,397 +4,304 @@ const API = 'https://apiproducers.serviceapp.net.br/api'
 //const API = 'http://192.168.1.128:8080/api'
 //const API = 'https://producersapi.herokuapp.com/api'
 
+const apiFetchPost = async (endpoint, body) => {
+
+    const headers = new Headers();
+    headers.append("Content-Type", "application/json")
+    headers.append("Accept", 'application/json')
+
+    const response = await fetch(API + endpoint, {
+        method: 'POST',
+        headers: headers,
+        body: JSON.stringify(body)
+    })
+
+    if (response.status >= 200 && response.status <= 299) {
+        const json = await response.json()
+        if (json) {
+            return {
+                data: json,
+                status: response.status
+            }
+        } else {
+            return {
+                data: null,
+                status: response.status
+            }
+        }
+    } else {
+        return {
+            data: null,
+            status: response.status,
+        }
+    }
+}
+
+const apiFetchGet = async (endpoint) => {
+
+    const response = await fetch(API + endpoint)
+    if (response.status >= 200 && response.status <= 299) {
+        const json = await response.json()
+        if (json) {
+            return {
+                data: json,
+                status: response.status
+            }
+        } else {
+            return {
+                data: null,
+                status: response.status
+            }
+        }
+    } else {
+        return {
+            data: null,
+            status: response.status,
+        }
+    }
+}
+
+const apiFetchPut = async (endpoint, body) => {
+
+    const headers = new Headers();
+    headers.append("Content-Type", "application/json")
+    headers.append("Accept", 'application/json')
+
+    const response = await fetch(API + endpoint, {
+        method: 'PUT',
+        headers: headers,
+        body: JSON.stringify(body)
+    })
+
+    if (response.status >= 200 && response.status <= 299) {
+        const json = await response.json()
+        if (json) {
+            return {
+                data: json,
+                status: response.status
+            }
+        } else {
+            return {
+                data: null,
+                status: response.status
+            }
+        }
+    } else {
+        return {
+            data: null,
+            status: response.status,
+        }
+    }
+}
+
+const apiFetchDelete = async (endpoint) => {
+
+    const response = await fetch(`${API + endpoint}`, { method: 'DELETE' })
+    if (response.status >= 200 && response.status <= 299) {
+        return {
+            status: response.status
+        }
+    } else {
+        return {
+            status: response.status,
+        }
+    }
+}
+
 export default {
 
     onSignIn: async (email, password) => {
-        try {
-            const request = await fetch(`${API}/signin`, {
-                method: 'POST',
-                headers: {
-                    Accept: 'application/json',
-                    'Content-type': 'application/json'
-                },
-                body: JSON.stringify({ email, password })
-            })
-            return request
-
-        } catch (e) {
-            console.log('Error: onSignIn ' + e)
-        }
+        const request = await apiFetchPost('/signin', { email, password })
+        return request
     },
 
     getAllProducers: async () => {
-        try {
-            const request = await fetch(`${API}/producers`)
-            return request
-        } catch (e) {
-            console.log('Erro: getAllProducers ' + e)
-        }
+        const response = await apiFetchGet('/producers')
+        return response
     },
 
     getProducerById: async (id) => {
-        try {
-            const request = await fetch(`${API}/producers/${id}`)
-            const response = await request.json()
-            return response
-        } catch (e) {
-            console.log('Erro: getProducerById ' + e)
-        }
+        const response = await apiFetchGet(`/producers/${id}`)
+        return response
     },
 
-    createProducer: async (
-        name, nickname, birthDate, cpf, phone, email, zipCode,
-        uf, city, district, street, houseNumber, reference,
-        activity, period, averageCash, products, userId
-    ) => {
+    createProducer: async (values, products, userId) => {
 
-        try {
-
-            const headers = new Headers();
-            headers.append("Content-Type", "application/json")
-            headers.append("Accept", 'application/json')
-
-            const data = {
-                name: name,
-                nickname: nickname,
-                birthDate: birthDate,
-                cpf: cpf,
-                phone: phone,
-                email: email,
-                address: {
-                    zipCode: zipCode,
-                    uf: uf,
-                    city: city,
-                    district: district,
-                    street: street,
-                    houseNumber: houseNumber,
-                    reference: reference,
+        const data = {
+            name: values.name,
+            nickname: values.nickname,
+            birthDate: values.birthDate,
+            cpf: values.cpf,
+            phone: values.phone,
+            email: values.email,
+            address: {
+                zipCode: values.address.zipCode,
+                uf: values.address.uf,
+                city: values.address.city,
+                district: values.address.district,
+                street: values.address.street,
+                houseNumber: values.address.houseNumber,
+                reference: values.address.reference,
+            },
+            farmingActivity: {
+                activityName: {
+                    value: values.farmingActivity.activityName.value
                 },
-                farmingActivity: {
-                    activityName: {
-                        value: activity
-                    },
-                    period: period,
-                    averageCash: parseFloat(averageCash)
-                },
-                products: products,
-                manager: {
-                    id: userId,
-                },
-            }
-
-            const request = await fetch(`${API}/producers`, {
-                method: 'POST',
-                headers: headers,
-                body: JSON.stringify(data)
-            })
-            return request
-        } catch (e) {
-            console.log('Erro: createProducer ' + e)
+                period: values.farmingActivity.period,
+                averageCash: parseFloat(values.farmingActivity.averageCash)
+            },
+            products: products,
+            manager: {
+                id: userId,
+            },
         }
+
+        const request = await apiFetchPost('/producers', data)
+        return request
     },
 
-    updateProducer: async (
-        id, name, nickname, birthDate, cpf, phone, email, zipCode,
-        uf, city, district, street, houseNumber, reference,
-        activity, period, averageCash, products, userId
-    ) => {
+    updateProducer: async (id, values, products, userId) => {
 
-        try {
-
-            const headers = new Headers();
-            headers.append("Content-Type", "application/json")
-            headers.append("Accept", 'application/json')
-
-            const data = {
-                name: name,
-                nickname: nickname,
-                birthDate: birthDate,
-                cpf: cpf,
-                phone: phone,
-                email: email,
-                address: {
-                    zipCode: zipCode,
-                    uf: uf,
-                    city: city,
-                    district: district,
-                    street: street,
-                    houseNumber: houseNumber,
-                    reference: reference,
+        const data = {
+            name: values.name,
+            nickname: values.nickname,
+            birthDate: values.birthDate,
+            cpf: values.cpf,
+            phone: values.phone,
+            email: values.email,
+            address: {
+                zipCode: values.address.zipCode,
+                uf: values.address.uf,
+                city: values.address.city,
+                district: values.address.district,
+                street: values.address.street,
+                houseNumber: values.address.houseNumber,
+                reference: values.address.reference,
+            },
+            farmingActivity: {
+                activityName: {
+                    value: values.farmingActivity.activityName.value
                 },
-                farmingActivity: {
-                    activityName: {
-                        value: activity
-                    },
-                    period: period,
-                    averageCash: parseFloat(averageCash)
-                },
-                products: products,
-                manager: {
-                    id: userId,
-                },
-            }
-
-            const request = await fetch(`${API}/producers/${id}`, {
-                method: 'PUT',
-                headers: headers,
-                body: JSON.stringify(data)
-            })
-            return request
-        } catch (e) {
-            console.log('Erro: createProducer ' + e)
+                period: values.farmingActivity.period,
+                averageCash: parseFloat(values.farmingActivity.averageCash)
+            },
+            products: products,
+            manager: {
+                id: userId,
+            },
         }
+
+        const request = await apiFetchPut(`/producers/${id}`, data)
+        return request
     },
 
     deleteProducer: async (id) => {
-        try {
-            const request = await fetch(`${API}/producers/${id}`, { method: 'DELETE' })
-            return request
-        } catch (e) {
-            console.log('Erro: deleteProducer ' + e)
-        }
+        const request = await apiFetchDelete(`/producers/${id}`)
+        return request
     },
 
     createProduct: async (label) => {
-        try {
-            const headers = new Headers();
-            headers.append("Content-Type", "application/json")
-            headers.append("Accept", 'application/json')
-
-            const data = { label: label }
-
-            const request = await fetch(`${API}/products`, {
-                method: 'POST',
-                headers: headers,
-                body: JSON.stringify(data)
-            })
-            return request
-        } catch (e) {
-            console.log('Erro: createProduct ' + e)
-        }
+        const data = { label }
+        const request = await apiFetchPost('/products', data)
+        return request
     },
 
     updateProduct: async (id, label) => {
-        try {
-
-            const headers = new Headers();
-            headers.append("Content-Type", "application/json")
-            headers.append("Accept", 'application/json')
-
-            const data = {
-                value: id,
-                label: label
-            }
-
-            const request = await fetch(`${API}/products/${id}`, {
-                method: 'PUT',
-                headers: headers,
-                body: JSON.stringify(data)
-            })
-            return request
-        } catch (e) {
-            console.log('Erro: updateProduct ' + e)
-        }
+        const data = { value: id, label: label }
+        const request = await apiFetchPut(`/products/${id}`, data)
+        return request
     },
 
     getAllProducts: async () => {
-        try {
-            const request = await fetch(`${API}/products`)
-            return request
-        } catch (e) {
-            console.log('Erro: getAllProducts ' + e)
-        }
+        const response = await apiFetchGet('/products')
+        return response
     },
 
     getProductById: async (id) => {
-        try {
-            const request = await fetch(`${API}/products/${id}`)
-            return request
-        } catch (e) {
-            console.log('Erro: getProductById ' + e)
-        }
+        const response = await apiFetchGet(`/products/${id}`)
+        return response
     },
 
     getProducersByProduct: async (id) => {
-        try {
-            const request = await fetch(`${API}/products/${id}/producers`)
-            return request
-        } catch (e) {
-            console.log('Erro: getProducersByProduct ' + e)
-        }
+        const response = await apiFetchGet(`/products/${id}/producers`)
+        return response
     },
 
     deleteProduct: async (id) => {
-        try {
-            const request = await fetch(`${API}/products/${id}`, { method: 'DELETE' })
-            return request
-        } catch (e) {
-            console.log('Erro: deleteProduct ' + e)
-        }
+        const request = await apiFetchDelete(`/products/${id}`)
+        return request
     },
 
     createActivity: async (label) => {
-        try {
-            const headers = new Headers();
-            headers.append("Content-Type", "application/json")
-            headers.append("Accept", 'application/json')
-
-            const data = { label: label }
-
-            const request = await fetch(`${API}/activities`, {
-                method: 'POST',
-                headers: headers,
-                body: JSON.stringify(data)
-            })
-            return request
-        } catch (e) {
-            console.log('Erro: createProduct ' + e)
-        }
+        const data = { label: label }
+        const request = await apiFetchPost('/activities', data)
+        return request
     },
 
     updateActivity: async (id, label) => {
-        try {
-
-            const headers = new Headers();
-            headers.append("Content-Type", "application/json")
-            headers.append("Accept", 'application/json')
-
-            const data = {
-                value: id,
-                label: label
-            }
-
-            const request = await fetch(`${API}/activities/${id}`, {
-                method: 'PUT',
-                headers: headers,
-                body: JSON.stringify(data)
-            })
-            return request
-        } catch (e) {
-            console.log('Erro: updateActivity ' + e)
-        }
+        const data = { value: id, label: label }
+        const request = await apiFetchPut(`/activities/${id}`, data)
+        return request
     },
 
     getAllActivities: async () => {
-        try {
-            const request = await fetch(`${API}/activities`)
-            return request
-        } catch (e) {
-            console.log('Erro: getAllActivities ' + e)
-        }
+        const response = await apiFetchGet('/activities')
+        return response
     },
 
     getActivityById: async (id) => {
-        try {
-            const request = await fetch(`${API}/activities/${id}`)
-            return request
-        } catch (e) {
-            console.log('Erro: getProductById ' + e)
-        }
+        const response = await apiFetchGet(`/activities/${id}`)
+        return response
     },
 
     getProducersByActivity: async (id) => {
-        try {
-            const request = await fetch(`${API}/producers/findByActivity/${id}`)
-            return request
-        } catch (e) {
-            console.log('Erro: getProducersByActivity ' + e)
-        }
+        const response = await apiFetchGet(`/producers/findByActivity/${id}`)
+        return response
     },
 
     deleteActivity: async (id) => {
-        try {
-            const request = await fetch(`${API}/activities/${id}`, { method: 'DELETE' })
-            return request
-        } catch (e) {
-            console.log('Erro: deleteProduct ' + e)
-        }
+        const request = await apiFetchDelete(`/activities/${id}`)
+        return request
     },
 
     createTask: async (description, date, id) => {
-        try {
-            const headers = new Headers();
-            headers.append("Content-Type", "application/json")
-            headers.append("Accept", 'application/json')
-
-            const formatDate = moment(date).format('yyyy/MM/DD')
-
-            const data = {
-                description: description,
-                status: false,
-                date: formatDate,
-                manager: {
-                    id: id,
-                },
-            }
-
-            const request = await fetch(`${API}/tasks`, {
-                method: 'POST',
-                headers: headers,
-                body: JSON.stringify(data)
-            })
-            return request
-        } catch (e) {
-            console.log('Erro: createTask ' + e)
+        const formatDate = moment(date).format('yyyy/MM/DD')
+        const data = {
+            description: description,
+            status: false,
+            date: formatDate,
+            manager: {
+                id: id,
+            },
         }
+        const request = await apiFetchPost('/tasks', data)
+        return request
     },
 
     getAllTasks: async () => {
-        try {
-            const request = await fetch(`${API}/tasks`)
-            return request
-        } catch (e) {
-            console.log('Erro: getAllTasks ' + e)
-        }
+        const response = await apiFetchGet('/tasks')
+        return response
     },
 
     getAllTodayTasks: async () => {
-        try {
-            const request = await fetch(`${API}/tasks/todaytasks`) || []
-            return request
-        } catch (e) {
-            console.log('Erro: getAllTodayTasks ' + e)
-        }
+        const response = await apiFetchGet('/tasks/todaytasks')
+        return response
     },
 
     getAllFutureTasks: async () => {
-        try {
-            const request = await fetch(`${API}/tasks/futuretasks`) || []
-            return request
-        } catch (e) {
-            console.log('Erro: getAllFutureTasks ' + e)
-        }
+        const response = await apiFetchGet('/tasks/futuretasks')
+        return response
     },
 
     setStateTasks: async (id, status) => {
-        try {
-
-            const headers = new Headers();
-            headers.append("Content-Type", "application/json")
-            headers.append("Accept", 'application/json')
-
-            const data = { status: status }
-
-            const request = await fetch(`${API}/tasks/${id}`,
-                {
-                    method: 'PUT',
-                    headers: headers,
-                    body: JSON.stringify(data)
-                }
-            )
-            return request
-        } catch (e) {
-            console.log('Erro: setStateTasks ' + e)
-        }
+        const data = { status: status }
+        const request = await apiFetchPut(`/tasks/${id}`, data)
+        return request
     },
 
     deleteTask: async (id) => {
-        try {
-            const request = await fetch(`${API}/tasks/${id}`, { method: 'DELETE' })
-            return request
-        } catch (e) {
-            console.log('Erro: deleteTask ' + e)
-        }
+        const request = await apiFetchDelete(`/tasks/${id}`)
+        return request
     },
 
 }

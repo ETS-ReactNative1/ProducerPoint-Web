@@ -11,21 +11,18 @@ const RequestProvider = ({ children }) => {
     const [activities, setActivities] = useState([])
 
     const loadProducers = async () => {
-        const request = await api.getAllProducers()
-        const response = await request.json()
-        setProducers(response)
+        const response = await api.getAllProducers()
+        setProducers(response.data)
     }
 
     const loadProducts = async () => {
-        const request = await api.getAllProducts()
-        const response = await request.json()
-        setProducts(response)
+        const response = await api.getAllProducts()
+        setProducts(response.data)
     }
 
     const loadActivities = async () => {
-        const request = await api.getAllActivities()
-        const response = await request.json()
-        setActivities(response)
+        const response = await api.getAllActivities()
+        setActivities(response.data)
     }
 
     useEffect(() => {
@@ -46,4 +43,3 @@ const RequestProvider = ({ children }) => {
 }
 
 export default RequestProvider
-
