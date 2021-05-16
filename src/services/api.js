@@ -111,7 +111,8 @@ const apiFetchDelete = async (endpoint) => {
 export default {
 
     onSignIn: async (email, password) => {
-        const request = await apiFetchPost('/signin', { email, password })
+        const data = { email: email, password: password }
+        const request = await apiFetchPost('/signin', data)
         return request
     },
 
@@ -265,7 +266,6 @@ export default {
     },
 
     createTask: async (description, date, id) => {
-        console.log(description, date, id)
         const formatDate = moment(date).format('yyyy-MM-DD')
         const data = {
             description: description,

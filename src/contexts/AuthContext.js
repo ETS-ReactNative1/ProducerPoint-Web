@@ -1,7 +1,7 @@
 import React, { useState, useEffect, createContext } from 'react'
 import Cookies from 'js-cookie'
 
-import Api from '../services/api'
+import api from '../services/api'
 
 export const AuthContext = createContext({})
 
@@ -27,7 +27,7 @@ const AuthProvider = ({ children }) => {
             setLoadingAuth(false)
             return
         } else {
-            const response = await Api.onSignIn(email, password)
+            const response = await api.onSignIn(email, password)
 
             try {
                 if (response.data) {
