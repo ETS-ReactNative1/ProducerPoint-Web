@@ -11,6 +11,7 @@ export const Title = styled.h1`
 
 export const Body = styled.div`
     max-width: 960px;
+    min-height: 70vh;
     margin: auto;
     padding: 20px;
 `;

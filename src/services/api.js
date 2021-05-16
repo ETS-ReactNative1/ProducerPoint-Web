@@ -265,7 +265,8 @@ export default {
     },
 
     createTask: async (description, date, id) => {
-        const formatDate = moment(date).format('yyyy/MM/DD')
+        console.log(description, date, id)
+        const formatDate = moment(date).format('yyyy-MM-DD')
         const data = {
             description: description,
             status: false,

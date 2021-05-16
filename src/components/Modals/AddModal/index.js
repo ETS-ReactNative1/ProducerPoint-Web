@@ -1,10 +1,28 @@
 import React from 'react'
+import { useFormik } from 'formik'
+import * as yup from 'yup'
 
-import { makeStyles, Modal, Backdrop, Fade } from '@material-ui/core'
+import {
+    makeStyles, Modal, Backdrop, Grid, Slide, TextField
+} from '@material-ui/core'
 
-const AddModal = ({ open, handleClose, title, doDelete }) => {
+const AddModal = ({ open, handleClose, handleCreate, title }) => {
 
-    const classes = useStyles();
+    const classes = useStyles()
+
+    const initialFormState = { description: '', date: '' }
+    const validationSchema = yup.object().shape({
+        description: yup.string().required('Descrição é obrigatória!'),
+        date: yup.date().required('Data é obrigatória!')
+    })
+
+    const formik = useFormik({
+        initialValues: initialFormState,
+        validationSchema: validationSchema,
+        onSubmit: async (values) => {
+            handleCreate(values)
+        }
+    })
 
     return (
         <Modal
@@ -17,15 +35,59 @@ const AddModal = ({ open, handleClose, title, doDelete }) => {
                 timeout: 500,
             }}
         >
-            <Fade in={open}>
+            <Slide direction='up' in={open}>
                 <div className={classes.paper}>
                     <h2>{title}</h2>
+                    <Grid container >
+                        <Grid item xs={12}>
+                            <form onSubmit={formik.handleSubmit}>
+
+                                <Grid direction='column' container spacing={2}>
+                                    <Grid item xs={12}>
+                                        <TextField
+                                            fullWidth
+                                            multiline
+                                            rows='2'
+                                            variant='outlined'
+                                            id="description"
+                                            name="description"
+                                            label="Descrição da tarefa"
+                                            value={formik.values.description}
+                                            onChange={formik.handleChange}
+                                            error={formik.touched.description && Boolean(formik.errors.description)}
+                                            helperText={formik.touched.description && formik.errors.description}
+                                            required
+                                        />
+                                    </Grid>
+
+                                    <Grid item xs={12}>
+                                        <TextField
+                                            fullWidth
+                                            variant='outlined'
+                                            id="date"
+                                            name="date"
+                                            label="Data da tarefa"
+                                            type="date"
+                                            value={formik.values.date}
+                                            onChange={formik.handleChange}
+                                            InputLabelProps={{
+                                                shrink: true,
+                                            }}
+                                            error={formik.touched.date && Boolean(formik.errors.date)}
+                                            helperText={formik.touched.date && formik.errors.date}
+                                            required
+                                        />
+                                    </Grid>
+                                </Grid>
+
+                            </form>
+                        </Grid>
+                    </Grid>
                     <div className={classes.buttons}>
-                        <button onClick={handleClose} className={classes.noButton}>Não</button>
-                        <button onClick={doDelete} className={classes.yesButton}>Sim</button>
+                        <button onClick={formik.handleSubmit} className={classes.yesButton}>Criar</button>
                     </div>
                 </div>
-            </Fade>
+            </Slide>
         </Modal>
     )
 }
@@ -37,6 +99,7 @@ const useStyles = makeStyles((theme) => ({
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
+        flexDirection: 'column'
     },
     paper: {
         backgroundColor: theme.palette.background.paper,
@@ -44,29 +107,16 @@ const useStyles = makeStyles((theme) => ({
         padding: theme.spacing(2, 4, 3),
         borderRadius: 8,
     },
-    noButton: {
-        height: 40,
-        width: '48%',
-        fontSize: 16,
-        fontWeight: 'bold',
-        borderRadius: 8,
-        border: 'none',
-        backgroundColor: '#da1e37',
-        cursor: 'pointer',
-
-        '&:hover': {
-            background: '#920000'
-        },
-    },
     yesButton: {
+        color: '#fff',
         height: 40,
-        width: '48%',
+        width: '100%',
         fontSize: 16,
-        fontWeight: 'bold',
-        borderRadius: 8,
+        borderRadius: 5,
         border: 'none',
         backgroundColor: '#007200',
         cursor: 'pointer',
+        textTransform: 'uppercase',
 
         '&:hover': {
             background: '#005200'
@@ -77,5 +127,6 @@ const useStyles = makeStyles((theme) => ({
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
+        marginTop: 15
     }
 }));

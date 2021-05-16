@@ -4,8 +4,9 @@ import {
     TableHead, TableRow, Paper, IconButton
 } from '@material-ui/core'
 import CheckIcon from '@material-ui/icons/Check'
-import DeleteIcon from '@material-ui/icons/Delete';
+import DeleteIcon from '@material-ui/icons/Delete'
 import ToggleButton from '@material-ui/lab/ToggleButton'
+import moment from 'moment'
 
 import api from '../../services/api'
 
@@ -14,19 +15,37 @@ import WarningModal from '../../components/Modals/WarningModal'
 import Success from '../../assets/lotties/success.json'
 import Fail from '../../assets/lotties/fail.json'
 
-const TodayTasks = ({ data }) => {
+const TasksList = ({ data }) => {
 
-    const [selected, setSelected] = useState(false)
     const classes = useStyles()
+    const [tasks, setTasks] = useState(data)
     const [open, setOpen] = useState(false)
     const [id, setId] = useState(null)
-    const [filteredSearch, setFilteredSearch] = useState([])
 
     const [warningModal, setWarningModal] = useState(false)
     const [message, setMessage] = useState(true)
     const [lottie, setLottie] = useState('')
-    const handleOpenWarningModal = () => setWarningModal(true)
-    const handleCloseWarningModal = () => setWarningModal(false)
+
+    useEffect(() => {
+        setTasks(data)
+    }, [data])
+
+    const handleChange = async (index, id) => {
+        const newArray = [...data]
+        newArray[index].status
+            ? newArray[index].status = false
+            : newArray[index].status = true
+
+        const status = newArray[index].status
+        const response = await api.setStateTasks(id, status)
+        if (response.data) {
+            setTasks(newArray)
+        } else {
+            setLottie(Fail)
+            setMessage(`Falha inesperada! Erro: ${response.status}`)
+            handleOpenWarningModal()
+        }
+    }
 
     const handleDelete = (id) => {
         setId(id)
@@ -37,9 +56,8 @@ const TodayTasks = ({ data }) => {
         const response = await api.deleteTask(id)
         if (response.status === 200) {
             handleClose()
-            setFilteredSearch(
-                data?.filter((i) => i.id !== id)
-            )
+            const filtered = tasks?.filter((i) => i.id !== id)
+            setTasks(filtered)
             setLottie(Success)
             setMessage('Tarefa excluída com sucesso!')
             handleOpenWarningModal()
@@ -51,9 +69,10 @@ const TodayTasks = ({ data }) => {
         }
     }
 
-    const handleChange = (index) => setSelected(!selected)
     const handleOpen = () => setOpen(true)
     const handleClose = () => setOpen(false)
+    const handleOpenWarningModal = () => setWarningModal(true)
+    const handleCloseWarningModal = () => setWarningModal(false)
 
     return (
         <>
@@ -68,22 +87,27 @@ const TodayTasks = ({ data }) => {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {data?.map((row) => (
-                            <TableRow key={row.id}>
+                        {tasks?.map((i, k) => (
+                            <TableRow key={k}>
                                 <TableCell component="th" scope="row">
                                     <ToggleButton
-                                        value={selected}
-                                        selected={row.status}
-                                        onChange={() => handleChange(row.id)}
-
+                                        value='check'
+                                        selected={i.status}
+                                        onChange={() => handleChange(k, i.id)}
                                     >
-                                        <CheckIcon />
+                                        <CheckIcon color={i.status ? 'secondary' : 'disabled'} />
                                     </ToggleButton>
                                 </TableCell>
-                                <TableCell align="left">{row.description}</TableCell>
-                                <TableCell align="left">{row.date}</TableCell>
+                                <TableCell
+                                    style={{ textDecorationLine: i.status ? 'line-through' : 'none' }}
+                                    align="left">{i.description}
+                                </TableCell>
+                                <TableCell
+                                    style={{ textDecorationLine: i.status ? 'line-through' : 'none' }}
+                                    align="left">{moment(i.date).locale('pt-br').format('D/MM/yyyy')}
+                                </TableCell>
                                 <TableCell align="left">
-                                    <IconButton onClick={() => handleDelete(row.id)} color='secondary' aria-label="delete">
+                                    <IconButton onClick={() => handleDelete(i.id)} color='secondary' aria-label="delete">
                                         <DeleteIcon />
                                     </IconButton>
                                 </TableCell>
@@ -112,7 +136,7 @@ const TodayTasks = ({ data }) => {
     );
 }
 
-export default TodayTasks
+export default TasksList
 
 const useStyles = makeStyles({
     table: {

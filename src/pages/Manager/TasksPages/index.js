@@ -1,39 +1,68 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import PropTypes from 'prop-types'
 import { makeStyles, Tabs, Tab, Typography, Box, Button } from '@material-ui/core'
 import AddIcon from '@material-ui/icons/Add';
 
-import TaskList from '../../../components/TaskList'
+import TasksList from '../../../components/TasksList'
 import AddModal from '../../../components/Modals/AddModal'
 
 import api from '../../../services/api'
+import { AuthContext } from '../../../contexts/AuthContext'
+
+import WarningModal from '../../../components/Modals/WarningModal'
+import Fail from '../../../assets/lotties/fail.json'
+import Success from '../../../assets/lotties/success.json'
 
 const NavTabs = () => {
 
     const classes = useStyles()
-    const [value, setValue] = useState(0);
+    const { user } = useContext(AuthContext)
+    const [value, setValue] = useState(0)
+    const [addModal, setAddModal] = useState(false)
     const [todayTasks, setTodayTasks] = useState([])
     const [futureTasks, setFutureTasks] = useState([])
 
-    useEffect(async () => {
-        const getTasks = async () => {
-            const response = await api.getAllTodayTasks()
-            setTodayTasks(response.data)
-        }
-        await getTasks()
+    const [warningModal, setWarningModal] = useState(false)
+    const [message, setMessage] = useState(true)
+    const [lottie, setLottie] = useState('')
+
+    const handleOpenAddModal = () => setAddModal(true)
+    const handleCloseAddModal = () => setAddModal(false)
+    const handleOpenWarningModal = () => setWarningModal(true)
+    const handleCloseWarningModal = () => setWarningModal(false)
+    const handleChange = (event, newValue) => setValue(newValue)
+
+    const getTodayTasks = async () => {
+        const response = await api.getAllTodayTasks()
+        setTodayTasks(response.data)
+    }
+
+    const getFutureTasks = async () => {
+        const response = await api.getAllFutureTasks()
+        setFutureTasks(response.data)
+    }
+
+    useEffect(() => {
+        getTodayTasks()
+        getFutureTasks()
     }, [])
 
-    useEffect(async () => {
-        const getTasks = async () => {
-            const response = await api.getAllFutureTasks()
-            setFutureTasks(response.data)
+    const handleCreateTask = async (values) => {
+        const response = await api.createTask(values.description, values.date, user?.id)
+        if (response.data) {
+            handleCloseAddModal()
+            setLottie(Success)
+            setMessage('Tarefa criada com sucesso!')
+            handleOpenWarningModal()
+            getTodayTasks()
+            getFutureTasks()
+        } else {
+            handleCloseAddModal()
+            setLottie(Fail)
+            setMessage(`Falha inesperada! Erro: ${response.status}`)
+            handleOpenWarningModal()
         }
-        await getTasks()
-    }, [])
-
-    const handleChange = (event, newValue) => {
-        setValue(newValue);
-    };
+    }
 
     return (
         <div className={classes.root}>
@@ -46,11 +75,36 @@ const NavTabs = () => {
                 <LinkTab label="Tarefas Futuras" {...a11yProps(1)} />
             </Tabs>
             <TabPanel value={value} index={0}>
-                <TaskList data={todayTasks} />
+                <TasksList data={todayTasks} />
             </TabPanel>
             <TabPanel value={value} index={1}>
-                <TaskList data={futureTasks} />
+                <TasksList data={futureTasks} />
             </TabPanel>
+            <Button
+                variant="contained"
+                color="secondary"
+                className={classes.button}
+                startIcon={<AddIcon />}
+                onClick={handleOpenAddModal}
+            >
+                Tarefa
+            </Button>
+            {addModal &&
+                <AddModal
+                    handleClose={handleCloseAddModal}
+                    open={addModal}
+                    handleCreate={handleCreateTask}
+                    title='Criar tarefa?'
+                />
+            }
+            {warningModal &&
+                <WarningModal
+                    handleClose={handleCloseWarningModal}
+                    open={warningModal}
+                    message={message}
+                    lottie={lottie}
+                />
+            }
         </div>
     );
 }
@@ -86,14 +140,6 @@ const TabPanel = (props) => {
                     <Typography>{children}</Typography>
                 </Box>
             )}
-            <Button
-                variant="contained"
-                color="secondary"
-                className={classes.button}
-                startIcon={<AddIcon />}
-            >
-                Tarefa
-            </Button>
         </div>
     );
 }

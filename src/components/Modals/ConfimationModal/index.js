@@ -45,28 +45,30 @@ const useStyles = makeStyles((theme) => ({
         borderRadius: 8,
     },
     noButton: {
+        color: '#fff',
         height: 40,
         width: '48%',
         fontSize: 16,
-        fontWeight: 'bold',
         borderRadius: 8,
         border: 'none',
         backgroundColor: '#da1e37',
         cursor: 'pointer',
+        textTransform: 'uppercase',
 
         '&:hover': {
             background: '#920000'
         },
     },
     yesButton: {
+        color: '#fff',
         height: 40,
         width: '48%',
         fontSize: 16,
-        fontWeight: 'bold',
         borderRadius: 8,
         border: 'none',
         backgroundColor: '#007200',
         cursor: 'pointer',
+        textTransform: 'uppercase',
 
         '&:hover': {
             background: '#005200'
