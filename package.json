@@ -1,4 +1,5 @@
 {
+  "start":"node main.js",
   "name": "producerpointweb",
   "version": "0.1.0",
   "private": true,
