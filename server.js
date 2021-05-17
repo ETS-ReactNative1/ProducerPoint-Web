@@ -1,4 +1,4 @@
-import express from 'express'
+const express = require('express')
 
 const { resolve } = require('path')
 
@@ -12,9 +12,6 @@ app.use('/', express.static(
 ))
 
 app.listen(process.env.PORT || 3000, (err) => {
-    if (err) {
-        return console.log(err)
-    } else {
-        return console.log('ProducerPoint Started...')
-    }
+    if (err) { return console.log(err) }
+    console.log('ProducerPoint Started...')
 })
