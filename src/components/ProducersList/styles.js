@@ -6,6 +6,14 @@ export const Area = styled.div`
         font-weight: bold;
     }
 
+    .emptylist {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #b00;
+        opacity: 0.7;
+    }
+
     .title--box {
         display: flex;
         height: 50px;

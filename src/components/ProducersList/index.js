@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 
 import {
     makeStyles, Table, TableBody, TableCell, TableContainer,
-    TableHead, TableRow, Paper, TablePagination
+    TableHead, TableRow, Paper, TablePagination, Grid, Box
 } from '@material-ui/core'
 
 import api from '../../services/api'
@@ -120,9 +120,17 @@ const ProducersList = ({ data, title }) => {
                                 </TableCell>
                             </TableRow>
                         ))}
+
                     </TableBody>
+
                 </Table>
+
             </TableContainer>
+            {filteredSearch.length === 0 &&
+                <div className='emptylist'>
+                    <h3>Nenhum produtor relacionado</h3>
+                </div>
+            }
             <TablePagination
                 labelRowsPerPage='Itens por página'
                 rowsPerPageOptions={[10, 15, 20]}
