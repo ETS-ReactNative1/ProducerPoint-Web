@@ -31,6 +31,7 @@ const ActivityDetails = () => {
         <ProducersList
             data={producers}
             title={`Todos da Categoria: ${activity?.label}`}
+            isButton={false}
         />
     );
 }

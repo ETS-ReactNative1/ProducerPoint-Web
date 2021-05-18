@@ -1,33 +1,37 @@
-import React, { useState, useMemo, useContext } from 'react'
+import React, { useState, useMemo, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 
 import {
     makeStyles, Table, TableBody, TableCell, TableContainer,
     TableHead, TableRow, Paper, TablePagination, IconButton,
-    Tooltip, TextField, InputAdornment
+    Tooltip, TextField, InputAdornment, Button
 } from '@material-ui/core'
 import DeleteIcon from '@material-ui/icons/Delete'
 import EditIcon from '@material-ui/icons/Edit'
 import AssessmentIcon from '@material-ui/icons/Assessment'
 import SearchIcon from '@material-ui/icons/Search'
+import AddIcon from '@material-ui/icons/Add'
 
 import api from '../../../../services/api'
-import { RequestContext } from '../../../../contexts/RequestContext'
 
 import ConfimationModal from '../../../../components/Modals/ConfimationModal'
 import WarningModal from '../../../../components/Modals/WarningModal'
 import Success from '../../../../assets/lotties/success.json'
 import Fail from '../../../../assets/lotties/fail.json'
+import AddModal from '../../../../components/Modals/AddModal'
+import EditProductModal from '../../../../components/Modals/EditProductModal'
 
 import { Area } from './styles'
 
 const ProductList = () => {
 
-    const { products } = useContext(RequestContext)
+    const [products, setProducts] = useState([])
     const [open, setOpen] = useState(false)
     const [value, setValue] = useState(null)
     const [search, setSearch] = useState('')
     const [filteredSearch, setFilteredSearch] = useState([])
+    const [addModal, setAddModal] = useState(false)
+    const [editModal, setEditModal] = useState(false)
 
     const [page, setPage] = useState(0)
     const [rowsPerPage, setRowsPerPage] = useState(10)
@@ -38,6 +42,13 @@ const ProductList = () => {
     const [lottie, setLottie] = useState('')
     const handleOpenWarningModal = () => setWarningModal(true)
     const handleCloseWarningModal = () => setWarningModal(false)
+    const handleOpenAddModal = () => setAddModal(true)
+    const handleCloseAddModal = () => setAddModal(false)
+    const handleCloseEditModal = () => setEditModal(false)
+    const handleOpenEditModal = (value) => {
+        setValue(value)
+        setEditModal(true)
+    }
 
     useMemo(() => {
         const lowerSearch = search.toLowerCase()
@@ -45,6 +56,51 @@ const ProductList = () => {
             products?.filter((i) => i.label.toLowerCase().includes(lowerSearch))
         )
     }, [search, products])
+
+    const loadProducts = async () => {
+        const response = await api.getAllProducts()
+        setProducts(response.data)
+    }
+
+    useEffect(() => {
+        loadProducts()
+    }, [])
+
+    const handleCreateProduct = async (values) => {
+        const response = await api.createProduct(values.label)
+        if (response.data) {
+            handleCloseAddModal()
+            setLottie(Success)
+            setMessage('Produto criado com sucesso!')
+            handleOpenWarningModal()
+            loadProducts()
+            setValue(null)
+        } else {
+            handleCloseAddModal()
+            setLottie(Fail)
+            setMessage(`Falha inesperada! Erro: ${response.status}`)
+            handleOpenWarningModal()
+            setValue(null)
+        }
+    }
+
+    const handleUpdateActivity = async (values) => {
+        const response = await api.updateActivity(value, values.label)
+
+        if (response.data) {
+            setLottie(Success)
+            setMessage('Produto atualizado com sucesso!')
+            handleOpenWarningModal()
+            handleCloseEditModal()
+            loadProducts()
+            setValue(null)
+        } else {
+            setLottie(Fail)
+            setMessage(`Falha inesperada! Erro: ${response.status}`)
+            handleOpenWarningModal()
+            setValue(null)
+        }
+    }
 
     const handleDelete = (value) => {
         setValue(value)
@@ -128,11 +184,11 @@ const ProductList = () => {
                                         </Tooltip>
 
                                         <Tooltip title='Editar' arrow>
-                                            <Link className='link--table' to={`/product-edit/${row.value}`} >
-                                                <IconButton className='button--edit' color='secondary' aria-label="delete">
+                                            <div className='link--table'>
+                                                <IconButton onClick={() => handleOpenEditModal(row.value)} className='button--edit' color='secondary' aria-label="delete">
                                                     <EditIcon />
                                                 </IconButton>
-                                            </Link>
+                                            </div>
                                         </Tooltip>
 
                                         <Tooltip title='Excluir' arrow>
@@ -155,16 +211,28 @@ const ProductList = () => {
                     <h3>Nenhum produto encontrado</h3>
                 </div>
             }
-            <TablePagination
-                labelRowsPerPage='Itens por página'
-                rowsPerPageOptions={[10, 15, 20]}
-                component="div"
-                count={filteredSearch?.length}
-                rowsPerPage={rowsPerPage}
-                page={page}
-                onChangePage={handleChangePage}
-                onChangeRowsPerPage={handleChangeRowsPerPage}
-            />
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <Button
+                    variant="contained"
+                    color="primary"
+                    className={classes.button}
+                    startIcon={<AddIcon />}
+                    onClick={handleOpenAddModal}
+                    size='small'
+                >
+                    Produto
+                </Button>
+                <TablePagination
+                    labelRowsPerPage='Itens por página'
+                    rowsPerPageOptions={[10, 15, 20]}
+                    component="div"
+                    count={filteredSearch?.length}
+                    rowsPerPage={rowsPerPage}
+                    page={page}
+                    onChangePage={handleChangePage}
+                    onChangeRowsPerPage={handleChangeRowsPerPage}
+                />
+            </div>
             {open &&
                 <ConfimationModal
                     handleClose={handleClose}
@@ -181,14 +249,43 @@ const ProductList = () => {
                     lottie={lottie}
                 />
             }
+            {addModal &&
+                <AddModal
+                    handleClose={handleCloseAddModal}
+                    open={addModal}
+                    handleCreate={handleCreateProduct}
+                    title='Criar produto?'
+                    label='Nome do produto'
+                    labelButton='Criar'
+                />
+            }
+            {editModal &&
+                <EditProductModal
+                    handleClose={handleCloseEditModal}
+                    open={editModal}
+                    handleUpdate={handleUpdateActivity}
+                    title='Editar produto?'
+                    label='Nome do produto'
+                    labelButton='Atualizar'
+                    id={value}
+                />
+            }
         </Area>
     );
 }
 
 export default ProductList
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
     table: {
         minWidth: 650,
     },
-});
+    button: {
+        margin: theme.spacing(1),
+        backgroundColor: '#007200',
+
+        '&:hover': {
+            background: '#005200'
+        },
+    },
+}))

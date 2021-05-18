@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useHistory } from 'react-router-dom'
 
 import {
     makeStyles, Table, TableBody, TableCell, TableContainer,
@@ -8,10 +8,12 @@ import {
 } from '@material-ui/core'
 import DeleteIcon from '@material-ui/icons/Delete'
 import EditIcon from '@material-ui/icons/Edit'
+import AddIcon from '@material-ui/icons/Add'
 import AssessmentIcon from '@material-ui/icons/Assessment'
 import PictureAsPdfIcon from '@material-ui/icons/PictureAsPdf'
 import WorkIcon from '@material-ui/icons/Work'
 import SearchIcon from '@material-ui/icons/Search'
+import ReplyIcon from '@material-ui/icons/Reply'
 
 import api from '../../services/api'
 
@@ -21,8 +23,9 @@ import Success from '../../assets/lotties/success.json'
 import Fail from '../../assets/lotties/fail.json'
 import { Area } from './styles'
 
-const ProducersList = ({ data, title }) => {
+const ProducersList = ({ data, title, isButton }) => {
 
+    const history = useHistory()
     const [open, setOpen] = useState(false)
     const [id, setId] = useState(null)
     const [search, setSearch] = useState('')
@@ -180,16 +183,44 @@ const ProducersList = ({ data, title }) => {
                     <h3>Nenhum produtor relacionado</h3>
                 </div>
             }
-            <TablePagination
-                labelRowsPerPage='Itens por página'
-                rowsPerPageOptions={[10, 15, 20]}
-                component="div"
-                count={filteredSearch?.length}
-                rowsPerPage={rowsPerPage}
-                page={page}
-                onChangePage={handleChangePage}
-                onChangeRowsPerPage={handleChangeRowsPerPage}
-            />
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                {isButton &&
+                    <Link className={classes.link} to='/producer-form'>
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            startIcon={<AddIcon />}
+                            className={classes.button}
+                            size='small'
+                        >
+                            Produtor
+                        </Button>
+                    </Link>
+                }
+                {!isButton &&
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        startIcon={<ReplyIcon />}
+                        className={classes.buttonBack}
+                        onClick={() => history.goBack()}
+                        size='small'
+                    >
+                        Voltar
+                    </Button>
+                }
+                <TablePagination
+                    labelRowsPerPage='Itens por página'
+                    rowsPerPageOptions={[10, 15, 20]}
+                    component="div"
+                    count={filteredSearch?.length}
+                    rowsPerPage={rowsPerPage}
+                    page={page}
+                    onChangePage={handleChangePage}
+                    onChangeRowsPerPage={handleChangeRowsPerPage}
+                />
+            </div>
+
             {open &&
                 <ConfimationModal
                     handleClose={handleClose}
@@ -219,4 +250,23 @@ const useStyles = makeStyles((theme) => ({
     margin: {
         margin: theme.spacing(1),
     },
+    button: {
+        margin: theme.spacing(1),
+        backgroundColor: '#007200',
+
+        '&:hover': {
+            background: '#005200'
+        },
+    },
+    buttonBack: {
+        margin: theme.spacing(1),
+        backgroundColor: '#458CB8',
+
+        '&:hover': {
+            background: '#33617D'
+        },
+    },
+    link: {
+        textDecoration: 'none'
+    }
 }))

@@ -31,6 +31,7 @@ const ProductDetails = () => {
         <ProducersList
             data={producers}
             title={`Produtores de ${product?.label}`}
+            isButton={false}
         />
     );
 }

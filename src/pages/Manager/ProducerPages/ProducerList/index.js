@@ -22,6 +22,7 @@ const ProducerList = () => {
             <ProducersList
                 data={producers}
                 title={'Lista de Produtores'}
+                isButton={true}
             />
         </Area>
     );

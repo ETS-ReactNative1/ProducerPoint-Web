@@ -19,6 +19,7 @@ import WarningModal from '../../../../components/Modals/WarningModal'
 import Success from '../../../../assets/lotties/success.json'
 import Fail from '../../../../assets/lotties/fail.json'
 import AddModal from '../../../../components/Modals/AddModal'
+import EditActivityModal from '../../../../components/Modals/EditActivityModal'
 
 import { Area } from './styles'
 
@@ -30,6 +31,7 @@ const ActivityList = () => {
     const [search, setSearch] = useState('')
     const [filteredSearch, setFilteredSearch] = useState([])
     const [addModal, setAddModal] = useState(false)
+    const [editModal, setEditModal] = useState(false)
 
     const [page, setPage] = useState(0)
     const [rowsPerPage, setRowsPerPage] = useState(10)
@@ -42,6 +44,11 @@ const ActivityList = () => {
     const handleCloseWarningModal = () => setWarningModal(false)
     const handleOpenAddModal = () => setAddModal(true)
     const handleCloseAddModal = () => setAddModal(false)
+    const handleCloseEditModal = () => setEditModal(false)
+    const handleOpenEditModal = (value) => {
+        setValue(value)
+        setEditModal(true)
+    }
 
     useMemo(() => {
         const lowerSearch = search?.toLowerCase()
@@ -59,11 +66,6 @@ const ActivityList = () => {
         loadActivities()
     }, [])
 
-    const handleDelete = (value) => {
-        setValue(value)
-        handleOpen()
-    }
-
     const handleCreateActivity = async (values) => {
         const response = await api.createActivity(values.label)
         if (response.data) {
@@ -72,12 +74,37 @@ const ActivityList = () => {
             setMessage('Atividade criada com sucesso!')
             handleOpenWarningModal()
             loadActivities()
+            setValue(null)
         } else {
             handleCloseAddModal()
             setLottie(Fail)
             setMessage(`Falha inesperada! Erro: ${response.status}`)
             handleOpenWarningModal()
+            setValue(null)
         }
+    }
+
+    const handleUpdateActivity = async (values) => {
+        const response = await api.updateActivity(value, values.label)
+
+        if (response.data) {
+            setLottie(Success)
+            setMessage('Atividade atualizada com sucesso!')
+            handleOpenWarningModal()
+            handleCloseEditModal()
+            loadActivities()
+            setValue(null)
+        } else {
+            setLottie(Fail)
+            setMessage(`Falha inesperada! Erro: ${response.status}`)
+            handleOpenWarningModal()
+            setValue(null)
+        }
+    }
+
+    const handleDelete = (value) => {
+        setValue(value)
+        handleOpen()
     }
 
     const doDelete = async () => {
@@ -157,11 +184,11 @@ const ActivityList = () => {
                                         </Tooltip>
 
                                         <Tooltip title='Editar' arrow>
-                                            <Link className='link--table' to={`/activity-edit/${row.value}`} >
-                                                <IconButton className='button--edit' color='secondary' aria-label="delete">
+                                            <div className='link--table'>
+                                                <IconButton onClick={() => handleOpenEditModal(row.value)} className='button--edit' color='secondary' aria-label="delete">
                                                     <EditIcon />
                                                 </IconButton>
-                                            </Link>
+                                            </div>
                                         </Tooltip>
 
                                         <Tooltip title='Excluir' arrow>
@@ -180,6 +207,11 @@ const ActivityList = () => {
                 </Table>
 
             </TableContainer>
+            {(!filteredSearch || filteredSearch?.length === 0) &&
+                <div className='emptylist'>
+                    <h3>Nenhuma atividade encontrada</h3>
+                </div>
+            }
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                 <Button
                     variant="contained"
@@ -202,11 +234,6 @@ const ActivityList = () => {
                     onChangeRowsPerPage={handleChangeRowsPerPage}
                 />
             </div>
-            {(!filteredSearch || filteredSearch?.length === 0) &&
-                <div className='emptylist'>
-                    <h3>Nenhuma atividade encontrada</h3>
-                </div>
-            }
             {open &&
                 <ConfimationModal
                     handleClose={handleClose}
@@ -230,6 +257,18 @@ const ActivityList = () => {
                     handleCreate={handleCreateActivity}
                     title='Criar atividade?'
                     label='Nome da atividade'
+                    labelButton='Criar'
+                />
+            }
+            {editModal &&
+                <EditActivityModal
+                    handleClose={handleCloseEditModal}
+                    open={editModal}
+                    handleUpdate={handleUpdateActivity}
+                    title='Editar atividade?'
+                    label='Nome da atividade'
+                    labelButton='Atualizar'
+                    id={value}
                 />
             }
         </Area>
