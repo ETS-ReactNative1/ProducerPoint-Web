@@ -1,28 +1,35 @@
-import React, { useState, useMemo, useContext } from 'react'
+import React, { useState, useMemo, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 
 import {
     makeStyles, Table, TableBody, TableCell, TableContainer,
-    TableHead, TableRow, Paper, TablePagination
+    TableHead, TableRow, Paper, TablePagination, IconButton,
+    Tooltip, TextField, InputAdornment, Button
 } from '@material-ui/core'
+import DeleteIcon from '@material-ui/icons/Delete'
+import EditIcon from '@material-ui/icons/Edit'
+import AssessmentIcon from '@material-ui/icons/Assessment'
+import SearchIcon from '@material-ui/icons/Search'
+import AddIcon from '@material-ui/icons/Add'
 
 import api from '../../../../services/api'
-import { RequestContext } from '../../../../contexts/RequestContext'
 
 import ConfimationModal from '../../../../components/Modals/ConfimationModal'
 import WarningModal from '../../../../components/Modals/WarningModal'
 import Success from '../../../../assets/lotties/success.json'
 import Fail from '../../../../assets/lotties/fail.json'
+import AddModal from '../../../../components/Modals/AddModal'
 
 import { Area } from './styles'
 
 const ActivityList = () => {
 
-    const { activities } = useContext(RequestContext)
+    const [activities, setActivities] = useState([])
     const [open, setOpen] = useState(false)
     const [value, setValue] = useState(null)
     const [search, setSearch] = useState('')
     const [filteredSearch, setFilteredSearch] = useState([])
+    const [addModal, setAddModal] = useState(false)
 
     const [page, setPage] = useState(0)
     const [rowsPerPage, setRowsPerPage] = useState(10)
@@ -33,6 +40,8 @@ const ActivityList = () => {
     const [lottie, setLottie] = useState('')
     const handleOpenWarningModal = () => setWarningModal(true)
     const handleCloseWarningModal = () => setWarningModal(false)
+    const handleOpenAddModal = () => setAddModal(true)
+    const handleCloseAddModal = () => setAddModal(false)
 
     useMemo(() => {
         const lowerSearch = search?.toLowerCase()
@@ -41,9 +50,34 @@ const ActivityList = () => {
         )
     }, [search, activities])
 
+    const loadActivities = async () => {
+        const response = await api.getAllActivities()
+        setActivities(response.data)
+    }
+
+    useEffect(() => {
+        loadActivities()
+    }, [])
+
     const handleDelete = (value) => {
         setValue(value)
         handleOpen()
+    }
+
+    const handleCreateActivity = async (values) => {
+        const response = await api.createActivity(values.label)
+        if (response.data) {
+            handleCloseAddModal()
+            setLottie(Success)
+            setMessage('Atividade criada com sucesso!')
+            handleOpenWarningModal()
+            loadActivities()
+        } else {
+            handleCloseAddModal()
+            setLottie(Fail)
+            setMessage(`Falha inesperada! Erro: ${response.status}`)
+            handleOpenWarningModal()
+        }
     }
 
     const doDelete = async () => {
@@ -78,9 +112,21 @@ const ActivityList = () => {
         <Area>
             <div className='title--box'>
                 <h3>lista de atividades</h3>
-                <div className='title--search'>
-                    <input type='text' value={search} onChange={ev => setSearch(ev.target.value)} placeholder='Qual atividade procura?' />
-                </div>
+                <TextField
+                    size='small'
+                    color='secondary'
+                    className={classes.margin}
+                    placeholder='Qual atividade procura?'
+                    InputProps={{
+                        startAdornment: (
+                            <InputAdornment position="start">
+                                <SearchIcon />
+                            </InputAdornment>
+                        ),
+                    }}
+                    value={search}
+                    onChange={ev => setSearch(ev.target.value)}
+                />
             </div>
             <TableContainer component={Paper}>
                 <Table className={classes.table} size="small" aria-label="a dense table">
@@ -101,37 +147,66 @@ const ActivityList = () => {
                                 <TableCell scope="row">{row.label}</TableCell>
                                 <TableCell align="center">
                                     <div className='button--group'>
-                                        <Link className='link--table' to={`/activity-details/${row.value}`} >
-                                            <button className='button--detail'>Detalhes</button>
-                                        </Link>
-                                        <Link className='link--table' to={`/activity-edit/${row.value}`} >
-                                            <button className='button--edit'>Editar</button>
-                                        </Link>
-                                        <Link className='link--table' to={`#`} >
-                                            <button onClick={() => handleDelete(row.value)} className='button--delete'>Excuir</button>
-                                        </Link>
+
+                                        <Tooltip title='Detalhes' arrow>
+                                            <Link className='link--table' to={`/activity-details/${row.value}`} >
+                                                <IconButton className='button--detail' color='secondary' aria-label="delete">
+                                                    <AssessmentIcon />
+                                                </IconButton>
+                                            </Link>
+                                        </Tooltip>
+
+                                        <Tooltip title='Editar' arrow>
+                                            <Link className='link--table' to={`/activity-edit/${row.value}`} >
+                                                <IconButton className='button--edit' color='secondary' aria-label="delete">
+                                                    <EditIcon />
+                                                </IconButton>
+                                            </Link>
+                                        </Tooltip>
+
+                                        <Tooltip title='Excluir' arrow>
+                                            <Link className='link--table' to='#' >
+                                                <IconButton className='button--delete' onClick={() => handleDelete(row.value)} color='secondary' aria-label="delete">
+                                                    <DeleteIcon />
+                                                </IconButton>
+                                            </Link>
+                                        </Tooltip>
+
                                     </div>
                                 </TableCell>
                             </TableRow>
                         ))}
                     </TableBody>
                 </Table>
+
             </TableContainer>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <Button
+                    variant="contained"
+                    color="primary"
+                    className={classes.button}
+                    startIcon={<AddIcon />}
+                    onClick={handleOpenAddModal}
+                    size='small'
+                >
+                    Atividade
+                </Button>
+                <TablePagination
+                    labelRowsPerPage='Itens por página'
+                    rowsPerPageOptions={[10, 15, 20]}
+                    component="div"
+                    count={filteredSearch?.length}
+                    rowsPerPage={rowsPerPage}
+                    page={page}
+                    onChangePage={handleChangePage}
+                    onChangeRowsPerPage={handleChangeRowsPerPage}
+                />
+            </div>
             {(!filteredSearch || filteredSearch?.length === 0) &&
                 <div className='emptylist'>
                     <h3>Nenhuma atividade encontrada</h3>
                 </div>
             }
-            <TablePagination
-                labelRowsPerPage='Itens por página'
-                rowsPerPageOptions={[10, 15, 20]}
-                component="div"
-                count={filteredSearch?.length}
-                rowsPerPage={rowsPerPage}
-                page={page}
-                onChangePage={handleChangePage}
-                onChangeRowsPerPage={handleChangeRowsPerPage}
-            />
             {open &&
                 <ConfimationModal
                     handleClose={handleClose}
@@ -148,14 +223,31 @@ const ActivityList = () => {
                     lottie={lottie}
                 />
             }
+            {addModal &&
+                <AddModal
+                    handleClose={handleCloseAddModal}
+                    open={addModal}
+                    handleCreate={handleCreateActivity}
+                    title='Criar atividade?'
+                    label='Nome da atividade'
+                />
+            }
         </Area>
     );
 }
 
 export default ActivityList
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
     table: {
         minWidth: 650,
     },
-});
+    button: {
+        margin: theme.spacing(1),
+        backgroundColor: '#007200',
+
+        '&:hover': {
+            background: '#005200'
+        },
+    },
+}))

@@ -11,7 +11,7 @@ import Header from '../Header'
 const SideBar = () => {
 
     const location = useLocation()
-    const [sidebar, setSidebar] = useState(true)
+    const [sidebar, setSidebar] = useState(false)
 
     const openSidebar = () => setSidebar(!sidebar)
 

@@ -4,7 +4,7 @@ import * as yup from 'yup'
 
 import {
     Button, CssBaseline, TextField, FormControlLabel, Checkbox,
-    Link, Grid, Typography, Container, makeStyles
+    Link, Grid, Typography, Container, makeStyles, CircularProgress
 } from '@material-ui/core'
 
 import logo from '../../assets/images/logo.png'
@@ -12,7 +12,7 @@ import { AuthContext } from '../../contexts/AuthContext'
 
 const SignIn = () => {
 
-    const { signIn } = useContext(AuthContext)
+    const { signIn, loadingAuth } = useContext(AuthContext)
     const classes = useStyles();
 
     const initialFormState = {
@@ -82,9 +82,13 @@ const SignIn = () => {
                         variant="contained"
                         color="primary"
                         className={classes.submit}
-                    >
-                        Entrar
-              </Button>
+                    >{loadingAuth ? (
+                        <CircularProgress color='inherit' size={24} />
+                    ) : (
+                        <span>Entrar</span>
+                    )
+                        }
+                    </Button>
                     <Grid container>
                         <Grid item xs>
                             <Link href="#" variant="body2">

@@ -3,8 +3,13 @@ import { Link } from 'react-router-dom'
 
 import {
     makeStyles, Table, TableBody, TableCell, TableContainer,
-    TableHead, TableRow, Paper, TablePagination
+    TableHead, TableRow, Paper, TablePagination, IconButton,
+    Tooltip, TextField, InputAdornment
 } from '@material-ui/core'
+import DeleteIcon from '@material-ui/icons/Delete'
+import EditIcon from '@material-ui/icons/Edit'
+import AssessmentIcon from '@material-ui/icons/Assessment'
+import SearchIcon from '@material-ui/icons/Search'
 
 import api from '../../../../services/api'
 import { RequestContext } from '../../../../contexts/RequestContext'
@@ -78,9 +83,21 @@ const ProductList = () => {
         <Area>
             <div className='title--box'>
                 <h3>lista de produtos</h3>
-                <div className='title--search'>
-                    <input type='text' value={search} onChange={ev => setSearch(ev.target.value)} placeholder='Qual produto procura?' />
-                </div>
+                <TextField
+                    size='small'
+                    color='secondary'
+                    className={classes.margin}
+                    placeholder='Quem você procura?'
+                    InputProps={{
+                        startAdornment: (
+                            <InputAdornment position="start">
+                                <SearchIcon />
+                            </InputAdornment>
+                        ),
+                    }}
+                    value={search}
+                    onChange={ev => setSearch(ev.target.value)}
+                />
             </div>
             <TableContainer component={Paper}>
                 <Table className={classes.table} size="small" aria-label="a dense table">
@@ -101,15 +118,31 @@ const ProductList = () => {
                                 <TableCell scope="row">{row.label}</TableCell>
                                 <TableCell align="center">
                                     <div className='button--group'>
-                                        <Link className='link--table' to={`/product-details/${row.value}`} >
-                                            <button className='button--detail'>Detalhes</button>
-                                        </Link>
-                                        <Link className='link--table' to={`/product-edit/${row.value}`} >
-                                            <button className='button--edit'>Editar</button>
-                                        </Link>
-                                        <Link className='link--table' to={`#`} >
-                                            <button onClick={() => handleDelete(row.value)} className='button--delete'>Excuir</button>
-                                        </Link>
+
+                                        <Tooltip title='Detalhes' arrow>
+                                            <Link className='link--table' to={`/product-details/${row.value}`} >
+                                                <IconButton className='button--detail' color='secondary' aria-label="delete">
+                                                    <AssessmentIcon />
+                                                </IconButton>
+                                            </Link>
+                                        </Tooltip>
+
+                                        <Tooltip title='Editar' arrow>
+                                            <Link className='link--table' to={`/product-edit/${row.value}`} >
+                                                <IconButton className='button--edit' color='secondary' aria-label="delete">
+                                                    <EditIcon />
+                                                </IconButton>
+                                            </Link>
+                                        </Tooltip>
+
+                                        <Tooltip title='Excluir' arrow>
+                                            <Link className='link--table' to='#' >
+                                                <IconButton className='button--delete' onClick={() => handleDelete(row.value)} color='secondary' aria-label="delete">
+                                                    <DeleteIcon />
+                                                </IconButton>
+                                            </Link>
+                                        </Tooltip>
+
                                     </div>
                                 </TableCell>
                             </TableRow>

@@ -26,8 +26,8 @@ export const Area = styled.div`
         margin-bottom: 10px;
 
         h3 {
-            font-size: 22px;
-            font-variant: small-caps;
+            font-size: 18px;
+            text-transform: uppercase;
         }
 
         .title--search {
@@ -42,77 +42,66 @@ export const Area = styled.div`
                 font-size: 14px;
                 color: #000;
                 padding: 0 5px;
-                background-color: #eee;
-            }
-
-            button {
-                height: 25px;
-                border-radius: 5px;
-                margin-left: 5px;
-                background-color: #0096c7;
-                color: #fff;
-                border: 0;
-                cursor: pointer;
+                background-color: #fff;
             }
         }
     }
 
-    .link--table {
-        text-decoration: none;
+    .button--group {
+        display: flex;
+        align-items: center;
+        justify-content: center;
 
-        button  {
-            background-color: #4CAF50; /* Green */
-            border: none;
-            color: white;
-            padding: 4px 8px;
-            text-align: center;
+        .link--table {
             text-decoration: none;
-            display: inline-block;
-            font-size: 14px;
-            transition-duration: 0.4s;
-            cursor: pointer;
-            margin-left: 2px;
-            border-right: none;
 
-        }
+            button  {
+                color: #fff;
+                text-decoration: none;
+                display: inline-block;
+                font-size: 14px;
+                transition-duration: 0.4s;
+                height: 35px;
+                width: 35px;
+                display: flex;
+                cursor: pointer;
+                margin-left: 5px;
+            }
 
-        .button--detail {
-            background-color: white; 
-            color: black; 
-            border: 1px solid #4CAF50;
-            border-top-left-radius: 3px;
-            border-bottom-left-radius: 3px;
+            .button--report {
+                background-color: #A890D5; 
+                &:hover {
+                    background-color: #80709E;
+                }
+            }
 
-            &:hover {
+            .button--detail {
                 background-color: #4CAF50;
-                color: white;
+                &:hover {
+                    background-color: #0C7112;
+                }
             }
-        }
 
-        .button--edit {
-            background-color: white; 
-            color: black; 
-            border: 1px solid #008CBA;
-
-            &:hover {
-                background-color: #008CBA;
-                color: white;
+            .button--edit {
+                background-color: #049DCF;
+                &:hover {
+                    background-color: #016788;
+                }
             }
-        }
-        
-        .button--delete {
-            background-color: white; 
-            color: black; 
-            border: 1px solid #f44336;
-            border-top-right-radius: 3px;
-            border-bottom-right-radius: 3px;
 
-            &:hover {
-                background-color: #f44336;
-                color: white;
+            .button--delete {
+                background-color: #E7422E; 
+                &:hover {
+                    background-color: #9A2B1D;
+                }
             }
-        }
 
+        }
+    }
+
+    .link--activity {
+        border: none;
+        text-decoration: none;
     }
 
     

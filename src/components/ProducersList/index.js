@@ -4,13 +4,14 @@ import { Link } from 'react-router-dom'
 import {
     makeStyles, Table, TableBody, TableCell, TableContainer,
     TableHead, TableRow, Paper, TablePagination, IconButton,
-    Tooltip, Button
+    Tooltip, Button, TextField, InputAdornment
 } from '@material-ui/core'
 import DeleteIcon from '@material-ui/icons/Delete'
 import EditIcon from '@material-ui/icons/Edit'
 import AssessmentIcon from '@material-ui/icons/Assessment'
 import PictureAsPdfIcon from '@material-ui/icons/PictureAsPdf'
 import WorkIcon from '@material-ui/icons/Work'
+import SearchIcon from '@material-ui/icons/Search'
 
 import api from '../../services/api'
 
@@ -80,9 +81,21 @@ const ProducersList = ({ data, title }) => {
         <Area>
             <div className='title--box'>
                 <h3>{title}</h3>
-                <div className='title--search'>
-                    <input type='text' value={search} onChange={ev => setSearch(ev.target.value)} placeholder='Quem você procura?' />
-                </div>
+                <TextField
+                    size='small'
+                    color='secondary'
+                    className={classes.margin}
+                    placeholder='Quem você procura?'
+                    InputProps={{
+                        startAdornment: (
+                            <InputAdornment position="start">
+                                <SearchIcon />
+                            </InputAdornment>
+                        ),
+                    }}
+                    value={search}
+                    onChange={ev => setSearch(ev.target.value)}
+                />
             </div>
             <TableContainer component={Paper}>
                 <Table className={classes.table} size="small" aria-label="a dense table">
@@ -107,40 +120,51 @@ const ProducersList = ({ data, title }) => {
                                 <TableCell align="center">{row.cpf}</TableCell>
                                 <TableCell align="center">{row.phone}</TableCell>
                                 <TableCell align="center">
-                                    <Link className='link--activity' to={`/activity-details/${row.farmingActivity?.activityName?.value}`}>
-                                        <Button
-                                            variant="contained"
-                                            startIcon={<WorkIcon />}
-                                            size='small'
-                                        >
-                                            {row.farmingActivity?.activityName?.label}
-                                        </Button>
-                                    </Link>
+                                    <Tooltip title='Atividade' arrow>
+                                        <Link className='link--activity' to={`/activity-details/${row.farmingActivity?.activityName?.value}`}>
+                                            <Button
+                                                variant="contained"
+                                                startIcon={<WorkIcon />}
+                                                size='small'
+                                            >
+                                                {row.farmingActivity?.activityName?.label}
+                                            </Button>
+                                        </Link>
+                                    </Tooltip>
                                 </TableCell>
                                 <TableCell align="right">
                                     <div className='button--group'>
-                                        <Link className='link--table' to={'#'} >
-                                            <IconButton className='button--report' color='secondary' aria-label="delete">
-                                                <PictureAsPdfIcon />
-                                            </IconButton>
-                                        </Link>
-                                        <Link className='link--table' to={`/producer-details/${row.id}`} >
-                                            <IconButton className='button--detail' color='secondary' aria-label="delete">
-                                                <AssessmentIcon />
-                                            </IconButton>
-                                        </Link>
+                                        <Tooltip title='Relatório' arrow>
+                                            <Link className='link--table' to={'#'} >
+                                                <IconButton className='button--report' color='secondary' aria-label="delete">
+                                                    <PictureAsPdfIcon />
+                                                </IconButton>
+                                            </Link>
+                                        </Tooltip>
 
-                                        <Link className='link--table' to={`/producer-edit/${row.id}`} >
-                                            <IconButton className='button--edit' color='secondary' aria-label="delete">
-                                                <EditIcon />
-                                            </IconButton>
-                                        </Link>
+                                        <Tooltip title='Detalhes' arrow>
+                                            <Link className='link--table' to={`/producer-details/${row.id}`} >
+                                                <IconButton className='button--detail' color='secondary' aria-label="delete">
+                                                    <AssessmentIcon />
+                                                </IconButton>
+                                            </Link>
+                                        </Tooltip>
 
-                                        <Link className='link--table' to='#' >
-                                            <IconButton className='button--delete' onClick={() => handleDelete(row.id)} color='secondary' aria-label="delete">
-                                                <DeleteIcon />
-                                            </IconButton>
-                                        </Link>
+                                        <Tooltip title='Editar' arrow>
+                                            <Link className='link--table' to={`/producer-edit/${row.id}`} >
+                                                <IconButton className='button--edit' color='secondary' aria-label="delete">
+                                                    <EditIcon />
+                                                </IconButton>
+                                            </Link>
+                                        </Tooltip>
+
+                                        <Tooltip title='Excluir' arrow>
+                                            <Link className='link--table' to='#' >
+                                                <IconButton className='button--delete' onClick={() => handleDelete(row.id)} color='secondary' aria-label="delete">
+                                                    <DeleteIcon />
+                                                </IconButton>
+                                            </Link>
+                                        </Tooltip>
                                     </div>
                                 </TableCell>
                             </TableRow>
@@ -188,8 +212,11 @@ const ProducersList = ({ data, title }) => {
 
 export default ProducersList
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
     table: {
         minWidth: 650,
     },
-});
+    margin: {
+        margin: theme.spacing(1),
+    },
+}))

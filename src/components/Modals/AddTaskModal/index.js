@@ -6,13 +6,14 @@ import {
     makeStyles, Modal, Backdrop, Grid, Slide, TextField
 } from '@material-ui/core'
 
-const AddModal = ({ open, handleClose, handleCreate, title, label }) => {
+const AddTaskModal = ({ open, handleClose, handleCreate, title }) => {
 
     const classes = useStyles()
 
-    const initialFormState = { label: ''}
+    const initialFormState = { description: '', date: '' }
     const validationSchema = yup.object().shape({
-        label: yup.string().required('Nome é obrigatório'),
+        description: yup.string().required('Descrição é obrigatória!'),
+        date: yup.date().required('Data é obrigatória!')
     })
 
     const formik = useFormik({
@@ -45,14 +46,35 @@ const AddModal = ({ open, handleClose, handleCreate, title, label }) => {
                                     <Grid item xs={12}>
                                         <TextField
                                             fullWidth
+                                            multiline
+                                            rows='2'
                                             variant='outlined'
-                                            id="label"
-                                            name="label"
-                                            label={label}
-                                            value={formik.values.label}
+                                            id="description"
+                                            name="description"
+                                            label="Descrição da tarefa"
+                                            value={formik.values.description}
                                             onChange={formik.handleChange}
-                                            error={formik.touched.label && Boolean(formik.errors.label)}
-                                            helperText={formik.touched.label && formik.errors.label}
+                                            error={formik.touched.description && Boolean(formik.errors.description)}
+                                            helperText={formik.touched.description && formik.errors.description}
+                                            required
+                                        />
+                                    </Grid>
+
+                                    <Grid item xs={12}>
+                                        <TextField
+                                            fullWidth
+                                            variant='outlined'
+                                            id="date"
+                                            name="date"
+                                            label="Data da tarefa"
+                                            type="date"
+                                            value={formik.values.date}
+                                            onChange={formik.handleChange}
+                                            InputLabelProps={{
+                                                shrink: true,
+                                            }}
+                                            error={formik.touched.date && Boolean(formik.errors.date)}
+                                            helperText={formik.touched.date && formik.errors.date}
                                             required
                                         />
                                     </Grid>
@@ -70,7 +92,7 @@ const AddModal = ({ open, handleClose, handleCreate, title, label }) => {
     )
 }
 
-export default AddModal
+export default AddTaskModal
 
 const useStyles = makeStyles((theme) => ({
     modal: {

@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useContext } from 'react'
 import PropTypes from 'prop-types'
 import { makeStyles, Tabs, Tab, Typography, Box, Button } from '@material-ui/core'
-import AddIcon from '@material-ui/icons/Add';
+import AddIcon from '@material-ui/icons/Add'
 
 import TasksList from '../../../components/TasksList'
-import AddModal from '../../../components/Modals/AddModal'
+import AddTaskModal from '../../../components/Modals/AddTaskModal'
 
 import api from '../../../services/api'
 import { AuthContext } from '../../../contexts/AuthContext'
@@ -89,11 +89,12 @@ const NavTabs = () => {
                 className={classes.button}
                 startIcon={<AddIcon />}
                 onClick={handleOpenAddModal}
+                size='small'
             >
                 Tarefa
             </Button>
             {addModal &&
-                <AddModal
+                <AddTaskModal
                     handleClose={handleCloseAddModal}
                     open={addModal}
                     handleCreate={handleCreateTask}
