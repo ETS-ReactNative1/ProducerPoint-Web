@@ -13,7 +13,6 @@ import Fail from '../../../../assets/lotties/fail.json'
 
 const ProductEdit = () => {
 
-    const [loading, setLoading] = useState(false)
     const { id } = useParams()
     const classes = useStyles()
 

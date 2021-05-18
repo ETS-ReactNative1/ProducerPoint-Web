@@ -84,7 +84,7 @@ const AddModal = ({ open, handleClose, handleCreate, title }) => {
                         </Grid>
                     </Grid>
                     <div className={classes.buttons}>
-                        <button onClick={formik.handleSubmit} className={classes.yesButton}>Criar</button>
+                        <button type='button' onClick={formik.handleSubmit} className={classes.yesButton}>Criar</button>
                     </div>
                 </div>
             </Slide>

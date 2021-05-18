@@ -3,8 +3,14 @@ import { Link } from 'react-router-dom'
 
 import {
     makeStyles, Table, TableBody, TableCell, TableContainer,
-    TableHead, TableRow, Paper, TablePagination, Grid, Box
+    TableHead, TableRow, Paper, TablePagination, IconButton,
+    Tooltip, Button
 } from '@material-ui/core'
+import DeleteIcon from '@material-ui/icons/Delete'
+import EditIcon from '@material-ui/icons/Edit'
+import AssessmentIcon from '@material-ui/icons/Assessment'
+import PictureAsPdfIcon from '@material-ui/icons/PictureAsPdf'
+import WorkIcon from '@material-ui/icons/Work'
 
 import api from '../../services/api'
 
@@ -101,20 +107,39 @@ const ProducersList = ({ data, title }) => {
                                 <TableCell align="center">{row.cpf}</TableCell>
                                 <TableCell align="center">{row.phone}</TableCell>
                                 <TableCell align="center">
-                                    <Link to={`/activity-details/${row.farmingActivity?.activityName?.value}`}>
-                                        <button className='link--activity'>{row.farmingActivity?.activityName?.label}</button>
+                                    <Link className='link--activity' to={`/activity-details/${row.farmingActivity?.activityName?.value}`}>
+                                        <Button
+                                            variant="contained"
+                                            startIcon={<WorkIcon />}
+                                            size='small'
+                                        >
+                                            {row.farmingActivity?.activityName?.label}
+                                        </Button>
                                     </Link>
                                 </TableCell>
                                 <TableCell align="right">
                                     <div className='button--group'>
+                                        <Link className='link--table' to={'#'} >
+                                            <IconButton className='button--report' color='secondary' aria-label="delete">
+                                                <PictureAsPdfIcon />
+                                            </IconButton>
+                                        </Link>
                                         <Link className='link--table' to={`/producer-details/${row.id}`} >
-                                            <button className='button--detail'>Detalhes</button>
+                                            <IconButton className='button--detail' color='secondary' aria-label="delete">
+                                                <AssessmentIcon />
+                                            </IconButton>
                                         </Link>
+
                                         <Link className='link--table' to={`/producer-edit/${row.id}`} >
-                                            <button className='button--edit'>Editar</button>
+                                            <IconButton className='button--edit' color='secondary' aria-label="delete">
+                                                <EditIcon />
+                                            </IconButton>
                                         </Link>
-                                        <Link className='link--table' to={`#`} >
-                                            <button onClick={() => handleDelete(row.id)} className='button--delete'>Excuir</button>
+
+                                        <Link className='link--table' to='#' >
+                                            <IconButton className='button--delete' onClick={() => handleDelete(row.id)} color='secondary' aria-label="delete">
+                                                <DeleteIcon />
+                                            </IconButton>
                                         </Link>
                                     </div>
                                 </TableCell>
@@ -126,7 +151,7 @@ const ProducersList = ({ data, title }) => {
                 </Table>
 
             </TableContainer>
-            {filteredSearch.length === 0 &&
+            {(!filteredSearch || filteredSearch?.length === 0) &&
                 <div className='emptylist'>
                     <h3>Nenhum produtor relacionado</h3>
                 </div>

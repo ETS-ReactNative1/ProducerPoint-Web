@@ -36,7 +36,7 @@ const TasksList = ({ data }) => {
             ? newArray[index].status = false
             : newArray[index].status = true
 
-        const status = newArray[index].status
+        const status = newArray[index].status ? false : true // Na api recebe invertido
         const response = await api.setStateTasks(id, status)
         if (response.data) {
             setTasks(newArray)
@@ -116,6 +116,11 @@ const TasksList = ({ data }) => {
                     </TableBody>
                 </Table>
             </TableContainer>
+            {(!tasks || tasks?.length === 0) &&
+                <div className={classes.emptylist}>
+                    <h3>Sem tarefas no momento</h3>
+                </div>
+            }
             {open &&
                 <ConfimationModal
                     handleClose={handleClose}
@@ -142,4 +147,11 @@ const useStyles = makeStyles({
     table: {
         minWidth: 650,
     },
+    emptylist: {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        color: '#b00',
+        opacity: 0.7
+    }
 });

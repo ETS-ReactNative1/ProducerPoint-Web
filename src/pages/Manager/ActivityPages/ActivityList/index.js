@@ -117,6 +117,11 @@ const ActivityList = () => {
                     </TableBody>
                 </Table>
             </TableContainer>
+            {(!filteredSearch || filteredSearch?.length === 0) &&
+                <div className='emptylist'>
+                    <h3>Nenhuma atividade encontrada</h3>
+                </div>
+            }
             <TablePagination
                 labelRowsPerPage='Itens por página'
                 rowsPerPageOptions={[10, 15, 20]}

@@ -47,79 +47,60 @@ export const Area = styled.div`
         }
     }
 
-    .link--table {
-        text-decoration: none;
+    .button--group {
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
 
-        button  {
-            background-color: #4CAF50; /* Green */
-            border: none;
-            color: white;
-            padding: 4px 8px;
-            text-align: center;
+        .link--table {
             text-decoration: none;
-            display: inline-block;
-            font-size: 14px;
-            transition-duration: 0.4s;
-            cursor: pointer;
-            margin-left: 2px;
-            border-right: none;
 
-        }
+            button  {
+                color: #fff;
+                text-decoration: none;
+                display: inline-block;
+                font-size: 14px;
+                transition-duration: 0.4s;
+                height: 35px;
+                width: 35px;
+                display: flex;
+                cursor: pointer;
+            }
 
-        .button--detail {
-            background-color: white; 
-            color: black; 
-            border: 1px solid #4CAF50;
-            border-top-left-radius: 3px;
-            border-bottom-left-radius: 3px;
+            .button--report {
+                background-color: #A890D5; 
+                &:hover {
+                    background-color: #80709E;
+                }
+            }
 
-            &:hover {
+            .button--detail {
                 background-color: #4CAF50;
-                color: white;
+                &:hover {
+                    background-color: #0C7112;
+                }
             }
-        }
 
-        .button--edit {
-            background-color: white; 
-            color: black; 
-            border: 1px solid #008CBA;
-
-            &:hover {
-                background-color: #008CBA;
-                color: white;
+            .button--edit {
+                background-color: #049DCF;
+                &:hover {
+                    background-color: #016788;
+                }
             }
-        }
-        
-        .button--delete {
-            background-color: white; 
-            color: black; 
-            border: 1px solid #f44336;
-            border-top-right-radius: 3px;
-            border-bottom-right-radius: 3px;
 
-            &:hover {
-                background-color: #f44336;
-                color: white;
+            .button--delete {
+                background-color: #E7422E; 
+                &:hover {
+                    background-color: #9A2B1D;
+                }
             }
-        }
 
+        }
     }
 
     .link--activity {
-        width: 80px;
-        background-color: #DDD;
         border: none;
-        text-align: center;
         text-decoration: none;
-        display: inline-block;
-        transition-duration: 0.4s;
-        cursor: pointer;
-        padding: 4px 8px;
-        border-radius: 3px;
-
-        &:hover {
-            background-color: rgb(0,0,0,0.3);
-        }
     }
 
     

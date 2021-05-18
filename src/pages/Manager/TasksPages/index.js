@@ -44,6 +44,9 @@ const NavTabs = () => {
 
     useEffect(() => {
         getTodayTasks()
+    }, [])
+
+    useEffect(() => {
         getFutureTasks()
     }, [])
 
@@ -125,7 +128,6 @@ const useStyles = makeStyles((theme) => ({
 
 const TabPanel = (props) => {
     const { children, value, index, ...other } = props;
-    const classes = useStyles()
 
     return (
         <div

@@ -10,7 +10,7 @@ const WarningModal = ({ open, handleClose, message, lottie }) => {
 
     setTimeout(() => {
         handleClose()
-    }, lottie === Success ? 3000 : 5000);
+    }, lottie === Success ? 2000 : 5000);
 
     const lottieConfig = {
         loop: true,

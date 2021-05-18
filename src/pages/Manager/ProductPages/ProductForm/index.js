@@ -12,7 +12,6 @@ import Fail from '../../../../assets/lotties/fail.json'
 
 const ProductForm = () => {
 
-    const [loading, setLoading] = useState(false)
     const classes = useStyles()
 
     const [warningModal, setWarningModal] = useState(false)
