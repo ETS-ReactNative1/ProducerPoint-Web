@@ -34,7 +34,7 @@ const ActivityList = () => {
     const [editModal, setEditModal] = useState(false)
 
     const [page, setPage] = useState(0)
-    const [rowsPerPage, setRowsPerPage] = useState(10)
+    const [rowsPerPage, setRowsPerPage] = useState(5)
     const classes = useStyles()
 
     const [warningModal, setWarningModal] = useState(false)
@@ -225,7 +225,7 @@ const ActivityList = () => {
                 </Button>
                 <TablePagination
                     labelRowsPerPage='Itens por página'
-                    rowsPerPageOptions={[10, 15, 20]}
+                    rowsPerPageOptions={[5, 10, 15]}
                     component="div"
                     count={filteredSearch?.length}
                     rowsPerPage={rowsPerPage}

@@ -23,6 +23,8 @@ import Success from '../../assets/lotties/success.json'
 import Fail from '../../assets/lotties/fail.json'
 import { Area } from './styles'
 
+const API = 'https://producersapi.herokuapp.com/api'
+
 const ProducersList = ({ data, title, isButton }) => {
 
     const history = useHistory()
@@ -32,7 +34,7 @@ const ProducersList = ({ data, title, isButton }) => {
     const [filteredSearch, setFilteredSearch] = useState([])
 
     const [page, setPage] = useState(0)
-    const [rowsPerPage, setRowsPerPage] = useState(10)
+    const [rowsPerPage, setRowsPerPage] = useState(5)
     const classes = useStyles()
 
     const [warningModal, setWarningModal] = useState(false)
@@ -69,6 +71,8 @@ const ProducersList = ({ data, title, isButton }) => {
             handleOpenWarningModal()
         }
     }
+
+    //<a href={`${api.BASE.API}/producers/${producer.id}/pdf/1`} target="_new" class="btn btn-sm btn-outline-info m-2">PDF</a>
 
     const handleChangePage = (event, newPage) => { setPage(newPage) }
 
@@ -138,16 +142,18 @@ const ProducersList = ({ data, title, isButton }) => {
                                 <TableCell align="right">
                                     <div className='button--group'>
                                         <Tooltip title='Relatório' arrow>
-                                            <Link className='link--table' to={'#'} >
-                                                <IconButton className='button--report' color='secondary' aria-label="delete">
-                                                    <PictureAsPdfIcon />
-                                                </IconButton>
-                                            </Link>
+                                            <div className='link--table'>
+                                                <a href={`${API}/producers/${row.id}/pdf/1`} target="_blank">
+                                                    <IconButton className='button--report'>
+                                                        <PictureAsPdfIcon />
+                                                    </IconButton>
+                                                </a>
+                                            </div>
                                         </Tooltip>
 
                                         <Tooltip title='Detalhes' arrow>
                                             <Link className='link--table' to={`/producer-details/${row.id}`} >
-                                                <IconButton className='button--detail' color='secondary' aria-label="delete">
+                                                <IconButton className='button--detail'>
                                                     <AssessmentIcon />
                                                 </IconButton>
                                             </Link>
@@ -155,7 +161,7 @@ const ProducersList = ({ data, title, isButton }) => {
 
                                         <Tooltip title='Editar' arrow>
                                             <Link className='link--table' to={`/producer-edit/${row.id}`} >
-                                                <IconButton className='button--edit' color='secondary' aria-label="delete">
+                                                <IconButton className='button--edit'>
                                                     <EditIcon />
                                                 </IconButton>
                                             </Link>
@@ -163,7 +169,7 @@ const ProducersList = ({ data, title, isButton }) => {
 
                                         <Tooltip title='Excluir' arrow>
                                             <Link className='link--table' to='#' >
-                                                <IconButton className='button--delete' onClick={() => handleDelete(row.id)} color='secondary' aria-label="delete">
+                                                <IconButton className='button--delete' onClick={() => handleDelete(row.id)}>
                                                     <DeleteIcon />
                                                 </IconButton>
                                             </Link>
@@ -211,7 +217,7 @@ const ProducersList = ({ data, title, isButton }) => {
                 }
                 <TablePagination
                     labelRowsPerPage='Itens por página'
-                    rowsPerPageOptions={[10, 15, 20]}
+                    rowsPerPageOptions={[5, 10, 15]}
                     component="div"
                     count={filteredSearch?.length}
                     rowsPerPage={rowsPerPage}

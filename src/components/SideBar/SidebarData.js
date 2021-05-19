@@ -13,64 +13,28 @@ export const SidebarData = [
     },
     {
         title: 'Produtor',
-        path: '#',
+        path: '/producer-list',
         icon: <FaIcons.FaHatCowboy />,
         iconOpened: <RiIcons.RiArrowUpSFill />,
         iconClosed: <RiIcons.RiArrowDownSFill />,
-        subNav: [
-            {
-                title: 'Cadastrar',
-                path: '/producer-form',
-                icon: <AiIcons.AiOutlinePlusCircle />,
-            },
-            {
-                title: 'Listar',
-                path: '/producer-list',
-                icon: <AiIcons.AiOutlineUnorderedList />,
-            },
-        ],
     },
     {
         title: 'Produto',
-        path: '#',
+        path: '/product-list',
         icon: <GiIcons.GiFruitBowl />,
         iconOpened: <RiIcons.RiArrowUpSFill />,
         iconClosed: <RiIcons.RiArrowDownSFill />,
-        subNav: [
-            {
-                title: 'Cadastrar',
-                path: '/product-form',
-                icon: <AiIcons.AiOutlinePlusCircle />,
-            },
-            {
-                title: 'Listar',
-                path: '/product-list',
-                icon: <AiIcons.AiOutlineUnorderedList />,
-            },
-        ],
     },
     {
         title: 'Atividade',
-        path: '#',
-        icon: <MdIcons.MdWork/>,
+        path: '/activity-list',
+        icon: <MdIcons.MdWork />,
         iconOpened: <RiIcons.RiArrowUpSFill />,
         iconClosed: <RiIcons.RiArrowDownSFill />,
-        subNav: [
-            {
-                title: 'Cadastrar',
-                path: '/activity-form',
-                icon: <AiIcons.AiOutlinePlusCircle />,
-            },
-            {
-                title: 'Listar',
-                path: '/activity-list',
-                icon: <AiIcons.AiOutlineUnorderedList />,
-            },
-        ],
     },
-    {
+    /*{
         title: 'Sair',
         path: '/',
         icon: <GiIcons.GiExitDoor />,
-    },
+    },*/
 ]

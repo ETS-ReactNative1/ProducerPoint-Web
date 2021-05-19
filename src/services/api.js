@@ -304,5 +304,4 @@ export default {
         const request = await apiFetchDelete(`/tasks/${id}`)
         return request
     },
-
 }
