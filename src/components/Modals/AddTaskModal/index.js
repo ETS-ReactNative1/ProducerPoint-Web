@@ -3,8 +3,9 @@ import { useFormik } from 'formik'
 import * as yup from 'yup'
 
 import {
-    makeStyles, Modal, Backdrop, Grid, Slide, TextField
+    makeStyles, Modal, Backdrop, Grid, Slide, TextField, Button
 } from '@material-ui/core'
+import SaveIcon from '@material-ui/icons/Save'
 
 const AddTaskModal = ({ open, handleClose, handleCreate, title }) => {
 
@@ -84,7 +85,16 @@ const AddTaskModal = ({ open, handleClose, handleCreate, title }) => {
                         </Grid>
                     </Grid>
                     <div className={classes.buttons}>
-                        <button type='button' onClick={formik.handleSubmit} className={classes.yesButton}>Criar</button>
+                        <Button
+                            onClick={formik.handleSubmit}
+                            className={classes.yesButton}
+                            startIcon={<SaveIcon />}
+                            color="primary"
+                            variant="contained"
+                            fullWidth
+                        >
+                            Criar
+                        </Button>
                     </div>
                 </div>
             </Slide>

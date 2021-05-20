@@ -23,7 +23,6 @@ const ProducerEdit = () => {
 
     const { products, activities } = useContext(RequestContext)
     const { user } = useContext(AuthContext)
-    const [loading, setLoading] = useState(false)
     const { id } = useParams()
     const classes = useStyles()
 
@@ -38,26 +37,26 @@ const ProducerEdit = () => {
             const response = await api.getProducerById(id)
             const { data } = response
 
-            formik.setFieldValue('name', data.name)
-            formik.setFieldValue('nickname', data.nickname)
-            formik.setFieldValue('birthDate', data.birthDate)
-            formik.setFieldValue('cpf', data.cpf)
-            formik.setFieldValue('phone', data.phone)
-            formik.setFieldValue('email', data.email)
-            formik.setFieldValue('address.zipCode', data.address?.zipCode)
-            formik.setFieldValue('address.uf', data.address.uf)
-            formik.setFieldValue('address.city', data.address.city)
-            formik.setFieldValue('address.district', data.address.district)
-            formik.setFieldValue('address.street', data.address.street)
-            formik.setFieldValue('address.houseNumber', data.address.houseNumber)
-            formik.setFieldValue('address.reference', data.address.reference)
-            formik.setFieldValue('farmingActivity.activityName.value', data.farmingActivity?.activityName?.value)
-            formik.setFieldValue('farmingActivity.period', data.farmingActivity.period)
-            formik.setFieldValue('farmingActivity.averageCash', data.farmingActivity.averageCash)
+            formik.setFieldValue('name', data?.name)
+            formik.setFieldValue('nickname', data?.nickname)
+            formik.setFieldValue('birthDate', data?.birthDate)
+            formik.setFieldValue('cpf', data?.cpf)
+            formik.setFieldValue('phone', data?.phone)
+            formik.setFieldValue('email', data?.email)
+            formik.setFieldValue('address.zipCode', data?.address?.zipCode)
+            formik.setFieldValue('address.uf', data?.address?.uf)
+            formik.setFieldValue('address.city', data?.address?.city)
+            formik.setFieldValue('address.district', data?.address?.district)
+            formik.setFieldValue('address.street', data?.address?.street)
+            formik.setFieldValue('address.houseNumber', data?.address?.houseNumber)
+            formik.setFieldValue('address.reference', data?.address?.reference)
+            formik.setFieldValue('farmingActivity.activityName.value', data?.farmingActivity?.activityName?.value)
+            formik.setFieldValue('farmingActivity.period', data?.farmingActivity?.period)
+            formik.setFieldValue('farmingActivity.averageCash', data?.farmingActivity?.averageCash)
 
             const productsList = () => {
                 const newArray = []
-                for (let i of data.products) {
+                for (let i of data?.products) {
                     const values = Object.values(i)
                     newArray.push(values[1])
                 }
@@ -453,7 +452,7 @@ const ProducerEdit = () => {
                                         fullWidth
                                         type="submit">
                                         Salvar
-                                        </Button>
+                                    </Button>
                                 </Grid>
 
                             </Grid>

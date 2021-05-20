@@ -15,13 +15,13 @@ import SearchIcon from '@material-ui/icons/Search'
 import ReplyIcon from '@material-ui/icons/Reply'
 import PersonIcon from '@material-ui/icons/Person';
 
-import api from '../../../services/api'
-import { AuthContext } from '../../../contexts/AuthContext'
+import api from '../../../../services/api'
+import { AuthContext } from '../../../../contexts/AuthContext'
 
-import ConfimationModal from '../../../components/Modals/ConfimationModal'
-import WarningModal from '../../../components/Modals/WarningModal'
-import Success from '../../../assets/lotties/success.json'
-import Fail from '../../../assets/lotties/fail.json'
+import ConfimationModal from '../../../../components/Modals/ConfimationModal'
+import WarningModal from '../../../../components/Modals/WarningModal'
+import Success from '../../../../assets/lotties/success.json'
+import Fail from '../../../../assets/lotties/fail.json'
 import { Area } from './styles'
 
 const UserManagement = () => {
@@ -63,13 +63,13 @@ const UserManagement = () => {
     }
 
     const doDelete = async () => {
-        const response = await api.deleteProducer(id)
+        const response = await api.deleteManager(id)
         if (response.status === 200) {
             handleClose()
             const filtered = filteredSearch?.filter((i) => i.id !== id)
             setFilteredSearch(filtered)
             setLottie(Success)
-            setMessage('Prorutor excluído com sucesso!')
+            setMessage('Usuário excluído com sucesso!')
             handleOpenWarningModal()
         } else {
             handleClose()
@@ -146,7 +146,7 @@ const UserManagement = () => {
                                     <div className='button--group'>
 
                                         <Tooltip title='Detalhes' arrow>
-                                            <Link className='link--table' to={`/producer-details/${row.id}`} >
+                                            <Link className='link--table' to={`/admin-details/${row.id}`} >
                                                 <IconButton className='button--detail'>
                                                     <AssessmentIcon />
                                                 </IconButton>
@@ -154,7 +154,7 @@ const UserManagement = () => {
                                         </Tooltip>
 
                                         <Tooltip title='Editar' arrow>
-                                            <Link className='link--table' to={`/producer-edit/${row.id}`} >
+                                            <Link className='link--table' to={`/admin-edit/${row.id}`} >
                                                 <IconButton className='button--edit'>
                                                     <EditIcon />
                                                 </IconButton>
@@ -182,19 +182,33 @@ const UserManagement = () => {
                 </div>
             }
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                {role == 0 &&
-                    <Link className={classes.link} to='/producer-form'>
-                        <Button
-                            variant="contained"
-                            color="primary"
-                            startIcon={<AddIcon />}
-                            className={classes.button}
-                            size='small'
-                        >
-                            Usuário
-                        </Button>
-                    </Link>
-                }
+                <div>
+                    {role == 0 &&
+                        <>
+                            <Button
+                                variant="contained"
+                                color="primary"
+                                startIcon={<ReplyIcon />}
+                                className={classes.buttonBack}
+                                onClick={() => history.goBack()}
+                                size='small'
+                            >
+                                Voltar
+                            </Button>
+                            <Link className={classes.link} to='/admin-form'>
+                                <Button
+                                    variant="contained"
+                                    color="primary"
+                                    startIcon={<AddIcon />}
+                                    className={classes.button}
+                                    size='small'
+                                >
+                                    Usuário
+                                </Button>
+                            </Link>
+                        </>
+                    }
+                </div>
                 {role == 1 &&
                     <Button
                         variant="contained"

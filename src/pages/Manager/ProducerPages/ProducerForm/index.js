@@ -1,11 +1,14 @@
 import React, { useState, useContext } from 'react'
+import { useHistory } from 'react-router-dom'
 import { useFormik } from 'formik'
 import * as yup from 'yup'
 
 import {
     makeStyles, Grid, TextField, Button, MenuItem, Select,
     Input, InputLabel, ListItemText, Checkbox,
-} from '@material-ui/core';
+} from '@material-ui/core'
+import ReplyIcon from '@material-ui/icons/Reply'
+import SaveIcon from '@material-ui/icons/Save'
 
 import api from '../../../../services/api'
 import { RequestContext } from '../../../../contexts/RequestContext'
@@ -18,6 +21,7 @@ import Fail from '../../../../assets/lotties/fail.json'
 
 const ProducerForm = () => {
 
+    const history = useHistory()
     const { products, activities } = useContext(RequestContext)
     const { user } = useContext(AuthContext)
     const [loading, setLoading] = useState(false)
@@ -98,7 +102,7 @@ const ProducerForm = () => {
             }
 
             const resultList = productsList()
-            
+
             const response = await api.createProducer(values, resultList, user?.id)
 
             if (response.data) {
@@ -405,16 +409,31 @@ const ProducerForm = () => {
                                     </Select>
                                 </Grid>
 
-                                <Grid item xs={12}>
+                                <Grid item xs={2}>
                                     <Button
-                                        onClick={formik.handleSubmit}
-                                        className={classes.button}
+                                        onClick={() => history.goBack()}
+                                        className={classes.buttonBack}
+                                        startIcon={<ReplyIcon />}
                                         color="primary"
                                         variant="contained"
                                         fullWidth
-                                        type="submit">
+                                    >
+                                        Voltar
+                                    </Button>
+                                </Grid>
+
+                                <Grid item xs={10}>
+                                    <Button
+                                        onClick={formik.handleSubmit}
+                                        className={classes.button}
+                                        startIcon={<SaveIcon />}
+                                        color="primary"
+                                        variant="contained"
+                                        fullWidth
+                                        type="submit"
+                                    >
                                         Cadastrar
-                                </Button>
+                                    </Button>
                                 </Grid>
 
 
@@ -449,6 +468,13 @@ const useStyles = makeStyles((theme) => ({
 
         '&:hover': {
             background: '#005200'
+        },
+    },
+    buttonBack: {
+        backgroundColor: '#458CB8',
+
+        '&:hover': {
+            background: '#33617D'
         },
     },
     titleBox: {

@@ -89,7 +89,7 @@ const ToolbarWrap = () => {
                                     {user?.role == 0 &&
                                         <MenuItem
                                             component={Link}
-                                            to={`/management/${user?.id}/${user?.role}`}
+                                            to={`/admin-list/${user?.role}`}
                                             onClick={handleCloseMenu}
                                         >
                                             Gerenciar

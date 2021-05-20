@@ -13,16 +13,20 @@ import ProducerEdit from '../pages/Manager/ProducerPages/ProducerEdit'
 import ProducerList from '../pages/Manager/ProducerPages/ProducerList'
 import ProducerDetails from '../pages/Manager/ProducerPages/ProducerDetails'
 
-import ActivityForm from '../pages/Manager/ActivityPages/ActivityForm'
 import ActivityList from '../pages/Manager/ActivityPages/ActivityList'
 import ActivityDetails from '../pages/Manager/ActivityPages/ActivityDetails'
 
-import ProductForm from '../pages/Manager/ProductPages/ProductForm'
 import ProductList from '../pages/Manager/ProductPages/ProductList'
 import ProductDetails from '../pages/Manager/ProductPages/ProductDetails'
 
+import AdminForm from '../pages/Manager/AdminPage/AdminForm'
+import AdminEdit from '../pages/Manager/AdminPage/AdminEdit'
+import AdminList from '../pages/Manager/AdminPage/AdminList'
+import AdminDetails from '../pages/Manager/AdminPage/AdminDetails'
+
+import FinancialRecord from '../pages/Manager/FinancialRecord'
+import TasksPage from '../pages/Manager/TasksPage'
 import MyProfile from '../pages/Manager/MyProfile'
-import UserManagement from '../pages/Manager/UserManagement'
 
 const Routes = () => {
     return (
@@ -51,20 +55,12 @@ const Routes = () => {
                 <ProducerDetails />
             </RouteHandler>
 
-            <RouteHandler private path='/product-form'>
-                <ProductForm />
-            </RouteHandler>
-
             <RouteHandler private path='/product-list'>
                 <ProductList />
             </RouteHandler>
 
             <RouteHandler private path='/product-details/:id'>
                 <ProductDetails />
-            </RouteHandler>
-
-            <RouteHandler private path='/activity-form'>
-                <ActivityForm />
             </RouteHandler>
 
             <RouteHandler private path='/activity-list'>
@@ -79,8 +75,28 @@ const Routes = () => {
                 <MyProfile />
             </RouteHandler>
 
-            <RouteHandler private exact path='/management/:id/:role'>
-                <UserManagement />
+            <RouteHandler private path='/admin-form'>
+                <AdminForm />
+            </RouteHandler>
+
+            <RouteHandler private path='/admin-edit/:id'>
+                <AdminEdit />
+            </RouteHandler>
+
+            <RouteHandler private path='/admin-list/:role'>
+                <AdminList />
+            </RouteHandler>
+
+            <RouteHandler private path='/admin-details/:id'>
+                <AdminDetails />
+            </RouteHandler>
+
+            <RouteHandler private path='/financial'>
+                <FinancialRecord />
+            </RouteHandler>
+
+            <RouteHandler private path='/tasks'>
+                <TasksPage />
             </RouteHandler>
 
             <RouteHandler path='*'>

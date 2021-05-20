@@ -1,6 +1,9 @@
 import React from 'react'
 
-import { makeStyles, Modal, Backdrop, Fade } from '@material-ui/core'
+import { makeStyles, Modal, Backdrop, Fade, Button } from '@material-ui/core'
+import DoneIcon from '@material-ui/icons/Done'
+import CheckCircleIcon from '@material-ui/icons/CheckCircle'
+import CancelIcon from '@material-ui/icons/Cancel'
 
 const ConfimationModal = ({ open, handleClose, title, doDelete }) => {
 
@@ -21,8 +24,26 @@ const ConfimationModal = ({ open, handleClose, title, doDelete }) => {
                 <div className={classes.paper}>
                     <h2>{title}</h2>
                     <div className={classes.buttons}>
-                        <button onClick={handleClose} className={classes.noButton}>Não</button>
-                        <button onClick={doDelete} className={classes.yesButton}>Sim</button>
+                        <Button
+                            onClick={doDelete}
+                            className={classes.yesButton}
+                            startIcon={<CheckCircleIcon />}
+                            color="primary"
+                            variant="contained"
+                            fullWidth
+                        >
+                            SIM
+                        </Button>
+                        <Button
+                            onClick={handleClose}
+                            className={classes.noButton}
+                            startIcon={<CancelIcon />}
+                            color="primary"
+                            variant="contained"
+                            fullWidth
+                        >
+                            NÃO
+                        </Button>
                     </div>
                 </div>
             </Fade>
@@ -44,36 +65,20 @@ const useStyles = makeStyles((theme) => ({
         padding: theme.spacing(2, 4, 3),
         borderRadius: 8,
     },
-    noButton: {
-        color: '#fff',
-        height: 40,
-        width: '48%',
-        fontSize: 16,
-        borderRadius: 8,
-        border: 'none',
-        backgroundColor: '#da1e37',
-        cursor: 'pointer',
-        textTransform: 'uppercase',
-
-        '&:hover': {
-            background: '#920000'
-        },
-    },
     yesButton: {
-        color: '#fff',
-        height: 40,
-        width: '48%',
-        fontSize: 16,
-        borderRadius: 8,
-        border: 'none',
         backgroundColor: '#007200',
-        cursor: 'pointer',
-        textTransform: 'uppercase',
+        marginRight: '2%',
 
         '&:hover': {
             background: '#005200'
         },
+    },
+    noButton: {
+        backgroundColor: '#da1e37',
 
+        '&:hover': {
+            background: '#920000'
+        },
     },
     buttons: {
         display: 'flex',

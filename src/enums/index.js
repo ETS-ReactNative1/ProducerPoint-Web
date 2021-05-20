@@ -36,3 +36,8 @@ export const ufs = [
     { value: 'SE', label: 'Sergipe' },
     { value: 'TO', label: 'Pernambuco' }
 ]
+
+export const profiles = [
+    { value: '0', label: 'Administrador' },
+    { value: '1', label: 'Técnico' }
+]

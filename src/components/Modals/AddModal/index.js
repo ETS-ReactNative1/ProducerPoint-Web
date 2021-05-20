@@ -3,14 +3,15 @@ import { useFormik } from 'formik'
 import * as yup from 'yup'
 
 import {
-    makeStyles, Modal, Backdrop, Grid, Slide, TextField
+    makeStyles, Modal, Backdrop, Grid, Slide, TextField, Button
 } from '@material-ui/core'
+import SaveIcon from '@material-ui/icons/Save'
 
-const AddModal = ({ open, handleClose, handleCreate, title, label , labelButton}) => {
+const AddModal = ({ open, handleClose, handleCreate, title, label, labelButton }) => {
 
     const classes = useStyles()
 
-    const initialFormState = { label: ''}
+    const initialFormState = { label: '' }
     const validationSchema = yup.object().shape({
         label: yup.string().required('Nome é obrigatório'),
     })
@@ -62,7 +63,16 @@ const AddModal = ({ open, handleClose, handleCreate, title, label , labelButton}
                         </Grid>
                     </Grid>
                     <div className={classes.buttons}>
-                        <button type='button' onClick={formik.handleSubmit} className={classes.yesButton}>{labelButton}</button>
+                        <Button
+                            onClick={formik.handleSubmit}
+                            className={classes.yesButton}
+                            startIcon={<SaveIcon />}
+                            color="primary"
+                            variant="contained"
+                            fullWidth
+                        >
+                            Criar
+                        </Button>
                     </div>
                 </div>
             </Slide>
@@ -86,20 +96,10 @@ const useStyles = makeStyles((theme) => ({
         borderRadius: 8,
     },
     yesButton: {
-        color: '#fff',
-        height: 40,
-        width: '100%',
-        fontSize: 16,
-        borderRadius: 5,
-        border: 'none',
         backgroundColor: '#007200',
-        cursor: 'pointer',
-        textTransform: 'uppercase',
-
         '&:hover': {
             background: '#005200'
         },
-
     },
     buttons: {
         display: 'flex',

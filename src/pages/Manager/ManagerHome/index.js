@@ -1,6 +1,6 @@
 import React from 'react'
 
-import TasksPage from '../TasksPages'
+import TasksPage from '../TasksPage'
 
 const ManagerHome = () => {
 

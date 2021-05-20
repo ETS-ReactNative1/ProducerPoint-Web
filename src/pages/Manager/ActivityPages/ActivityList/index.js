@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useHistory } from 'react-router-dom'
 
 import {
     makeStyles, Table, TableBody, TableCell, TableContainer,
@@ -11,6 +11,7 @@ import EditIcon from '@material-ui/icons/Edit'
 import AssessmentIcon from '@material-ui/icons/Assessment'
 import SearchIcon from '@material-ui/icons/Search'
 import AddIcon from '@material-ui/icons/Add'
+import ReplyIcon from '@material-ui/icons/Reply'
 
 import api from '../../../../services/api'
 
@@ -25,6 +26,7 @@ import { Area } from './styles'
 
 const ActivityList = () => {
 
+    const history = useHistory()
     const [activities, setActivities] = useState([])
     const [open, setOpen] = useState(false)
     const [value, setValue] = useState(null)
@@ -213,16 +215,28 @@ const ActivityList = () => {
                 </div>
             }
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                <Button
-                    variant="contained"
-                    color="primary"
-                    className={classes.button}
-                    startIcon={<AddIcon />}
-                    onClick={handleOpenAddModal}
-                    size='small'
-                >
-                    Atividade
-                </Button>
+                <div>
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        startIcon={<ReplyIcon />}
+                        className={classes.buttonBack}
+                        onClick={() => history.goBack()}
+                        size='small'
+                    >
+                        Voltar
+                    </Button>
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        className={classes.button}
+                        startIcon={<AddIcon />}
+                        onClick={handleOpenAddModal}
+                        size='small'
+                    >
+                        Atividade
+                    </Button>
+                </div>
                 <TablePagination
                     labelRowsPerPage='Itens por página'
                     rowsPerPageOptions={[5, 10, 15]}
@@ -289,4 +303,15 @@ const useStyles = makeStyles((theme) => ({
             background: '#005200'
         },
     },
+    buttonBack: {
+        margin: theme.spacing(1),
+        backgroundColor: '#458CB8',
+
+        '&:hover': {
+            background: '#33617D'
+        },
+    },
+    link: {
+        textDecoration: 'none'
+    }
 }))

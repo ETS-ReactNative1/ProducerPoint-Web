@@ -129,19 +129,40 @@ export default {
         return response
     },
 
-    createManager: async (id, name, nickname, birthDate, phone, cpf, email, role) => {
+    createManager: async (values) => {
 
         const data = {
-            name: name,
-            nickname: nickname,
-            birthDate: birthDate,
-            phone: phone,
-            cpf: cpf,
-            email: email,
-            role: role,
+            name: values.name,
+            nickname: values.nickname,
+            birthDate: values.birthDate,
+            phone: values.phone,
+            cpf: values.cpf,
+            email: values.email,
+            role: values.role,
         }
 
-        const request = await apiFetchPost('/producers', data)
+        const request = await apiFetchPost('/managers', data)
+        return request
+    },
+
+    updateManager: async (id, values) => {
+
+        const data = {
+            name: values.name,
+            nickname: values.nickname,
+            birthDate: values.birthDate,
+            phone: values.phone,
+            cpf: values.cpf,
+            email: values.email,
+            role: values.role
+        }
+
+        const request = await apiFetchPut(`/managers/${id}`, data)
+        return request
+    },
+
+    deleteManager: async (id) => {
+        const request = await apiFetchDelete(`/managers/${id}`)
         return request
     },
 

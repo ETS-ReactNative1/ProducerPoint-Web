@@ -23,7 +23,7 @@ import Success from '../../assets/lotties/success.json'
 import Fail from '../../assets/lotties/fail.json'
 import { Area } from './styles'
 
-const ProducersList = ({ data, title, isButton }) => {
+const ProducersList = ({ data, title }) => {
 
     const history = useHistory()
     const [open, setOpen] = useState(false)
@@ -60,7 +60,7 @@ const ProducersList = ({ data, title, isButton }) => {
             const filtered = filteredSearch?.filter((i) => i.id !== id)
             setFilteredSearch(filtered)
             setLottie(Success)
-            setMessage('Prorutor excluído com sucesso!')
+            setMessage('Produtor excluído com sucesso!')
             handleOpenWarningModal()
         } else {
             handleClose()
@@ -186,7 +186,17 @@ const ProducersList = ({ data, title, isButton }) => {
                 </div>
             }
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                {isButton &&
+                <div>
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        startIcon={<ReplyIcon />}
+                        className={classes.buttonBack}
+                        onClick={() => history.goBack()}
+                        size='small'
+                    >
+                        Voltar
+                    </Button>
                     <Link className={classes.link} to='/producer-form'>
                         <Button
                             variant="contained"
@@ -198,19 +208,7 @@ const ProducersList = ({ data, title, isButton }) => {
                             Produtor
                         </Button>
                     </Link>
-                }
-                {!isButton &&
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        startIcon={<ReplyIcon />}
-                        className={classes.buttonBack}
-                        onClick={() => history.goBack()}
-                        size='small'
-                    >
-                        Voltar
-                    </Button>
-                }
+                </div>
                 <TablePagination
                     labelRowsPerPage='Itens por página'
                     rowsPerPageOptions={[5, 10, 15]}
