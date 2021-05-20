@@ -9,8 +9,8 @@ import Routes from './routes/Routes'
 
 // Base Components
 import { Template, Body } from './components/MainStyles'
-import SideBar from './components/SideBar'
 import Footer from './components/Footer'
+import Toolbar from './components/Toolbar'
 
 const App = () => {
 
@@ -21,7 +21,7 @@ const App = () => {
 
 					<Template>
 
-						<SideBar />
+						<Toolbar />
 
 						<Body>
 

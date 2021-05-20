@@ -1,57 +1,34 @@
-import React, { useState } from 'react';
-import styled from 'styled-components';
-import { Link, useLocation } from 'react-router-dom'
-import * as AiIcons from "react-icons/ai";
+import React from 'react'
+import styled from 'styled-components'
+import { Link } from 'react-router-dom'
 
 import { SidebarData } from './SidebarData'
 import SubMenu from '../SubMenu';
 import { IconContext } from 'react-icons/lib';
-import Header from '../Header'
 
-const SideBar = () => {
-
-    const location = useLocation()
-    const [sidebar, setSidebar] = useState(false)
-
-    const openSidebar = () => setSidebar(!sidebar)
+const SideBar = ({ show }) => {
 
     return (
-        <>
-            {location.pathname !== '/' &&
-                <IconContext.Provider value={{ color: '#000' }}>
-                    <Header openSidebar={openSidebar} />
+        <IconContext.Provider value={{ color: '#000' }}>
 
-                    <SidebarNav sidebar={sidebar}>
-                        <SidebarWrap>
-                            <NavIcon to='#'>
-                                <AiIcons.AiOutlineClose onClick={openSidebar} />
-                            </NavIcon>
-                            {SidebarData.map((i, k) => {
-                                return <SubMenu data={i} k={k} />
-                            })}
-                        </SidebarWrap>
-                    </SidebarNav>
-                </IconContext.Provider>
-            }
-        </>
+            <SidebarNav sidebar={show}>
+                <SidebarWrap>
+                    {SidebarData.map((i, k) => {
+                        return <SubMenu data={i} k={k} />
+                    })}
+                </SidebarWrap>
+            </SidebarNav>
+        </IconContext.Provider>
     );
 }
 
 export default SideBar
 
-const NavIcon = styled(Link)`
-    height: 60px;
-    margin-left: 2em;
-    font-size: 2em;
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-`;
-
 const SidebarNav = styled.nav`
     background-color: #fff;
     width: 200px;
     height: 100vh;
+    margin-top: 65px;
     display: flex;
     justify-content: center;
     position: fixed;

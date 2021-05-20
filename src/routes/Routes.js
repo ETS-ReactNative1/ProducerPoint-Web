@@ -14,14 +14,15 @@ import ProducerList from '../pages/Manager/ProducerPages/ProducerList'
 import ProducerDetails from '../pages/Manager/ProducerPages/ProducerDetails'
 
 import ActivityForm from '../pages/Manager/ActivityPages/ActivityForm'
-import ActivityEdit from '../pages/Manager/ActivityPages/ActivityEdit'
 import ActivityList from '../pages/Manager/ActivityPages/ActivityList'
 import ActivityDetails from '../pages/Manager/ActivityPages/ActivityDetails'
 
 import ProductForm from '../pages/Manager/ProductPages/ProductForm'
-import ProductEdit from '../pages/Manager/ProductPages/ProductEdit'
 import ProductList from '../pages/Manager/ProductPages/ProductList'
 import ProductDetails from '../pages/Manager/ProductPages/ProductDetails'
+
+import MyProfile from '../pages/Manager/MyProfile'
+import UserManagement from '../pages/Manager/UserManagement'
 
 const Routes = () => {
     return (
@@ -54,10 +55,6 @@ const Routes = () => {
                 <ProductForm />
             </RouteHandler>
 
-            <RouteHandler private path='/product-edit/:id'>
-                <ProductEdit />
-            </RouteHandler>
-
             <RouteHandler private path='/product-list'>
                 <ProductList />
             </RouteHandler>
@@ -70,16 +67,20 @@ const Routes = () => {
                 <ActivityForm />
             </RouteHandler>
 
-            <RouteHandler private path='/activity-edit/:id'>
-                <ActivityEdit />
-            </RouteHandler>
-
             <RouteHandler private path='/activity-list'>
                 <ActivityList />
             </RouteHandler>
 
             <RouteHandler private path='/activity-details/:id'>
                 <ActivityDetails />
+            </RouteHandler>
+
+            <RouteHandler private exact path='/my-profile/:id/:role'>
+                <MyProfile />
+            </RouteHandler>
+
+            <RouteHandler private exact path='/management/:id/:role'>
+                <UserManagement />
             </RouteHandler>
 
             <RouteHandler path='*'>

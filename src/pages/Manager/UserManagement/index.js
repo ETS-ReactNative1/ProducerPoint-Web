@@ -1,29 +1,33 @@
-import React, { useMemo, useState } from 'react'
-import { Link, useHistory } from 'react-router-dom'
+import React, { useState, useContext, useEffect } from 'react'
+import { Link, useHistory, useParams } from 'react-router-dom'
 
 import {
     makeStyles, Table, TableBody, TableCell, TableContainer,
     TableHead, TableRow, Paper, TablePagination, IconButton,
     Tooltip, Button, TextField, InputAdornment
 } from '@material-ui/core'
+
 import DeleteIcon from '@material-ui/icons/Delete'
 import EditIcon from '@material-ui/icons/Edit'
 import AddIcon from '@material-ui/icons/Add'
 import AssessmentIcon from '@material-ui/icons/Assessment'
-import PictureAsPdfIcon from '@material-ui/icons/PictureAsPdf'
-import WorkIcon from '@material-ui/icons/Work'
 import SearchIcon from '@material-ui/icons/Search'
 import ReplyIcon from '@material-ui/icons/Reply'
+import PersonIcon from '@material-ui/icons/Person';
 
-import api from '../../services/api'
+import api from '../../../services/api'
+import { AuthContext } from '../../../contexts/AuthContext'
 
-import ConfimationModal from '../Modals/ConfimationModal'
-import WarningModal from '../../components/Modals/WarningModal'
-import Success from '../../assets/lotties/success.json'
-import Fail from '../../assets/lotties/fail.json'
+import ConfimationModal from '../../../components/Modals/ConfimationModal'
+import WarningModal from '../../../components/Modals/WarningModal'
+import Success from '../../../assets/lotties/success.json'
+import Fail from '../../../assets/lotties/fail.json'
 import { Area } from './styles'
 
-const ProducersList = ({ data, title, isButton }) => {
+const UserManagement = () => {
+
+    const { user } = useContext(AuthContext)
+    const { role } = useParams()
 
     const history = useHistory()
     const [open, setOpen] = useState(false)
@@ -41,12 +45,17 @@ const ProducersList = ({ data, title, isButton }) => {
     const handleOpenWarningModal = () => setWarningModal(true)
     const handleCloseWarningModal = () => setWarningModal(false)
 
-    useMemo(() => {
-        const lowerSearch = search.toLowerCase()
-        setFilteredSearch(
-            data?.filter((i) => i.name.toLowerCase().includes(lowerSearch))
-        )
-    }, [search, data])
+    useEffect(() => {
+        const getAllManagers = async () => {
+            const response = await api.getAllManagers()
+            const data = response.data
+            const lowerSearch = search.toLowerCase()
+            setFilteredSearch(
+                data?.filter((i) => i.name.toLowerCase().includes(lowerSearch))
+            )
+        }
+        getAllManagers()
+    }, [search])
 
     const handleDelete = (id) => {
         setId(id)
@@ -70,7 +79,7 @@ const ProducersList = ({ data, title, isButton }) => {
         }
     }
 
-    const handleChangePage = (event, newPage) => { setPage(newPage) }
+    const handleChangePage = (event, newPage) => setPage(newPage)
 
     const handleChangeRowsPerPage = (event) => {
         setRowsPerPage(parseInt(event.target.value, 10))
@@ -83,7 +92,7 @@ const ProducersList = ({ data, title, isButton }) => {
     return (
         <Area>
             <div className='title--box'>
-                <h3>{title}</h3>
+                <h3>lista de usuários</h3>
                 <TextField
                     size='small'
                     color='secondary'
@@ -105,9 +114,9 @@ const ProducersList = ({ data, title, isButton }) => {
                     <TableHead>
                         <TableRow>
                             <TableCell className='title--table' align="center">Nome</TableCell>
-                            <TableCell className='title--table' align="center">CPF</TableCell>
+                            <TableCell className='title--table' align="center">Perfil</TableCell>
+                            <TableCell className='title--table' align="center">E-mail</TableCell>
                             <TableCell className='title--table' align="center">Telefone</TableCell>
-                            <TableCell className='title--table' align="center">Atividade</TableCell>
                             <TableCell className='title--table' align="center">Opções</TableCell>
                         </TableRow>
                     </TableHead>
@@ -117,35 +126,24 @@ const ProducersList = ({ data, title, isButton }) => {
                             : filteredSearch
                         )?.map((row) => (
                             <TableRow key={row.id}>
-                                <TableCell component="th" scope="row">
-                                    {row.name}
-                                </TableCell>
-                                <TableCell align="center">{row.cpf}</TableCell>
-                                <TableCell align="center">{row.phone}</TableCell>
+                                <TableCell component="th" scope="row">{row.name}</TableCell>
                                 <TableCell align="center">
-                                    <Tooltip title='Atividade' arrow>
-                                        <Link className='link--activity' to={`/activity-details/${row.farmingActivity?.activityName?.value}`}>
+                                    <Tooltip title={row.role === 0 ? 'Administrador' : 'Técnico'} arrow>
+                                        <Link to={`#`}>
                                             <Button
-                                                variant="contained"
-                                                startIcon={<WorkIcon />}
-                                                size='small'
+                                                startIcon={<PersonIcon style={{
+                                                    color: row.role === 0 ? 'red' : 'green'
+                                                }} />}
+                                                size='large'
                                             >
-                                                {row.farmingActivity?.activityName?.label}
                                             </Button>
                                         </Link>
                                     </Tooltip>
                                 </TableCell>
+                                <TableCell>{row.email}</TableCell>
+                                <TableCell align="center">{row.phone}</TableCell>
                                 <TableCell align="right">
                                     <div className='button--group'>
-                                        <Tooltip title='Relatório' arrow>
-                                            <div className='link--table'>
-                                                <a href={`${api.API}/producers/${row.id}/pdf/1`} target="_blank">
-                                                    <IconButton className='button--report'>
-                                                        <PictureAsPdfIcon />
-                                                    </IconButton>
-                                                </a>
-                                            </div>
-                                        </Tooltip>
 
                                         <Tooltip title='Detalhes' arrow>
                                             <Link className='link--table' to={`/producer-details/${row.id}`} >
@@ -174,9 +172,7 @@ const ProducersList = ({ data, title, isButton }) => {
                                 </TableCell>
                             </TableRow>
                         ))}
-
                     </TableBody>
-
                 </Table>
 
             </TableContainer>
@@ -186,7 +182,7 @@ const ProducersList = ({ data, title, isButton }) => {
                 </div>
             }
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                {isButton &&
+                {role == 0 &&
                     <Link className={classes.link} to='/producer-form'>
                         <Button
                             variant="contained"
@@ -195,11 +191,11 @@ const ProducersList = ({ data, title, isButton }) => {
                             className={classes.button}
                             size='small'
                         >
-                            Produtor
+                            Usuário
                         </Button>
                     </Link>
                 }
-                {!isButton &&
+                {role == 1 &&
                     <Button
                         variant="contained"
                         color="primary"
@@ -243,7 +239,7 @@ const ProducersList = ({ data, title, isButton }) => {
     );
 }
 
-export default ProducersList
+export default UserManagement
 
 const useStyles = makeStyles((theme) => ({
     table: {

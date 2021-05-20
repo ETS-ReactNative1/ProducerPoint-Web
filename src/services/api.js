@@ -1,8 +1,9 @@
 import moment from 'moment'
 
-//const API = 'https://apiproducers.serviceapp.net.br/api'
+const API = 'https://apiproducers.serviceapp.net.br/api'
 //const API = 'http://192.168.1.128:8080/api'
-const API = 'https://producersapi.herokuapp.com/api'
+//const API = 'https://producersapi.herokuapp.com/api'
+
 
 const apiFetchPost = async (endpoint, body) => {
 
@@ -110,9 +111,37 @@ const apiFetchDelete = async (endpoint) => {
 
 export default {
 
+    API: API,
+
     onSignIn: async (email, password) => {
         const data = { email: email, password: password }
         const request = await apiFetchPost('/signin', data)
+        return request
+    },
+
+    getAllManagers: async () => {
+        const response = await apiFetchGet('/managers')
+        return response
+    },
+
+    getManagerById: async (id) => {
+        const response = await apiFetchGet(`/managers/${id}`)
+        return response
+    },
+
+    createManager: async (id, name, nickname, birthDate, phone, cpf, email, role) => {
+
+        const data = {
+            name: name,
+            nickname: nickname,
+            birthDate: birthDate,
+            phone: phone,
+            cpf: cpf,
+            email: email,
+            role: role,
+        }
+
+        const request = await apiFetchPost('/producers', data)
         return request
     },
 
