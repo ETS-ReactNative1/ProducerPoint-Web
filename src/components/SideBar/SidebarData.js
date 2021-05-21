@@ -35,12 +35,12 @@ export const SidebarData = [
     },
     {
         title: 'Vendas',
-        path: '#',
+        path: '/financial',
         icon: <FaIcons.FaChartLine />,
     },
     {
         title: 'Tarefas',
-        path: '#',
+        path: '/tasks',
         icon: <BiIcons.BiTask />,
     },
 ]

@@ -26,7 +26,8 @@ export default SideBar
 
 const SidebarNav = styled.nav`
     background-color: #fff;
-    width: 200px;
+    width: 13%;
+    max-width: 170px;
     height: 100vh;
     margin-top: 65px;
     display: flex;

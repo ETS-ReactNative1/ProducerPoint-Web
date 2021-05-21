@@ -4,7 +4,7 @@ const FinancialRecord = () => {
 
     return (
         <div>
-
+            FINANCEIRO
         </div>
     );
 }

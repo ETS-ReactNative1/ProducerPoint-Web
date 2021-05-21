@@ -11,7 +11,8 @@ const Footer = () => {
         <>
             {location.pathname !== '/' &&
                 < Container >
-                    Todos os direitos reservados aos criadores do Producer Point - 2021 < br />
+                    Todos os direitos reservados aos criadores do Producer Point
+                    <em>Versão v2021.05.20</em>
                 </Container >
             }
         </>

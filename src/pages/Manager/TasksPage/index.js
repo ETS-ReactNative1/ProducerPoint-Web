@@ -1,7 +1,9 @@
 import React, { useState, useEffect, useContext } from 'react'
+import { useHistory } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import { makeStyles, Tabs, Tab, Typography, Box, Button } from '@material-ui/core'
 import AddIcon from '@material-ui/icons/Add'
+import ReplyIcon from '@material-ui/icons/Reply'
 
 import TasksList from '../../../components/TasksList'
 import AddTaskModal from '../../../components/Modals/AddTaskModal'
@@ -16,6 +18,7 @@ import Success from '../../../assets/lotties/success.json'
 const NavTabs = () => {
 
     const classes = useStyles()
+    const history = useHistory()
     const { user } = useContext(AuthContext)
     const [value, setValue] = useState(0)
     const [addModal, setAddModal] = useState(false)
@@ -85,6 +88,16 @@ const NavTabs = () => {
             </TabPanel>
             <Button
                 variant="contained"
+                color="primary"
+                startIcon={<ReplyIcon />}
+                className={classes.buttonBack}
+                onClick={() => history.goBack()}
+                size='small'
+            >
+                Voltar
+                    </Button>
+            <Button
+                variant="contained"
                 color="secondary"
                 className={classes.button}
                 startIcon={<AddIcon />}
@@ -123,7 +136,14 @@ const useStyles = makeStyles((theme) => ({
     },
     button: {
         margin: theme.spacing(1),
-        marginLeft: 20,
+    },
+    buttonBack: {
+        margin: theme.spacing(1),
+        backgroundColor: '#458CB8',
+
+        '&:hover': {
+            background: '#33617D'
+        },
     },
 }))
 

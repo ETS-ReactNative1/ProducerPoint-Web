@@ -41,3 +41,27 @@ export const profiles = [
     { value: '0', label: 'Administrador' },
     { value: '1', label: 'Técnico' }
 ]
+
+export const images = {
+    Produtor: {
+        title: 'Produtor',
+        image: '../../../assets/images/produtor.jpg'
+    },
+    Produto: {
+        title: 'Produto',
+        image: '../assets/images/produto.jpg'
+    },
+    Atividade: {
+        title: 'Atividade', image: '../assets/images/atividade.jpg'
+    },
+    Vendas: {
+        title: 'Vendas', image: '../assets/images/vendas.jpg'
+    }
+    ,
+    Tarefas: {
+        title: 'Tarefas', image: '../assets/images/tarefas.jpg'
+    },
+    Perfil: {
+        title: 'Meu Perfil', image: '../assets/images/meuperfil.jpg'
+    }
+}

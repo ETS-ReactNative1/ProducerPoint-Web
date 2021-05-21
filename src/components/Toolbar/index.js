@@ -44,27 +44,39 @@ const ToolbarWrap = () => {
                 <div className={classes.root}>
                     <AppBar className={classes.appbar} position="static">
                         <Toolbar>
-                            <IconButton onClick={changeSideBar} edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
-                                {showSideBar ? <CancelPresentationIcon /> : <MenuIcon />}
-                            </IconButton>
-                            <Avatar
-                                component={Link}
-                                className={classes.logo}
-                                alt="logo producer point"
-                                src={logo}
-                                to='/home'
-                            />
-                            <Typography variant="h6" className={classes.title}>
-                                Olá, {user?.name}
-                            </Typography>
-                            <div>
-                                <Button
-                                    onClick={handleClick}
-                                    color='inherit'
-                                    endIcon={<AccountCircleIcon />}
-                                >
-                                    Minha Conta
+                            <div style={{width: '13%'}}>
+                                <IconButton onClick={changeSideBar} edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
+                                    {showSideBar ? <CancelPresentationIcon /> : <MenuIcon />}
+                                </IconButton>
+                            </div>
+                            <div style={{
+                                display: 'flex',
+                                flex: 1,
+                                alignItems: 'center',
+                                maxWidth: 960,
+                                justifyContent: 'space-between'
+                            }}>
+                                <div style={{ display: 'flex', alignItems: 'center' }}>
+                                    <Avatar
+                                        component={Link}
+                                        className={classes.logo}
+                                        alt="logo producer point"
+                                        src={logo}
+                                        to='/home'
+                                    />
+                                    <Typography variant="h6" className={classes.title}>
+                                        Olá, {user?.name}
+                                    </Typography>
+                                </div>
+                                <div>
+                                    <Button
+                                        onClick={handleClick}
+                                        color='inherit'
+                                        endIcon={<AccountCircleIcon />}
+                                    >
+                                        Minha Conta
                                 </Button>
+                                </div>
                                 <Menu
                                     id="simple-menu"
                                     anchorEl={anchorEl}
@@ -126,12 +138,9 @@ const useStyles = makeStyles((theme) => ({
     },
     appbar: {
         backgroundColor: '#343a40',
-        paddingLeft: '5%',
-        paddingRight: '13%'
     },
     logo: {
-        marginLeft: 60,
-        marginRight: 20,
+        marginRight: 10,
     },
     menuButton: {
         marginRight: theme.spacing(2),
