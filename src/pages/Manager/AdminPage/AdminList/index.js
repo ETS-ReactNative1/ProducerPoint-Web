@@ -129,15 +129,9 @@ const UserManagement = () => {
                                 <TableCell component="th" scope="row">{row.name}</TableCell>
                                 <TableCell align="center">
                                     <Tooltip title={row.role === 0 ? 'Administrador' : 'Técnico'} arrow>
-                                        <Link to={`#`}>
-                                            <Button
-                                                startIcon={<PersonIcon style={{
-                                                    color: row.role === 0 ? 'red' : 'green'
-                                                }} />}
-                                                size='large'
-                                            >
-                                            </Button>
-                                        </Link>
+                                        <PersonIcon style={{
+                                            color: row.role === 0 ? 'red' : 'green'
+                                        }} />
                                     </Tooltip>
                                 </TableCell>
                                 <TableCell>{row.email}</TableCell>
