@@ -154,14 +154,24 @@ const UserManagement = () => {
                                                 </IconButton>
                                             </Link>
                                         </Tooltip>
-
-                                        <Tooltip title='Excluir' arrow>
-                                            <Link className='link--table' to='#' >
-                                                <IconButton className='button--delete' onClick={() => handleDelete(row.id)}>
-                                                    <DeleteIcon />
-                                                </IconButton>
-                                            </Link>
-                                        </Tooltip>
+                                        {row.id !== user?.id &&
+                                            < Tooltip title='Excluir' arrow>
+                                                <Link className='link--table' to='#' >
+                                                    <IconButton className='button--delete' onClick={() => handleDelete(row.id)}>
+                                                        <DeleteIcon />
+                                                    </IconButton>
+                                                </Link>
+                                            </Tooltip>
+                                        }
+                                         {row.id === user?.id &&
+                                            < Tooltip title='Excluir' arrow>
+                                                <Link className='link--table' to='#' >
+                                                    <IconButton disabled={true} className='button--delete-disabled' onClick={() => handleDelete(row.id)}>
+                                                        <DeleteIcon />
+                                                    </IconButton>
+                                                </Link>
+                                            </Tooltip>
+                                        }
                                     </div>
                                 </TableCell>
                             </TableRow>
@@ -170,7 +180,8 @@ const UserManagement = () => {
                 </Table>
 
             </TableContainer>
-            {(!filteredSearch || filteredSearch?.length === 0) &&
+            {
+                (!filteredSearch || filteredSearch?.length === 0) &&
                 <div className='emptylist'>
                     <h3>Nenhum produtor relacionado</h3>
                 </div>
@@ -227,7 +238,8 @@ const UserManagement = () => {
                 />
             </div>
 
-            {open &&
+            {
+                open &&
                 <ConfimationModal
                     handleClose={handleClose}
                     open={open}
@@ -235,7 +247,8 @@ const UserManagement = () => {
                     title='Deseja realmente excluir este produtor?'
                 />
             }
-            {warningModal &&
+            {
+                warningModal &&
                 <WarningModal
                     handleClose={handleCloseWarningModal}
                     open={warningModal}
@@ -243,7 +256,7 @@ const UserManagement = () => {
                     lottie={lottie}
                 />
             }
-        </Area>
+        </Area >
     );
 }
 

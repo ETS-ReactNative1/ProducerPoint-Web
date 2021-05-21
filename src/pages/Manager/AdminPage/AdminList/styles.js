@@ -95,6 +95,10 @@ export const Area = styled.div`
                 }
             }
 
+            .button--delete-disabled {
+                background-color: #aaa;
+            }
+
         }
     }
 
