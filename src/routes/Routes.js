@@ -35,6 +35,10 @@ const Routes = () => {
                 <SignIn />
             </RouteHandler>
 
+            <RouteHandler exact path="/recovery/:mail/:time/:token">
+                <SignIn />
+            </RouteHandler>
+
             <RouteHandler private path='/home'>
                 <ManagerHome />
             </RouteHandler>
