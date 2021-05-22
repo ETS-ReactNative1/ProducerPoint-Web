@@ -25,7 +25,7 @@ import WarningModal from '../../components/Modals/WarningModal'
 const SignIn = () => {
 
     const classes = useStyles()
-    const { mail, time, token } = useParams()
+    const { email, time, token } = useParams()
 
     const {
         signIn,
@@ -50,7 +50,7 @@ const SignIn = () => {
     const handleCloseSnack = () => setSnack(false)
 
     useEffect(() => {
-        if (mail && time && token) {
+        if (email && time && token) {
             validateLink()
         }
     }, [])
@@ -74,7 +74,7 @@ const SignIn = () => {
     }
 
     const validateLink = async () => {
-        const response = await api.validateLink(mail, time, token)
+        const response = await api.validateLink(email, time, token)
         if (response?.status === 200) {
             handleOpenRecovery()
         } else {
@@ -86,7 +86,7 @@ const SignIn = () => {
 
     const changePassword = async (password) => {
         setLoading(true)
-        const response = await api.setNewPassword(mail, time, token, password)
+        const response = await api.setNewPassword(email, time, token, password)
         if (response?.status === 200) {
             setSnackColor('#070')
             setSnackMessage('Nova senha salva com sucesso!')
