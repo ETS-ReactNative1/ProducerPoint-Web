@@ -381,32 +381,15 @@ export default {
     },
 
     setNewPassword: async (email, time, token, newPassword) => {
-        try {
-            const headers = new Headers();
-            headers.append("Content-Type", "application/json")
-            headers.append("Accept", 'application/json')
-
-            const formData = new URLSearchParams();
-            formData.append('email', email);
-            formData.append('time', time);
-            formData.append('token', token);
-            formData.append('newPassword', newPassword);
-
-            const request = await fetch(`${API}/recovery/`, {
-                method: 'PUT',
-                headers: headers,
-                body: JSON.stringify({
-                    email: email,
-                    time: time,
-                    token: token,
-                    newPassword: newPassword
-                })
-            });
-            return request
-        } catch (e) {
-            console.log('Erro: setNewPassword ' + e)
+        const data = {
+            email: email,
+            time: time,
+            token: token,
+            newPassword: newPassword
         }
-        return null
+
+        const request = await apiFetchPut('/recovery/', data)
+        return request
     },
 
 }

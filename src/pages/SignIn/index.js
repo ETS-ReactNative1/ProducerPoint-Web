@@ -15,17 +15,25 @@ import EmailIcon from '@material-ui/icons/Email'
 import api from '../../services/api'
 
 import logo from '../../assets/images/logo.png'
+import Fail from '../../assets/lotties/fail.json'
 import { AuthContext } from '../../contexts/AuthContext'
 
 import ForgotPasswordModal from '../../components/Modals/ForgotPasswordModal'
 import RecoveryModal from '../../components/Modals/RecoveryModal'
+import WarningModal from '../../components/Modals/WarningModal'
 
 const SignIn = () => {
 
     const classes = useStyles()
     const { mail, time, token } = useParams()
 
-    const { signIn, loadingAuth } = useContext(AuthContext)
+    const {
+        signIn,
+        loadingAuth,
+        warningModal,
+        handleCloseWarningModal,
+        message
+    } = useContext(AuthContext)
     const [forgotPassword, setForgotPassword] = useState(false)
     const [recovery, setRecovery] = useState(false)
     const [snackMessage, setSnackMessage] = useState('')
@@ -33,7 +41,6 @@ const SignIn = () => {
     const [snackColor, setSnackColor] = useState('')
     const [show, setShow] = useState(false)
     const [loading, setLoading] = useState(false)
-
 
     const handleOpenForgotPassword = () => setForgotPassword(true)
     const handleCloseForgotPassword = () => setForgotPassword(false)
@@ -72,7 +79,7 @@ const SignIn = () => {
             handleOpenRecovery()
         } else {
             setSnackColor('#da1e37')
-            setSnackMessage('Link inválido ou expirado!')
+            setSnackMessage('Link de redefinição de senha inválido ou expirado!')
             handleOpenSnack()
         }
     }
@@ -82,7 +89,7 @@ const SignIn = () => {
         const response = await api.setNewPassword(mail, time, token, password)
         if (response?.status === 200) {
             setSnackColor('#070')
-            setSnackMessage('Senha alterada com sucesso!')
+            setSnackMessage('Nova senha salva com sucesso!')
             handleOpenSnack()
             handleCloseRecovery()
             setLoading(false)
@@ -112,10 +119,6 @@ const SignIn = () => {
             await signIn(values.email.trim(), values.password.trim())
         }
     })
-
-    const changeMessage = (msg) => {
-        setSnackMessage(msg)
-    }
 
     return (
         <Container component="main" maxWidth="xs">
@@ -215,8 +218,6 @@ const SignIn = () => {
                     open={forgotPassword}
                     title='Recuperar sua senha?'
                     label='Digite seu e-mail cadastrado'
-                    labelButton='Enviar'
-                    changeMessage={changeMessage}
                     sendEmail={sendEmail}
                     loading={loading}
                 />
@@ -227,9 +228,16 @@ const SignIn = () => {
                     openSnack={handleOpenSnack}
                     open={recovery}
                     title='Crie uma nova senha'
-                    changeMessage={changeMessage}
                     changePassword={changePassword}
                     loading={loading}
+                />
+            }
+            {warningModal &&
+                <WarningModal
+                    handleClose={handleCloseWarningModal}
+                    open={warningModal}
+                    message={message}
+                    lottie={Fail}
                 />
             }
             {snack &&

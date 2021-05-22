@@ -9,6 +9,11 @@ const AuthProvider = ({ children }) => {
 
     const [loadingAuth, setLoadingAuth] = useState(false)
     const [user, setUser] = useState(null)
+    const [warningModal, setWarningModal] = useState(false)
+    const [message, setMessage] = useState(true)
+
+    const handleOpenWarningModal = () => setWarningModal(true)
+    const handleCloseWarningModal = () => setWarningModal(false)
 
     useEffect(() => {
         const loadStorage = () => {
@@ -29,22 +34,17 @@ const AuthProvider = ({ children }) => {
         } else {
             const response = await api.onSignIn(email, password)
 
-            try {
-                if (response.data) {
-                    setUser(response.data)
-                    storageUser(response.data)
-                    window.location.href = '/home'
-                    setLoadingAuth(false)
-                    return
-                } else {
-                    alert('Erro inesperado!' + response.status)
-                    setLoadingAuth(false)
-                    return
-                }
-            }
-            catch (erro) {
-                alert('Error: ' + erro)
+            if (response.data) {
+                setUser(response.data)
+                storageUser(response.data)
+                window.location.href = '/home'
                 setLoadingAuth(false)
+                return
+            } else {
+                setLoadingAuth(false)
+                setMessage('E-mail ou senha inválidos!')
+                handleOpenWarningModal()
+                return
             }
         }
     }
@@ -58,7 +58,8 @@ const AuthProvider = ({ children }) => {
     return (
 
         <AuthContext.Provider value={{
-            user, loadingAuth, signIn
+            user, loadingAuth, warningModal, message,
+            handleCloseWarningModal, signIn
         }}>
             {children}
         </AuthContext.Provider>
