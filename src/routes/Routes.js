@@ -31,7 +31,11 @@ import MyProfile from '../pages/Manager/MyProfile'
 const Routes = () => {
     return (
         <Switch>
-            <RouteHandler exact path={'/' || '/recovery/:email/:time/:token'}>
+            <RouteHandler exact path='/'>
+                <SignIn />
+            </RouteHandler>
+
+            <RouteHandler exact path='/recovery/:email/:time/:token'>
                 <SignIn />
             </RouteHandler>
 
