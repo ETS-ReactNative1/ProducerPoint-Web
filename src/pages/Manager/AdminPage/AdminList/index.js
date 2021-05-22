@@ -244,7 +244,7 @@ const UserManagement = () => {
                     handleClose={handleClose}
                     open={open}
                     doDelete={doDelete}
-                    title='Deseja realmente excluir este produtor?'
+                    title='Deseja realmente excluir este usuário?'
                 />
             }
             {
