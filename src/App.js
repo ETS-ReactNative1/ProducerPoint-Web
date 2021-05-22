@@ -4,6 +4,7 @@ import './App.css'
 
 import AuthProvider from './contexts/AuthContext'
 import RequestProvider from './contexts/RequestContext'
+import { isLogged } from './services/auth'
 
 import Routes from './routes/Routes'
 
@@ -14,6 +15,8 @@ import Toolbar from './components/Toolbar'
 
 const App = () => {
 
+	const logged = isLogged()
+
 	return (
 		<BrowserRouter>
 			<AuthProvider>
@@ -21,7 +24,7 @@ const App = () => {
 
 					<Template>
 
-						<Toolbar />
+						{logged && <Toolbar />}
 
 						<Body>
 

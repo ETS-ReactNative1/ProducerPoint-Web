@@ -55,7 +55,7 @@ const SignIn = () => {
             setSnackColor('#070')
             setSnackMessage('Verifique seu e-mail e siga as instruções para recuperar sua senha.')
             handleOpenSnack()
-            handleOpenForgotPassword()
+            handleCloseForgotPassword()
             setLoading(false)
         } else {
             setSnackColor('#da1e37')
@@ -84,12 +84,14 @@ const SignIn = () => {
             setSnackColor('#070')
             setSnackMessage('Senha alterada com sucesso!')
             handleOpenSnack()
+            handleCloseRecovery()
             setLoading(false)
         } else {
             setSnackColor('#da1e37')
             setSnackMessage('Link de redefinição de senha inválido ou expirado!')
             handleOpenSnack()
             setLoading(false)
+            handleCloseRecovery()
         }
     }
 
