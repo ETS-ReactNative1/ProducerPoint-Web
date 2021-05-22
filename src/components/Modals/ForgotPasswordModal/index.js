@@ -3,24 +3,26 @@ import { useFormik } from 'formik'
 import * as yup from 'yup'
 
 import {
-    makeStyles, Modal, Backdrop, Grid, Slide, TextField, Button
+    makeStyles, Modal, Backdrop, Grid, Fade, TextField, Button, CircularProgress
 } from '@material-ui/core'
-import SaveIcon from '@material-ui/icons/Save'
+import SendIcon from '@material-ui/icons/Send'
 
-const AddModal = ({ open, handleClose, handleCreate, title, label }) => {
+const ForgotPasswordModal = ({
+    open, handleClose, title, label, sendEmail, loading
+}) => {
 
     const classes = useStyles()
 
-    const initialFormState = { label: '' }
+    const initialFormState = { email: '' }
     const validationSchema = yup.object().shape({
-        label: yup.string().required('Nome é obrigatório'),
+        email: yup.string().email('E-mail inválido!').required('E-mail é obrigatório!')
     })
 
     const formik = useFormik({
         initialValues: initialFormState,
         validationSchema: validationSchema,
         onSubmit: async (values) => {
-            handleCreate(values)
+            sendEmail(values.email)
         }
     })
 
@@ -35,7 +37,7 @@ const AddModal = ({ open, handleClose, handleCreate, title, label }) => {
                 timeout: 500,
             }}
         >
-            <Slide direction='up' in={open}>
+            <Fade direction='up' in={open}>
                 <div className={classes.paper}>
                     <h2>{title}</h2>
                     <Grid container >
@@ -45,15 +47,17 @@ const AddModal = ({ open, handleClose, handleCreate, title, label }) => {
                                 <Grid direction='column' container spacing={2}>
                                     <Grid item xs={12}>
                                         <TextField
+                                            className={classes.input}
+                                            autoFocus
                                             fullWidth
                                             variant='outlined'
-                                            id="label"
-                                            name="label"
+                                            id="email"
+                                            name="email"
                                             label={label}
-                                            value={formik.values.label}
+                                            value={formik.values.email}
                                             onChange={formik.handleChange}
-                                            error={formik.touched.label && Boolean(formik.errors.label)}
-                                            helperText={formik.touched.label && formik.errors.label}
+                                            error={formik.touched.email && Boolean(formik.errors.email)}
+                                            helperText={formik.touched.email && formik.errors.email}
                                             required
                                         />
                                     </Grid>
@@ -66,21 +70,26 @@ const AddModal = ({ open, handleClose, handleCreate, title, label }) => {
                         <Button
                             onClick={formik.handleSubmit}
                             className={classes.yesButton}
-                            startIcon={<SaveIcon />}
+                            startIcon={!loading && <SendIcon />}
                             color="primary"
                             variant="contained"
+                            type='submit'
                             fullWidth
-                        >
-                            Criar
+                        >{loading ? (
+                            <CircularProgress color='inherit' size={24} />
+                        ) : (
+                            <span>Enviar</span>
+                        )
+                            }
                         </Button>
                     </div>
                 </div>
-            </Slide>
+            </Fade>
         </Modal>
     )
 }
 
-export default AddModal
+export default ForgotPasswordModal
 
 const useStyles = makeStyles((theme) => ({
     modal: {
@@ -92,7 +101,7 @@ const useStyles = makeStyles((theme) => ({
     paper: {
         backgroundColor: theme.palette.background.paper,
         boxShadow: theme.shadows[5],
-        padding: theme.spacing(2, 4, 3),
+        padding: theme.spacing(2, 5, 3),
         borderRadius: 8,
     },
     yesButton: {
@@ -106,5 +115,8 @@ const useStyles = makeStyles((theme) => ({
         alignItems: 'center',
         justifyContent: 'space-between',
         marginTop: 15
+    },
+    input: {
+        width: 250
     }
 }));

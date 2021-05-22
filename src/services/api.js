@@ -1,8 +1,8 @@
 import moment from 'moment'
 
-//const API = 'https://apiproducers.serviceapp.net.br/api'
+const API = 'https://apiproducers.serviceapp.net.br/api'
 //const API = 'http://192.168.1.128:8080/api'
-const API = 'https://producersapi.herokuapp.com/api'
+//const API = 'https://producersapi.herokuapp.com/api'
 
 
 const apiFetchPost = async (endpoint, body) => {
@@ -354,4 +354,59 @@ export default {
         const request = await apiFetchDelete(`/tasks/${id}`)
         return request
     },
+
+    sendEmailRecovery: async (email) => {
+        try {
+            const headers = new Headers()
+            headers.append("Content-Type", "application/x-www-form-urlencoded")
+
+            const formData = new URLSearchParams()
+            formData.append('email', email)
+
+            const request = await fetch(`${API}/recovery/`, {
+                method: 'POST',
+                headers: headers,
+                body: formData.toString()
+            })
+            return request
+        } catch (e) {
+            console.log('Erro: sendEmailRecovery ' + e)
+        }
+        return null
+    },
+
+    validateLink: async (mail, time, token) => {
+        const response = await apiFetchGet(`/recovery/${mail}/${time}/${token}`)
+        return response
+    },
+
+    setNewPassword: async (email, time, token, newPassword) => {
+        try {
+            const headers = new Headers();
+            headers.append("Content-Type", "application/json")
+            headers.append("Accept", 'application/json')
+
+            const formData = new URLSearchParams();
+            formData.append('email', email);
+            formData.append('time', time);
+            formData.append('token', token);
+            formData.append('newPassword', newPassword);
+
+            const request = await fetch(`${API}/recovery/`, {
+                method: 'PUT',
+                headers: headers,
+                body: JSON.stringify({
+                    email: email,
+                    time: time,
+                    token: token,
+                    newPassword: newPassword
+                })
+            });
+            return request
+        } catch (e) {
+            console.log('Erro: setNewPassword ' + e)
+        }
+        return null
+    },
+
 }
