@@ -13,8 +13,9 @@ import { AuthContext } from '../../contexts/AuthContext'
 
 import logo from '../../assets/images/logo.png'
 import ConfimationModal from '../Modals/ConfimationModal'
-import SideBar from '../SideBar'
 import { doLogout } from '../../services/auth'
+
+import Drawer from '../Drawer'
 
 const ToolbarWrap = () => {
 
@@ -23,11 +24,10 @@ const ToolbarWrap = () => {
     const [anchorEl, setAnchorEl] = useState(null)
 
     const [confirmModal, setConfirmModal] = useState(false)
-    const [showSideBar, setShowSideBar] = useState(false)
+    const [state, setState] = useState(false)
 
     const handleOpenConfirmation = () => setConfirmModal(true)
     const handleCloseConfirmation = () => setConfirmModal(false)
-    const changeSideBar = () => setShowSideBar((prevOpen) => !prevOpen)
 
     const handleLogout = () => {
         doLogout()
@@ -36,14 +36,20 @@ const ToolbarWrap = () => {
 
     const handleClick = (event) => setAnchorEl(event.currentTarget)
     const handleCloseMenu = () => setAnchorEl(null)
+    const toggleDrawer = (anchor, open) => (event) => {
+        if (event && event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
+            return
+        }
+        setState({ [anchor]: open });
+    }
 
     return (
         <div className={classes.root}>
             <AppBar className={classes.appbar} position="static">
                 <Toolbar>
                     <div style={{ width: '13%' }}>
-                        <IconButton onClick={changeSideBar} edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
-                            {showSideBar ? <CancelPresentationIcon /> : <MenuIcon />}
+                        <IconButton onClick={toggleDrawer('left', true)} edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
+                            <MenuIcon />
                         </IconButton>
                     </div>
                     <div style={{
@@ -117,9 +123,9 @@ const ToolbarWrap = () => {
                     title='Deseja realmente sair?'
                 />
             }
-            <SideBar
-                show={showSideBar}
-                change={changeSideBar}
+            <Drawer
+                state={state}
+                toggleDrawer={toggleDrawer}
             />
         </div>
     );

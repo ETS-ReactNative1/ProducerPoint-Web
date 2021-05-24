@@ -108,7 +108,7 @@ const SignIn = () => {
     }
 
     const validationSchema = yup.object().shape({
-        email: yup.string().email('Entre com seu e-mail').required('O e-mail é obrigatório!'),
+        email: yup.string().email('Entre com um e-mail válido!').required('O e-mail é obrigatório!'),
         password: yup.string('Entre com sua senha').required('A senha é obrigatória!'),
     })
 
