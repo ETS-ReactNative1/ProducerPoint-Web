@@ -1,8 +1,8 @@
 import moment from 'moment'
 
-//const API = 'https://apiproducers.serviceapp.net.br/api'
+const API = 'https://apiproducers.serviceapp.net.br/api'
 //const API = 'http://192.168.1.128:8080/api'
-const API = 'https://producersapi.herokuapp.com/api'
+//const API = 'https://producersapi.herokuapp.com/api'
 
 
 const apiFetchPost = async (endpoint, body) => {
@@ -11,29 +11,29 @@ const apiFetchPost = async (endpoint, body) => {
     headers.append("Content-Type", "application/json")
     headers.append("Accept", 'application/json')
 
-    const response = await fetch(API + endpoint, {
+    const request = await fetch(API + endpoint, {
         method: 'POST',
         headers: headers,
         body: JSON.stringify(body)
     })
 
-    if (response.status >= 200 && response.status <= 299) {
-        const json = await response.json()
+    if (request.status >= 200 && request.status <= 299) {
+        const json = await request.json()
         if (json) {
             return {
                 data: json,
-                status: response.status
+                status: request.status
             }
         } else {
             return {
                 data: null,
-                status: response.status
+                status: request.status
             }
         }
     } else {
         return {
             data: null,
-            status: response.status,
+            status: request.status,
         }
     }
 }
