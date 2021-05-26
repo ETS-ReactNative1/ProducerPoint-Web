@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useParams, useHistory } from 'react-router-dom'
 
 import {
-    makeStyles, Table, TableBody, TableCell, TableContainer,
-    TableHead, TableRow, Paper
+    Grid, makeStyles, Table, TableBody, TableCell, TableContainer,
+    TableHead, TableRow, Paper, Button
 } from '@material-ui/core'
+import ReplyIcon from '@material-ui/icons/Reply'
 
 import api from '../../../../services/api'
 import moment from 'moment'
@@ -13,6 +14,7 @@ import { Area } from './styles'
 
 const ProducerDetails = () => {
 
+    const history = useHistory()
     const { id } = useParams()
     const [producer, setProducer] = useState([])
     const birth = moment(producer.birthDate).locale('pt-br').format('D/MM/yyyy')
@@ -132,6 +134,31 @@ const ProducerDetails = () => {
                     </Table>
                 </TableContainer>
             </Area>
+            <Grid container
+                direction="row"
+                justify="left"
+                alignItems="center"
+                spacing={2}
+            >
+                
+                <Grid item xs={12}>
+
+                </Grid>
+
+                <Grid item xs={10} sm={4} md={2}>
+                    <Button 
+                        variant="contained"
+                        color="primary"
+                        startIcon={<ReplyIcon />}
+                        className={classes.buttonBack}
+                        onClick={() => history.goBack()}
+                        size='small'
+                    >
+                        Voltar
+                    </Button>
+                </Grid>
+                
+            </Grid>
         </>
     );
 }
@@ -141,5 +168,13 @@ export default ProducerDetails
 const useStyles = makeStyles({
     table: {
         minWidth: 650,
+    },
+    buttonBack: {
+        margin: 2,
+        backgroundColor: '#458CB8',
+        width: '100%',
+        '&:hover': {
+            background: '#33617D'
+        },
     },
 })

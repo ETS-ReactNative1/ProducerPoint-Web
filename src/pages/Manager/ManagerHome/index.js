@@ -22,7 +22,7 @@ const ManagerHome = () => {
 
     return (
         <Grid container spacing={2}>
-            <Grid component={Link} to={'/producer-list'} className={classes.grid} item xs={4}>
+            <Grid component={Link} to={'/producer-list'} className={classes.grid} item xs={12} sm={6} md={4}>
                 <Card className={classes.root}>
                     <CardActionArea>
                         <CardMedia
@@ -43,7 +43,7 @@ const ManagerHome = () => {
                 </Card>
             </Grid>
 
-            <Grid component={Link} to={'/product-list'} className={classes.grid} item xs={4}>
+            <Grid component={Link} to={'/product-list'} className={classes.grid} item xs={12} sm={6} md={4}>
                 <Card className={classes.root}>
                     <CardActionArea>
                         <CardMedia
@@ -64,7 +64,7 @@ const ManagerHome = () => {
                 </Card>
             </Grid>
 
-            <Grid component={Link} to={'/activity-list'} className={classes.grid} item xs={4}>
+            <Grid component={Link} to={'/activity-list'} className={classes.grid} item xs={12} sm={6} md={4}>
                 <Card className={classes.root}>
                     <CardActionArea>
                         <CardMedia
@@ -85,7 +85,7 @@ const ManagerHome = () => {
                 </Card>
             </Grid>
 
-            <Grid component={Link} to={'/financial'} className={classes.grid} item xs={4}>
+            <Grid component={Link} to={'/financial'} className={classes.grid} item xs={12} sm={6} md={4}>
                 <Card className={classes.root}>
                     <CardActionArea>
                         <CardMedia
@@ -106,7 +106,7 @@ const ManagerHome = () => {
                 </Card>
             </Grid>
 
-            <Grid component={Link} to={'/tasks'} className={classes.grid} item xs={4}>
+            <Grid component={Link} to={'/tasks'} className={classes.grid} item xs={12} sm={6} md={4}>
                 <Card className={classes.root}>
                     <CardActionArea>
                         <CardMedia
@@ -127,7 +127,7 @@ const ManagerHome = () => {
                 </Card>
             </Grid>
 
-            <Grid component={Link} to={`/my-profile/${user?.id}/${user?.role}`} className={classes.grid} item xs={4}>
+            <Grid component={Link} to={`/my-profile/${user?.id}/${user?.role}`} className={classes.grid} item xs={12} sm={6} md={4}>
                 <Card className={classes.root}>
                     <CardActionArea>
                         <CardMedia

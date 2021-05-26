@@ -2,7 +2,7 @@ import React, { useMemo, useState } from 'react'
 import { Link, useHistory } from 'react-router-dom'
 
 import {
-    makeStyles, Table, TableBody, TableCell, TableContainer,
+    Grid, makeStyles, Table, TableBody, TableCell, TableContainer,
     TableHead, TableRow, Paper, TablePagination, IconButton,
     Tooltip, Button, TextField, InputAdornment
 } from '@material-ui/core'
@@ -185,18 +185,28 @@ const ProducersList = ({ data, title }) => {
                     <h3>Nenhum produtor relacionado</h3>
                 </div>
             }
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                <div>
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        startIcon={<ReplyIcon />}
-                        className={classes.buttonBack}
-                        onClick={() => history.goBack()}
-                        size='small'
-                    >
-                        Voltar
-                    </Button>
+
+            <Grid container
+                    direction="row-reverse"
+                    justify="space-around"
+                    alignItems="center"
+                    spacing={2}
+                >
+                
+                <Grid item xs={12} md={8}>
+                    <TablePagination
+                        labelRowsPerPage='Itens por página'
+                        rowsPerPageOptions={[5, 10, 15]}
+                        component="div"
+                        count={filteredSearch?.length}
+                        rowsPerPage={rowsPerPage}
+                        page={page}
+                        onChangePage={handleChangePage}
+                        onChangeRowsPerPage={handleChangeRowsPerPage}
+                    />
+                </Grid>
+                
+                <Grid item xs={10} sm={4} md={2}>
                     <Link className={classes.link} to='/producer-form'>
                         <Button
                             variant="contained"
@@ -208,18 +218,22 @@ const ProducersList = ({ data, title }) => {
                             Produtor
                         </Button>
                     </Link>
-                </div>
-                <TablePagination
-                    labelRowsPerPage='Itens por página'
-                    rowsPerPageOptions={[5, 10, 15]}
-                    component="div"
-                    count={filteredSearch?.length}
-                    rowsPerPage={rowsPerPage}
-                    page={page}
-                    onChangePage={handleChangePage}
-                    onChangeRowsPerPage={handleChangeRowsPerPage}
-                />
-            </div>
+                </Grid>
+
+                <Grid item xs={10} sm={4} md={2}>
+                    <Button 
+                        variant="contained"
+                        color="primary"
+                        startIcon={<ReplyIcon />}
+                        className={classes.buttonBack}
+                        onClick={() => history.goBack()}
+                        size='small'
+                    >
+                        Voltar
+                    </Button>
+                </Grid>
+                
+            </Grid>
 
             {open &&
                 <ConfimationModal
@@ -253,7 +267,7 @@ const useStyles = makeStyles((theme) => ({
     button: {
         margin: theme.spacing(1),
         backgroundColor: '#007200',
-
+        width: '100%',
         '&:hover': {
             background: '#005200'
         },
@@ -261,7 +275,7 @@ const useStyles = makeStyles((theme) => ({
     buttonBack: {
         margin: theme.spacing(1),
         backgroundColor: '#458CB8',
-
+        width: '100%',
         '&:hover': {
             background: '#33617D'
         },

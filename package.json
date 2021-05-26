@@ -3,7 +3,7 @@
   "homepage": "http://producerpoint2.serviceapp.net.br",
   "version": "0.1.0",
   "engines": {
-    "node": "14.16.1"
+    "node": "14.17.0"
   },
   "private": true,
   "dependencies": {

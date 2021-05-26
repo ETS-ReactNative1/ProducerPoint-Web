@@ -2,7 +2,7 @@ import React, { useState, useContext } from 'react'
 import { Link } from 'react-router-dom'
 
 import {
-    makeStyles, AppBar, Toolbar, Button, IconButton, Avatar,
+    Grid, makeStyles, AppBar, Toolbar, Button, IconButton, Avatar,
     MenuItem, Menu
 } from '@material-ui/core'
 import MenuIcon from '@material-ui/icons/Menu'
@@ -88,7 +88,7 @@ const ToolbarWrap = () => {
                             onClose={handleCloseMenu}
                             PaperProps={{
                                 style: {
-                                    width: '10%',
+                                    width: '150px',
                                     marginTop: 28,
                                     marginLeft: 3
                                 },
