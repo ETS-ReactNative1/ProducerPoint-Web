@@ -2,7 +2,7 @@ import React from 'react'
 import { Link, useHistory } from 'react-router-dom'
 
 import {
-    makeStyles, Table, TableBody, TableCell, TableContainer,
+    Grid, makeStyles, Table, TableBody, TableCell, TableContainer,
     TableHead, TableRow, Paper, Button
 } from '@material-ui/core'
 
@@ -58,29 +58,46 @@ const ProfileDetails = ({ data }) => {
                         </TableBody>
                     </Table>
                 </TableContainer>
-                <div style={{ display: 'flex', alignItems: 'center' }}>
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        startIcon={<ReplyIcon />}
-                        className={classes.buttonBack}
-                        onClick={() => history.goBack()}
-                        size='small'
-                    >
-                        Voltar
-                        </Button>
-                    <Link className={classes.link} to={`/admin-edit/${data.id}`}>
+
+                <Grid container
+                    direction="row-reverse"
+                    justify="space-around"
+                    alignItems="center"
+                    spacing={2}
+                >
+                
+                    <Grid item xs={12} md={8}>
+
+                    </Grid>
+                    
+                    <Grid item xs={10} sm={4} md={2}>
+                        <Link className={classes.link} to={`/admin-edit/${data.id}`}>
+                            <Button
+                                variant="contained"
+                                color="primary"
+                                startIcon={<EditIcon />}
+                                className={classes.button}
+                                size='small'
+                            >
+                                Editar
+                            </Button>
+                        </Link>
+                    </Grid>
+
+                    <Grid item xs={10} sm={4} md={2}>
                         <Button
                             variant="contained"
                             color="primary"
-                            startIcon={<EditIcon />}
-                            className={classes.button}
+                            startIcon={<ReplyIcon />}
+                            className={classes.buttonBack}
+                            onClick={() => history.goBack()}
                             size='small'
                         >
-                            Editar
+                            Voltar
                         </Button>
-                    </Link>
-                </div>
+                    </Grid>
+                    
+                </Grid>
             </Area>
         </>
     );
@@ -95,7 +112,7 @@ const useStyles = makeStyles((theme) => ({
     button: {
         margin: theme.spacing(1),
         backgroundColor: '#007200',
-
+        width: "100%",
         '&:hover': {
             background: '#005200'
         },
@@ -103,7 +120,7 @@ const useStyles = makeStyles((theme) => ({
     buttonBack: {
         margin: theme.spacing(1),
         backgroundColor: '#458CB8',
-
+        width: "100%",
         '&:hover': {
             background: '#33617D'
         },

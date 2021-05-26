@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react'
-import { useParams } from 'react-router-dom'
+import { useParams, useHistory } from 'react-router-dom'
 import { useFormik } from 'formik'
 import * as yup from 'yup'
 
@@ -8,6 +8,7 @@ import {
     Grid, TextField, Button, MenuItem, Select,
     Input, InputLabel, ListItemText, Checkbox,
 } from '@material-ui/core';
+import ReplyIcon from '@material-ui/icons/Reply'
 
 import api from '../../../../services/api'
 import { RequestContext } from '../../../../contexts/RequestContext'
@@ -21,6 +22,7 @@ import Fail from '../../../../assets/lotties/fail.json'
 
 const ProducerEdit = () => {
 
+    const history = useHistory()
     const { products, activities } = useContext(RequestContext)
     const { user } = useContext(AuthContext)
     const { id } = useParams()
@@ -443,16 +445,48 @@ const ProducerEdit = () => {
                                     </Select>
                                 </Grid>
 
+                                <Grid container
+                                    direction="row-reverse"
+                                    justify="space-around"
+                                    alignItems="center"
+                                    spacing={2}
+                                >
+                                    <Grid item xs={12} md={8}>
+
+                                    </Grid>
+                                    
+                                    <Grid item xs={10} sm={4} md={2}>
+                                        <Button
+                                            onClick={formik.handleSubmit}
+                                            className={classes.button}
+                                            color="primary"
+                                            variant="contained"
+                                            fullWidth
+                                            type="submit"
+                                            size='small'
+                                        >
+                                            Salvar
+                                        </Button>
+                                    </Grid>
+
+                                    <Grid item xs={10} sm={4} md={2}>
+                                        <Button 
+                                            variant="contained"
+                                            color="primary"
+                                            startIcon={<ReplyIcon />}
+                                            className={classes.buttonBack}
+                                            onClick={() => history.goBack()}
+                                            size='small'
+                                        >
+                                            Voltar
+                                        </Button>
+                                    </Grid>
+                                    
+                                </Grid>
+
+
                                 <Grid item xs={12}>
-                                    <Button
-                                        onClick={formik.handleSubmit}
-                                        className={classes.button}
-                                        color="primary"
-                                        variant="contained"
-                                        fullWidth
-                                        type="submit">
-                                        Salvar
-                                    </Button>
+                                    
                                 </Grid>
 
                             </Grid>
@@ -484,9 +518,17 @@ const useStyles = makeStyles((theme) => ({
     },
     button: {
         backgroundColor: '#070',
-
+        width: '100%',
         '&:hover': {
             background: '#005200'
+        },
+    },
+    buttonBack: {
+        margin: 2,
+        backgroundColor: '#458CB8',
+        width: '100%',
+        '&:hover': {
+            background: '#33617D'
         },
     },
     titleBox: {

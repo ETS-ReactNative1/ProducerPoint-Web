@@ -211,31 +211,44 @@ const ProfileEdit = ({ data }) => {
                                     </TextField>
                                 </Grid>
 
-                                <Grid item xs={2}>
-                                    <Button
-                                        onClick={() => history.goBack()}
-                                        className={classes.buttonBack}
-                                        startIcon={<ReplyIcon />}
-                                        color="primary"
-                                        variant="contained"
-                                        fullWidth
-                                    >
-                                        Voltar
-                                    </Button>
-                                </Grid>
+                                <Grid container
+                                    direction="row-reverse"
+                                    justify="space-around"
+                                    alignItems="center"
+                                    spacing={2}
+                                >
+                                
+                                    <Grid item xs={12} md={8}>
 
-                                <Grid item xs={10}>
-                                    <Button
-                                        onClick={formik.handleSubmit}
-                                        className={classes.button}
-                                        startIcon={<SaveIcon />}
-                                        color="primary"
-                                        variant="contained"
-                                        fullWidth
-                                        type="submit"
-                                    >
-                                        Salvar
-                                    </Button>
+                                    </Grid>
+                                    
+                                    <Grid item xs={10} sm={4} md={2}>
+                                        <Button
+                                            onClick={formik.handleSubmit}
+                                            className={classes.button}
+                                            startIcon={<SaveIcon />}
+                                            color="primary"
+                                            variant="contained"
+                                            fullWidth
+                                            type="submit"
+                                        >
+                                            Salvar
+                                        </Button>
+                                    </Grid>
+
+                                    <Grid item xs={10} sm={4} md={2}>
+                                        <Button
+                                            onClick={() => history.goBack()}
+                                            className={classes.buttonBack}
+                                            startIcon={<ReplyIcon />}
+                                            color="primary"
+                                            variant="contained"
+                                            fullWidth
+                                        >
+                                            Voltar
+                                        </Button>
+                                    </Grid>
+                                    
                                 </Grid>
 
                             </Grid>
@@ -267,14 +280,14 @@ const useStyles = makeStyles((theme) => ({
     },
     button: {
         backgroundColor: '#070',
-
+        width: '100%',
         '&:hover': {
             background: '#005200'
         },
     },
     buttonBack: {
         backgroundColor: '#458CB8',
-
+        width: '100%',
         '&:hover': {
             background: '#33617D'
         },

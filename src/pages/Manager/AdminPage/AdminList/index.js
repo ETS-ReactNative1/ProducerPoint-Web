@@ -2,7 +2,7 @@ import React, { useState, useContext, useEffect } from 'react'
 import { Link, useHistory, useParams } from 'react-router-dom'
 
 import {
-    makeStyles, Table, TableBody, TableCell, TableContainer,
+    Grid, makeStyles, Table, TableBody, TableCell, TableContainer,
     TableHead, TableRow, Paper, TablePagination, IconButton,
     Tooltip, Button, TextField, InputAdornment
 } from '@material-ui/core'
@@ -186,35 +186,44 @@ const UserManagement = () => {
                     <h3>Nenhum produtor relacionado</h3>
                 </div>
             }
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                <div>
-                    {role == 0 &&
-                        <>
+
+            <Grid container
+                direction="row-reverse"
+                justify="space-around"
+                alignItems="center"
+                spacing={2}
+            >
+                
+                <Grid item xs={12} md={8}>
+                    <TablePagination
+                        labelRowsPerPage='Itens por página'
+                        rowsPerPageOptions={[5, 10, 15]}
+                        component="div"
+                        count={filteredSearch?.length}
+                        rowsPerPage={rowsPerPage}
+                        page={page}
+                        onChangePage={handleChangePage}
+                        onChangeRowsPerPage={handleChangeRowsPerPage}
+                    />
+                </Grid>
+                
+                <Grid item xs={10} sm={4} md={2}>
+                    {role == 0 &&                      
+                        <Link className={classes.link} to='/admin-form'>
                             <Button
                                 variant="contained"
                                 color="primary"
-                                startIcon={<ReplyIcon />}
-                                className={classes.buttonBack}
-                                onClick={() => history.goBack()}
+                                startIcon={<AddIcon />}
+                                className={classes.button}
                                 size='small'
                             >
-                                Voltar
+                                Usuário
                             </Button>
-                            <Link className={classes.link} to='/admin-form'>
-                                <Button
-                                    variant="contained"
-                                    color="primary"
-                                    startIcon={<AddIcon />}
-                                    className={classes.button}
-                                    size='small'
-                                >
-                                    Usuário
-                                </Button>
-                            </Link>
-                        </>
+                        </Link>
                     }
-                </div>
-                {role == 1 &&
+                </Grid>
+
+                <Grid item xs={10} sm={4} md={2}>
                     <Button
                         variant="contained"
                         color="primary"
@@ -225,18 +234,9 @@ const UserManagement = () => {
                     >
                         Voltar
                     </Button>
-                }
-                <TablePagination
-                    labelRowsPerPage='Itens por página'
-                    rowsPerPageOptions={[5, 10, 15]}
-                    component="div"
-                    count={filteredSearch?.length}
-                    rowsPerPage={rowsPerPage}
-                    page={page}
-                    onChangePage={handleChangePage}
-                    onChangeRowsPerPage={handleChangeRowsPerPage}
-                />
-            </div>
+                </Grid>
+                
+            </Grid>
 
             {
                 open &&
@@ -272,7 +272,7 @@ const useStyles = makeStyles((theme) => ({
     button: {
         margin: theme.spacing(1),
         backgroundColor: '#007200',
-
+        width: '100%',
         '&:hover': {
             background: '#005200'
         },
@@ -280,7 +280,7 @@ const useStyles = makeStyles((theme) => ({
     buttonBack: {
         margin: theme.spacing(1),
         backgroundColor: '#458CB8',
-
+        width: '100%',
         '&:hover': {
             background: '#33617D'
         },

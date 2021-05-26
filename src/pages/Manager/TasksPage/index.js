@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react'
 import { useHistory } from 'react-router-dom'
 import PropTypes from 'prop-types'
-import { makeStyles, Tabs, Tab, Typography, Box, Button } from '@material-ui/core'
+import { Grid, makeStyles, Tabs, Tab, Typography, Box, Button } from '@material-ui/core'
 import AddIcon from '@material-ui/icons/Add'
 import ReplyIcon from '@material-ui/icons/Reply'
 
@@ -86,26 +86,49 @@ const NavTabs = () => {
             <TabPanel value={value} index={1}>
                 <TasksList data={futureTasks} />
             </TabPanel>
-            <Button
-                variant="contained"
-                color="primary"
-                startIcon={<ReplyIcon />}
-                className={classes.buttonBack}
-                onClick={() => history.goBack()}
-                size='small'
-            >
-                Voltar
+
+            <Grid container
+                    direction="row-reverse"
+                    justify="space-around"
+                    alignItems="center"
+                    spacing={2}
+                >
+                
+                <Grid item xs={12} md={8}>
+
+                </Grid>
+                
+                <Grid item xs={10} sm={4} md={2}>
+                    <Button
+                        style={{width: "100%"}}
+                        variant="contained"
+                        color="secondary"
+                        className={classes.button}
+                        startIcon={<AddIcon />}
+                        onClick={handleOpenAddModal}
+                        size='small'
+                    >
+                        Tarefa
                     </Button>
-            <Button
-                variant="contained"
-                color="secondary"
-                className={classes.button}
-                startIcon={<AddIcon />}
-                onClick={handleOpenAddModal}
-                size='small'
-            >
-                Tarefa
-            </Button>
+                </Grid>
+
+                <Grid item xs={10} sm={4} md={2}>
+                    <Button
+                        style={{width: "100%"}}
+                        variant="contained"
+                        color="primary"
+                        startIcon={<ReplyIcon />}
+                        className={classes.buttonBack}
+                        onClick={() => history.goBack()}
+                        size='small'
+                    >
+                        Voltar
+                    </Button>
+                </Grid>
+                
+            </Grid>
+            
+
             {addModal &&
                 <AddTaskModal
                     handleClose={handleCloseAddModal}
