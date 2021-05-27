@@ -10,6 +10,7 @@ import ReplyIcon from '@material-ui/icons/Reply'
 import SaveIcon from '@material-ui/icons/Save'
 
 import api from '../../services/api'
+import valid from '../../services/validations'
 import { profiles } from '../../enums'
 import { AuthContext } from '../../contexts/AuthContext'
 
@@ -53,13 +54,13 @@ const ProfileEdit = ({ data }) => {
         cpf: '',
         phone: '',
         email: '',
-        role: ''
+        role: 1
     }
 
     const validationSchema = yup.object().shape({
         name: yup.string().required('Nome é obrigatório!'),
         birthDate: yup.date().required('Data é obrigatória!'),
-        cpf: yup.string().required('CPF é obrigatório!'),
+        cpf: yup.string().required('CPF é obrigatório!').test('cpf', 'CPF inválido', async value => await valid.validaCPF( value ) ),
         phone: yup.string().required('Telefone é obrigatório!'),
         email: yup.string().email('E-mail inválido!').required('E-mail é obrigatório!'),
         role: yup.string().required('Perfil é obrigatório!'),
@@ -69,18 +70,26 @@ const ProfileEdit = ({ data }) => {
         initialValues: initialFormState,
         validationSchema: validationSchema,
         onSubmit: async (values) => {
-
-            const response = await api.updateManager(id, values)
-
+            
+            const response = id >0 ? 
+            await api.updateManager(id, values) :
+            await api.createManager(values)
+            
             if (response.data) {
-                setLottie(Success)
-                setMessage(`Usuário atualizado com sucesso!`)
-                handleOpenWarningModal()
-                setTimeout(() => {
-                    user.role == 0
-                        ? window.location.href = `/admin-list/${user?.role}`
-                        : window.location.href = `/my-profile/${user?.id}/${user?.role}`
-                }, 2500);
+                if (response.status >= 200 && response.status <= 299) {
+                    setLottie(Success)
+                    setMessage(`Usuário atualizado com sucesso!`)
+                    handleOpenWarningModal()
+                    setTimeout(() => {
+                        user.role == 0
+                            ? window.location.href = `/admin-list/${user?.role}`
+                            : window.location.href = `/my-profile/${user?.id}/${user?.role}`
+                    }, 2500);
+                } else {
+                    setLottie(Fail)
+                    setMessage(`Falha inesperada! Erro: ${response?.data?.message}`)
+                    handleOpenWarningModal()
+                };
             } else {
                 setLottie(Fail)
                 setMessage(`Falha inesperada! Erro: ${response.status}`)
@@ -170,7 +179,7 @@ const ProfileEdit = ({ data }) => {
                                         name="cpf"
                                         label="CPF"
                                         value={formik.values.cpf}
-                                        onChange={formik.handleChange}
+                                        onChange={async (e) => formik.setFieldValue('cpf', await valid.cpfMask(e.target.value))}
                                         error={formik.touched.cpf && Boolean(formik.errors.cpf)}
                                         helperText={formik.touched.cpf && formik.errors.cpf}
                                         required
@@ -185,7 +194,7 @@ const ProfileEdit = ({ data }) => {
                                         name="phone"
                                         label="Telefone"
                                         value={formik.values.phone}
-                                        onChange={formik.handleChange}
+                                        onChange={async (e) => formik.setFieldValue('phone', await valid.phoneMask(e.target.value))}
                                         error={formik.touched.phone && Boolean(formik.errors.phone)}
                                         helperText={formik.touched.phone && formik.errors.phone}
                                     />
