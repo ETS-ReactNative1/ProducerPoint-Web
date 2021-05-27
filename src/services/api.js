@@ -1,8 +1,8 @@
 import moment from 'moment'
 
-//const API = 'https://apiproducers.serviceapp.net.br/api'
+const API = 'https://apiproducers.serviceapp.net.br/api'
 //const API = 'http://192.168.1.128:8080/api'
-const API = 'https://producersapi.herokuapp.com/api'
+//const API = 'https://producersapi.herokuapp.com/api'
 
 
 const apiFetchPost = async (endpoint, body) => {
@@ -17,7 +17,7 @@ const apiFetchPost = async (endpoint, body) => {
         body: JSON.stringify(body)
     })
 
-    if (response.status >= 200 && response.status <= 299) {
+    if ((response.status >= 200 && response.status <= 299) || response.status === 400) {
         const json = await response.json()
         if (json) {
             return {
@@ -74,7 +74,7 @@ const apiFetchPut = async (endpoint, body) => {
         body: JSON.stringify(body)
     })
 
-    if (response.status >= 200 && response.status <= 299) {
+    if ((response.status >= 200 && response.status <= 299) || response.status === 400) {
         const json = await response.json()
         if (json) {
             return {

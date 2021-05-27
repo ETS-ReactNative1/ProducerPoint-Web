@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import { useHistory } from 'react-router-dom'
 import { useFormik } from 'formik'
 import * as yup from 'yup'
@@ -7,8 +7,10 @@ import {
     makeStyles, Grid, TextField, Button, MenuItem
 } from '@material-ui/core'
 import ReplyIcon from '@material-ui/icons/Reply'
+import SaveIcon from '@material-ui/icons/Save'
 
 import api from '../../../../services/api'
+import valid from '../../../../services/validations'
 import { profiles } from '../../../../enums'
 
 import WarningModal from '../../../../components/Modals/WarningModal'
@@ -39,7 +41,7 @@ const ProducerForm = () => {
     const validationSchema = yup.object().shape({
         name: yup.string().required('Nome é obrigatório!'),
         birthDate: yup.date().required('Data é obrigatória!'),
-        cpf: yup.string().required('CPF é obrigatório!'),
+        cpf: yup.string().required('CPF é obrigatório!').test('cpf', 'CPF inválido', async value => await valid.validaCPF( value ) ),
         phone: yup.string().required('Telefone é obrigatório!'),
         email: yup.string().email('E-mail inválido!').required('E-mail é obrigatório!'),
         role: yup.string().required('Perfil é obrigatório!'),
@@ -53,12 +55,18 @@ const ProducerForm = () => {
             const response = await api.createManager(values)
 
             if (response.data) {
-                setLottie(Success)
-                setMessage(`Usuário cadastrado com sucesso!`)
-                handleOpenWarningModal()
-                setTimeout(() => {
-                    window.location.href = `/admin-list/${values.role}`
-                }, 2500);
+                if (response.status >= 200 && response.status <= 299) {
+                    setLottie(Success)
+                    setMessage(`Usuário atualizado com sucesso!`)
+                    handleOpenWarningModal()
+                    setTimeout(() => {
+                        window.location.href = `/admin-list/0`
+                    }, 2500);
+                } else {
+                    setLottie(Fail)
+                    setMessage(`Falha inesperada! Erro: ${response?.data?.message}`)
+                    handleOpenWarningModal()
+                };
             } else {
                 setLottie(Fail)
                 setMessage(`Falha inesperada! Erro: ${response.status}`)
@@ -149,7 +157,7 @@ const ProducerForm = () => {
                                         name="cpf"
                                         label="CPF"
                                         value={formik.values.cpf}
-                                        onChange={formik.handleChange}
+                                        onChange={async (e) => formik.setFieldValue('cpf', await valid.cpfMask(e.target.value))}
                                         error={formik.touched.cpf && Boolean(formik.errors.cpf)}
                                         helperText={formik.touched.cpf && formik.errors.cpf}
                                         required
@@ -164,7 +172,7 @@ const ProducerForm = () => {
                                         name="phone"
                                         label="Telefone"
                                         value={formik.values.phone}
-                                        onChange={formik.handleChange}
+                                        onChange={async (e) => formik.setFieldValue('phone', await valid.phoneMask(e.target.value))}
                                         error={formik.touched.phone && Boolean(formik.errors.phone)}
                                         helperText={formik.touched.phone && formik.errors.phone}
                                     />
@@ -189,30 +197,44 @@ const ProducerForm = () => {
                                     </TextField>
                                 </Grid>
 
-                                <Grid item xs={2}>
-                                    <Button
-                                        onClick={() => history.goBack()}
-                                        className={classes.buttonBack}
-                                        startIcon={<ReplyIcon />}
-                                        color="primary"
-                                        variant="contained"
-                                        fullWidth
-                                    >
-                                        Voltar
-                                    </Button>
-                                </Grid>
+                                <Grid container
+                                    direction="row-reverse"
+                                    justify="space-around"
+                                    alignItems="center"
+                                    spacing={2}
+                                >
+                                
+                                    <Grid item xs={12} md={8}>
 
-                                <Grid item xs={10}>
-                                    <Button
-                                        onClick={formik.handleSubmit}
-                                        className={classes.button}
-                                        color="primary"
-                                        variant="contained"
-                                        fullWidth
-                                        type="submit"
-                                    >
-                                        Cadastrar
-                                    </Button>
+                                    </Grid>
+                                    
+                                    <Grid item xs={10} sm={4} md={2}>
+                                        <Button
+                                            onClick={formik.handleSubmit}
+                                            className={classes.button}
+                                            startIcon={<SaveIcon />}
+                                            color="primary"
+                                            variant="contained"
+                                            fullWidth
+                                            type="submit"
+                                        >
+                                            Salvar
+                                        </Button>
+                                    </Grid>
+
+                                    <Grid item xs={10} sm={4} md={2}>
+                                        <Button
+                                            onClick={() => history.goBack()}
+                                            className={classes.buttonBack}
+                                            startIcon={<ReplyIcon />}
+                                            color="primary"
+                                            variant="contained"
+                                            fullWidth
+                                        >
+                                            Voltar
+                                        </Button>
+                                    </Grid>
+                                    
                                 </Grid>
 
                             </Grid>

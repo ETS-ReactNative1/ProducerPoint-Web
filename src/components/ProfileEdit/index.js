@@ -54,7 +54,7 @@ const ProfileEdit = ({ data }) => {
         cpf: '',
         phone: '',
         email: '',
-        role: ''
+        role: 1
     }
 
     const validationSchema = yup.object().shape({
@@ -70,18 +70,26 @@ const ProfileEdit = ({ data }) => {
         initialValues: initialFormState,
         validationSchema: validationSchema,
         onSubmit: async (values) => {
-
-            const response = await api.updateManager(id, values)
-
+            
+            const response = id >0 ? 
+            await api.updateManager(id, values) :
+            await api.createManager(values)
+            
             if (response.data) {
-                setLottie(Success)
-                setMessage(`Usuário atualizado com sucesso!`)
-                handleOpenWarningModal()
-                setTimeout(() => {
-                    user.role == 0
-                        ? window.location.href = `/admin-list/${user?.role}`
-                        : window.location.href = `/my-profile/${user?.id}/${user?.role}`
-                }, 2500);
+                if (response.status >= 200 && response.status <= 299) {
+                    setLottie(Success)
+                    setMessage(`Usuário atualizado com sucesso!`)
+                    handleOpenWarningModal()
+                    setTimeout(() => {
+                        user.role == 0
+                            ? window.location.href = `/admin-list/${user?.role}`
+                            : window.location.href = `/my-profile/${user?.id}/${user?.role}`
+                    }, 2500);
+                } else {
+                    setLottie(Fail)
+                    setMessage(`Falha inesperada! Erro: ${response?.data?.message}`)
+                    handleOpenWarningModal()
+                };
             } else {
                 setLottie(Fail)
                 setMessage(`Falha inesperada! Erro: ${response.status}`)
