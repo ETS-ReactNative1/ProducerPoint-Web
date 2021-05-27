@@ -11,7 +11,7 @@ const apiFetchPost = async (endpoint, body) => {
     headers.append("Content-Type", "application/json")
     headers.append("Accept", 'application/json')
 
-    const response = await fetch(API + endpoint, {
+    const request = await fetch(API + endpoint, {
         method: 'POST',
         headers: headers,
         body: JSON.stringify(body)
@@ -22,18 +22,18 @@ const apiFetchPost = async (endpoint, body) => {
         if (json) {
             return {
                 data: json,
-                status: response.status
+                status: request.status
             }
         } else {
             return {
                 data: null,
-                status: response.status
+                status: request.status
             }
         }
     } else {
         return {
             data: null,
-            status: response.status,
+            status: request.status,
         }
     }
 }

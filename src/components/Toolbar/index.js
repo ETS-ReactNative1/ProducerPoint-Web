@@ -6,7 +6,6 @@ import {
     MenuItem, Menu
 } from '@material-ui/core'
 import MenuIcon from '@material-ui/icons/Menu'
-import CancelPresentationIcon from '@material-ui/icons/CancelPresentation'
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 
 import { AuthContext } from '../../contexts/AuthContext'
