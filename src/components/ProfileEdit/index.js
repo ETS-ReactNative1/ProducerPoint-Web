@@ -10,6 +10,7 @@ import ReplyIcon from '@material-ui/icons/Reply'
 import SaveIcon from '@material-ui/icons/Save'
 
 import api from '../../services/api'
+import valid from '../../services/validations'
 import { profiles } from '../../enums'
 import { AuthContext } from '../../contexts/AuthContext'
 
@@ -59,7 +60,7 @@ const ProfileEdit = ({ data }) => {
     const validationSchema = yup.object().shape({
         name: yup.string().required('Nome é obrigatório!'),
         birthDate: yup.date().required('Data é obrigatória!'),
-        cpf: yup.string().required('CPF é obrigatório!'),
+        cpf: yup.string().required('CPF é obrigatório!').test('cpf', 'CPF inválido', async value => await valid.validaCPF( value ) ),
         phone: yup.string().required('Telefone é obrigatório!'),
         email: yup.string().email('E-mail inválido!').required('E-mail é obrigatório!'),
         role: yup.string().required('Perfil é obrigatório!'),
@@ -170,7 +171,7 @@ const ProfileEdit = ({ data }) => {
                                         name="cpf"
                                         label="CPF"
                                         value={formik.values.cpf}
-                                        onChange={formik.handleChange}
+                                        onChange={async (e) => formik.setFieldValue('cpf', await valid.cpfMask(e.target.value))}
                                         error={formik.touched.cpf && Boolean(formik.errors.cpf)}
                                         helperText={formik.touched.cpf && formik.errors.cpf}
                                         required
@@ -185,7 +186,7 @@ const ProfileEdit = ({ data }) => {
                                         name="phone"
                                         label="Telefone"
                                         value={formik.values.phone}
-                                        onChange={formik.handleChange}
+                                        onChange={async (e) => formik.setFieldValue('phone', await valid.phoneMask(e.target.value))}
                                         error={formik.touched.phone && Boolean(formik.errors.phone)}
                                         helperText={formik.touched.phone && formik.errors.phone}
                                     />
