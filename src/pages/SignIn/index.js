@@ -13,6 +13,7 @@ import VisibilityOff from '@material-ui/icons/VisibilityOff'
 import EmailIcon from '@material-ui/icons/Email'
 
 import api from '../../services/api'
+import { isLogged } from '../../services/auth'
 
 import logo from '../../assets/images/logo.png'
 import Fail from '../../assets/lotties/fail.json'
@@ -24,8 +25,10 @@ import WarningModal from '../../components/Modals/WarningModal'
 
 const SignIn = () => {
 
+    const logged = isLogged()
     const classes = useStyles()
     const { email, time, token } = useParams()
+    const { user } = useContext(AuthContext)
 
     const {
         signIn,
@@ -128,6 +131,14 @@ const SignIn = () => {
                 <Typography component="h1" variant="h5">
                     Producer Point
                 </Typography>
+                {logged && <p align="center">
+                                Conectado como:
+                                <h2 className={classes.title}>
+                                    {user?.name}
+                                </h2>
+                                <sub>{user?.email}</sub>
+                            </p>}
+                {!logged && 
                 <form className={classes.form} noValidate onSubmit={formik.handleSubmit}>
                     <TextField
                         variant="outlined"
@@ -197,19 +208,21 @@ const SignIn = () => {
                     )
                         }
                     </Button>
-                    <Grid container>
-                        <Grid item xs>
-                            <Link onClick={handleOpenForgotPassword} href="#" variant="body2">
-                                Esqueceu sua senha?
-                            </Link>
-                        </Grid>
-                        <Grid item>
-                            <Link href="#" variant="body2">
-                                {"Quem somos?"}
-                            </Link>
-                        </Grid>
+                    
+                </form>}
+
+                <Grid container>
+                    <Grid item xs>
+                        <Link onClick={handleOpenForgotPassword} href="#" variant="body2">
+                            Esqueceu sua senha?
+                        </Link>
                     </Grid>
-                </form>
+                    <Grid item>
+                        <Link href="#" variant="body2">
+                            {"Quem somos?"}
+                        </Link>
+                    </Grid>
+                </Grid>
             </div>
             {forgotPassword &&
                 <ForgotPasswordModal
@@ -288,5 +301,10 @@ const useStyles = makeStyles((theme) => ({
     },
     logo: {
         width: 160
-    }
+    },
+    title: {
+        flexGrow: 1,
+        textTransform: 'capitalize',
+        margin: 0,
+    },
 }));
