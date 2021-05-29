@@ -6,9 +6,18 @@ import {
     TableHead, TableRow, Paper, Button
 } from '@material-ui/core'
 import ReplyIcon from '@material-ui/icons/Reply'
+import AddIcon from '@material-ui/icons/Add'
 
 import api from '../../../../services/api'
 import moment from 'moment'
+
+import ConfimationModal from '../../../../components/Modals/ConfimationModal'
+import WarningModal from '../../../../components/Modals/WarningModal'
+import Success from '../../../../assets/lotties/success.json'
+import Fail from '../../../../assets/lotties/fail.json'
+import AddModal from '../../../../components/Modals/AddSaleModal'
+import EditActivityModal from '../../../../components/Modals/EditActivityModal'
+import SalesList from '../../../../components/SalesList'
 
 import { Area } from './styles'
 
@@ -17,19 +26,117 @@ const ProducerDetails = () => {
     const history = useHistory()
     const { id } = useParams()
     const [producer, setProducer] = useState([])
+    const [sales, setSales] = useState([])
     const birth = moment(producer.birthDate).locale('pt-br').format('D/MM/yyyy')
+   
+    const [open, setOpen] = useState(false)
+    const [value, setValue] = useState(null)
+    const [search, setSearch] = useState('')
+    const [filteredSearch, setFilteredSearch] = useState([])
+    const [addModal, setAddModal] = useState(false)
+    const [editModal, setEditModal] = useState(false)
+    const [page, setPage] = useState(0)
+    const [rowsPerPage, setRowsPerPage] = useState(5)
+    const classes = useStyles()
+    const [warningModal, setWarningModal] = useState(false)
+    const [message, setMessage] = useState(true)
+    const [lottie, setLottie] = useState('')
+    const handleOpenWarningModal = () => setWarningModal(true)
+    const handleCloseWarningModal = () => setWarningModal(false)
+    const handleOpenAddModal = () => setAddModal(true)
+    const handleCloseAddModal = () => setAddModal(false)
+    const handleCloseEditModal = () => setEditModal(false)
+    const handleOpenEditModal = (value) => {
+        setValue(value)
+        setEditModal(true)
+    } 
+
+    const loadActivities = async () => {
+        const response = await api.getAllActivities()
+
+    }
 
     useEffect(() => {
         const getProducer = async (id) => {
             const response = await api.getProducerById(id)
             setProducer(response.data)
         }
+        const getProducerSales = async (id) => {
+            const response = await api.getProducerSales(id)
+            setProducer(response.data)
+        }
         getProducer(id)
+        getProducerSales(id);
     }, [])
 
-    const classes = useStyles();
     const currencyReal = producer.farmingActivity?.averageCash.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })
 
+    const handleCreateActivity = async (values) => {
+        const response = await api.createActivity(values.label)
+        if (response.data) {
+            handleCloseAddModal()
+            setLottie(Success)
+            setMessage('Atividade criada com sucesso!')
+            handleOpenWarningModal()
+            setValue(null)
+        } else {
+            handleCloseAddModal()
+            setLottie(Fail)
+            setMessage(`Falha inesperada! Erro: ${response.status}`)
+            handleOpenWarningModal()
+            setValue(null)
+        }
+    }
+
+    const handleUpdateActivity = async (values) => {
+        const response = await api.updateActivity(value, values.label)
+
+        if (response.data) {
+            setLottie(Success)
+            setMessage('Atividade atualizada com sucesso!')
+            handleOpenWarningModal()
+            handleCloseEditModal()
+            setValue(null)
+        } else {
+            setLottie(Fail)
+            setMessage(`Falha inesperada! Erro: ${response.status}`)
+            handleOpenWarningModal()
+            setValue(null)
+        }
+    }
+
+    const handleDelete = (value) => {
+        setValue(value)
+        handleOpen()
+    }
+
+    const doDelete = async () => {
+        const response = await api.deleteActivity(value)
+        if (response.status === 200) {
+            handleClose()
+            const filtered = filteredSearch?.filter((i) => i.value !== value)
+            setFilteredSearch(filtered)
+            setLottie(Success)
+            setMessage('Atividade excluída com sucesso!')
+            handleOpenWarningModal()
+
+        } else {
+            handleClose()
+            setLottie(Fail)
+            setMessage(`Falha inesperada! Erro: ${response.status}`)
+            handleOpenWarningModal()
+        }
+    }
+
+    const handleChangePage = (event, newPage) => { setPage(newPage) }
+
+    const handleChangeRowsPerPage = (event) => {
+        setRowsPerPage(parseInt(event.target.value, 10))
+        setPage(0)
+    }
+
+    const handleOpen = () => setOpen(true)
+    const handleClose = () => setOpen(false)
     return (
         <>
             <Area>
@@ -135,18 +242,31 @@ const ProducerDetails = () => {
                 </TableContainer>
             </Area>
             <Grid container
-                direction="row"
-                justify="left"
+                direction="row-reverse"
+                justify="space-around"
                 alignItems="center"
                 spacing={2}
             >
                 
-                <Grid item xs={12}>
+                <Grid item xs={12} md={8}>
 
                 </Grid>
 
                 <Grid item xs={10} sm={4} md={2}>
-                    <Button 
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        className={classes.button}
+                        startIcon={<AddIcon />}
+                        onClick={handleOpenAddModal}
+                        size='small'
+                    >
+                        Venda
+                    </Button>
+                </Grid>
+
+                <Grid item xs={10} sm={4} md={2}>
+                    <Button
                         variant="contained"
                         color="primary"
                         startIcon={<ReplyIcon />}
@@ -157,8 +277,55 @@ const ProducerDetails = () => {
                         Voltar
                     </Button>
                 </Grid>
-                
+            
             </Grid>
+
+            <Area style={{ marginTop: 20 }}>
+                <div className='title--box'>
+                    <h3>Vendas</h3>
+                </div>
+                
+            </Area>
+
+            {open &&
+                <ConfimationModal
+                    handleClose={handleClose}
+                    open={open}
+                    doDelete={doDelete}
+                    title='Deseja realmente excluir este produto?'
+                />
+            }
+            {warningModal &&
+                <WarningModal
+                    handleClose={handleCloseWarningModal}
+                    open={warningModal}
+                    message={message}
+                    lottie={lottie}
+                />
+            }
+            {addModal &&
+                <AddModal
+                    handleClose={handleCloseAddModal}
+                    open={addModal}
+                    handleCreate={handleCreateActivity}
+                    title='Registrar Venda?'
+                    label='Detalhes'
+                    labelButton='Registrar'
+                    object={{producer: producer}}
+                />
+            }
+            {editModal &&
+                <EditActivityModal
+                    handleClose={handleCloseEditModal}
+                    open={editModal}
+                    handleUpdate={handleUpdateActivity}
+                    title='Alterar?'
+                    label='Detalhes'
+                    labelButton='Atualizar'
+                    
+                    id={value}
+                />
+            }
         </>
     );
 }
@@ -168,6 +335,14 @@ export default ProducerDetails
 const useStyles = makeStyles({
     table: {
         minWidth: 650,
+    },
+    button: {
+        margin: 2,
+        backgroundColor: '#007200',
+        width: "100%",
+        '&:hover': {
+            background: '#005200'
+        },
     },
     buttonBack: {
         margin: 2,

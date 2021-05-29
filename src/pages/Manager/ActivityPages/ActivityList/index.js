@@ -262,13 +262,7 @@ const ActivityList = () => {
                 </Grid>
                 
             </Grid>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                <div>
-                    
-                    
-                </div>
 
-            </div>
             {open &&
                 <ConfimationModal
                     handleClose={handleClose}

@@ -355,6 +355,21 @@ export default {
         return request
     },
 
+    getAllSales: async () => {
+        const response = await apiFetchGet('/sales-producers')
+        return response
+    },
+
+    getProducerSales: async (id) => {
+        const response = await apiFetchGet(`/producers/${id}/sales`)
+        return response
+    },
+
+    deleteSale: async (id) => {
+        const request = await apiFetchDelete(`/sales-producers/${id}`)
+        return request
+    },
+
     sendEmailRecovery: async (email) => {
         try {
             const headers = new Headers()
