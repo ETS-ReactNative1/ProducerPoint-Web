@@ -95,10 +95,6 @@ const Routes = () => {
                 <AdminDetails />
             </RouteHandler>
 
-            <RouteHandler private path='/financial'>
-                <FinancialRecord />
-            </RouteHandler>
-
             <RouteHandler private path='/tasks'>
                 <TasksPage />
             </RouteHandler>
