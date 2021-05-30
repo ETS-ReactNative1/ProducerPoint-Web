@@ -24,7 +24,7 @@ import AdminEdit from '../pages/Manager/AdminPage/AdminEdit'
 import AdminList from '../pages/Manager/AdminPage/AdminList'
 import AdminDetails from '../pages/Manager/AdminPage/AdminDetails'
 
-import FinancialRecord from '../pages/Manager/FinancialRecord'
+import SalesPage from '../pages/Manager/SalePage'
 import TasksPage from '../pages/Manager/TasksPage'
 import MyProfile from '../pages/Manager/MyProfile'
 
@@ -101,6 +101,10 @@ const Routes = () => {
 
             <RouteHandler private path='/tasks'>
                 <TasksPage />
+            </RouteHandler>
+
+            <RouteHandler private path='/sales'>
+                <SalesPage />
             </RouteHandler>
 
             <RouteHandler path='*'>

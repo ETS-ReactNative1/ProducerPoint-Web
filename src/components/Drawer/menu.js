@@ -31,7 +31,7 @@ export const menu = [
     },
     {
         title: 'Vendas',
-        path: '/financial',
+        path: '/sales',
         icon: <FaIcons.FaChartLine size={size} />,
     },
     {

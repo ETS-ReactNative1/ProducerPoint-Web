@@ -25,7 +25,7 @@ const ProducerDetails = () => {
 
     const history = useHistory()
     const { id } = useParams()
-    const [producer, setProducer] = useState([])
+    const [producer, setProducer] = useState({})
     const [sales, setSales] = useState([])
     const birth = moment(producer.birthDate).locale('pt-br').format('D/MM/yyyy')
    
@@ -61,12 +61,12 @@ const ProducerDetails = () => {
             const response = await api.getProducerById(id)
             setProducer(response.data)
         }
-        const getProducerSales = async (id) => {
+        const getSales = async (id) => {
             const response = await api.getProducerSales(id)
-            setProducer(response.data)
+            setSales(response.data)
         }
         getProducer(id)
-        getProducerSales(id);
+        getSales(id);
     }, [])
 
     const currencyReal = producer.farmingActivity?.averageCash.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })
@@ -195,10 +195,8 @@ const ProducerDetails = () => {
                         </TableBody>
                     </Table>
                 </TableContainer>
-            </Area>
 
-            <Area style={{ marginTop: 20 }}>
-                <div className='title--box'>
+                <div className='title--box' style={{ marginTop: 20 }}>
                     <h3>Atividade</h3>
                 </div>
                 <TableContainer component={Paper}>
@@ -221,10 +219,8 @@ const ProducerDetails = () => {
                         </TableBody>
                     </Table>
                 </TableContainer>
-            </Area>
 
-            <Area style={{ marginTop: 20 }}>
-                <div className='title--box'>
+                <div className='title--box' style={{ marginTop: 20 }}>
                     <h3>Produtos</h3>
                 </div>
                 <TableContainer component={Paper}>
@@ -278,14 +274,15 @@ const ProducerDetails = () => {
                     </Button>
                 </Grid>
             
+                <Area>
+                    <div className='title--box' style={{ marginTop: 20 }}>
+                        <h3>Vendas</h3>
+                        <SalesList data={sales}/>
+                    </div>
+
+                </Area>
             </Grid>
 
-            <Area style={{ marginTop: 20 }}>
-                <div className='title--box'>
-                    <h3>Vendas</h3>
-                </div>
-                
-            </Area>
 
             {open &&
                 <ConfimationModal

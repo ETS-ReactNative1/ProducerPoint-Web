@@ -15,18 +15,24 @@ import WarningModal from '../../components/Modals/WarningModal'
 import Success from '../../assets/lotties/success.json'
 import Fail from '../../assets/lotties/fail.json'
 
-const SalesList = ({ data }) => {
+const SalesList = ({ data, showProducer }) => {
 
     const classes = useStyles()
     const [sales, setSales] = useState(data)
     const [open, setOpen] = useState(false)
+    const [showProducerName, setShowProducer] = useState(showProducer)
     const [id, setId] = useState(null)
 
     const [warningModal, setWarningModal] = useState(false)
     const [message, setMessage] = useState(true)
     const [lottie, setLottie] = useState('')
+    const [filteredSearch, setFilteredSearch] = useState([])
+    const [page, setPage] = useState(0)
+    const [rowsPerPage, setRowsPerPage] = useState(10)
 
     useEffect(() => {
+        setSales(data)
+        setShowProducer(showProducer)
     }, [])
 
     const handleDelete = (id) => {
@@ -62,6 +68,9 @@ const SalesList = ({ data }) => {
                 <Table className={classes.table} size="small" aria-label="a dense table">
                     <TableHead>
                         <TableRow>
+                            {showProducerName?
+                            <TableCell style={{ fontWeight: 'bold' }} align="left">Productor</TableCell>
+                            :<></>}
                             <TableCell style={{ fontWeight: 'bold' }} align="left">Data</TableCell>
                             <TableCell style={{ fontWeight: 'bold' }} align="left">Produto</TableCell>
                             <TableCell style={{ fontWeight: 'bold' }} align="left">Quantidade</TableCell>
@@ -72,11 +81,14 @@ const SalesList = ({ data }) => {
                     <TableBody>
                         {sales?.map((i, k) => (
                             <TableRow key={k}>
+                                {showProducerName?
+                                <TableCell align="left">{i.producer.name}</TableCell>
+                                :<></>}
                                 <TableCell
                                     align="left">{moment(i.date).locale('pt-br').format('D/MM/yyyy')}
                                 </TableCell>
                                 <TableCell
-                                    align="left">{i.product.name}
+                                    align="left">{i.product.label}
                                 </TableCell>
                                 <TableCell
                                     align="left">{i.quantity}
@@ -96,6 +108,7 @@ const SalesList = ({ data }) => {
                         ))}
                     </TableBody>
                 </Table>
+
             </TableContainer>
             {(!sales || sales?.length === 0) &&
                 <div className={classes.emptylist}>
@@ -107,7 +120,7 @@ const SalesList = ({ data }) => {
                     handleClose={handleClose}
                     open={open}
                     doDelete={doDelete}
-                    title='Deseja realmente excluir esta tarefa?'
+                    title='Deseja realmente excluir esta venda?'
                 />
             }
             {warningModal &&

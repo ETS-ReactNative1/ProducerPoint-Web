@@ -85,7 +85,7 @@ const ManagerHome = () => {
                 </Card>
             </Grid>
 
-            <Grid component={Link} to={'/financial'} className={classes.grid} item xs={12} sm={6} md={4}>
+            <Grid component={Link} to={'/sales'} className={classes.grid} item xs={12} sm={6} md={4}>
                 <Card className={classes.root}>
                     <CardActionArea>
                         <CardMedia
