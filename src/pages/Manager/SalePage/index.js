@@ -23,11 +23,12 @@ const SalePage = () => {
     const classes = useStyles()
     const [search, setSearch] = useState('')
 
+    const getSales = async () => {
+        const response = await api.getAllSales()
+        setSales(response.data)
+    }
+
     useEffect(() => {
-        const getSales = async () => {
-            const response = await api.getAllSales()
-            setSales(response.data)
-        }
         getSales()
     }, [])
 
@@ -39,7 +40,7 @@ const SalePage = () => {
                     size='small'
                     color='secondary'
                     className={classes.margin}
-                    placeholder='Qual atividade procura?'
+                    placeholder='Qual venda procura?'
                     InputProps={{
                         startAdornment: (
                             <InputAdornment position="start">
@@ -53,8 +54,8 @@ const SalePage = () => {
             </div>
             <TableContainer component={Paper}>
                 <SalesList 
-                data={sales}
-                showProducer={true}
+                    data={sales}
+                    showProducer={true}
                 />
             </TableContainer>
             

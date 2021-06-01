@@ -65,3 +65,10 @@ export const images = {
         title: 'Meu Perfil', image: '../assets/images/meuperfil.jpg'
     }
 }
+
+export const paramiter = [
+    {value: 'kg', label: 'kg'},
+    {value: 'unidade', label: 'unidade'},
+    {value: 'saco', label: 'saco'},
+    {value: 'litros', label: 'litros'}
+]

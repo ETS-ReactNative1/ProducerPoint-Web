@@ -407,4 +407,49 @@ export default {
         return request
     },
 
+    getSalesByProducer: async (id) => {
+        const response = await apiFetchGet(`/producers/${id}/sales`)
+        return response
+    },
+
+    createSaleProducer: async (date, quantity, valor, parameter, city, id, product) => {
+
+        try {
+            
+            const headers = new Headers();
+            headers.append("Content-Type", "application/json")
+            headers.append("Accept", 'application/json')
+
+            const data = {
+                date: date,
+                quantity: quantity,
+                valor: valor,
+                parameter: parameter,
+                city: city,
+                producer: {
+                    id: id,
+                },
+                product: {
+                    value: product,
+                },
+            }
+
+            const request = await fetch(`${API}/sales-producers`, {
+                method: 'POST',
+                headers: headers,
+                body: JSON.stringify(data)
+            })
+            
+            return request
+
+        } catch (e) {
+            console.log('Erro: createSaleProducer ' + e)
+        }
+
+    },
+
+    deleteSales: async (id) => {
+        const request = await apiFetchDelete(`/sales-producers/${id}`)
+        return request
+    },
 }
