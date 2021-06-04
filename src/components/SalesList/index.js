@@ -1,43 +1,50 @@
-import React, { useState, useEffect } from 'react'
+import React, { useMemo, useState } from 'react'
 import { Link, useHistory } from 'react-router-dom'
 
 import {
-    Grid, Button, makeStyles, Table, TableBody, TablePagination, TableCell, TableContainer,
-    TableHead, TableRow, Paper, IconButton
+    Grid, makeStyles, Table, TableBody, TableCell, TableContainer,
+    TableHead, TableRow, Paper, TablePagination, IconButton,
+    Tooltip, Button, TextField, InputAdornment
 } from '@material-ui/core'
-
-import CheckIcon from '@material-ui/icons/Check'
-import DeleteIcon from '@material-ui/icons/Delete'
-import ToggleButton from '@material-ui/lab/ToggleButton'
 import AddIcon from '@material-ui/icons/Add'
-import moment from 'moment'
+import AssessmentIcon from '@material-ui/icons/Assessment'
+import PictureAsPdfIcon from '@material-ui/icons/PictureAsPdf'
+import WorkIcon from '@material-ui/icons/Work'
+import SearchIcon from '@material-ui/icons/Search'
 import ReplyIcon from '@material-ui/icons/Reply'
 
 import api from '../../services/api'
 
-import ConfimationModal from '../../components/Modals/ConfimationModal'
+import ConfimationModal from '../Modals/ConfimationModal'
 import WarningModal from '../../components/Modals/WarningModal'
 import Success from '../../assets/lotties/success.json'
 import Fail from '../../assets/lotties/fail.json'
-
 import { Area } from './styles'
 
-const SalesList = ({ data, showProducer }) => {
-    
-    const history = useHistory()
+const SalesList = ({ data, title }) => {
 
+    const history = useHistory()
     const [open, setOpen] = useState(false)
-    const [showProducerName, setShowProducer] = useState(showProducer)
     const [id, setId] = useState(null)
     const [search, setSearch] = useState('')
     const [filteredSearch, setFilteredSearch] = useState([])
 
+    const [page, setPage] = useState(0)
+    const [rowsPerPage, setRowsPerPage] = useState(5)
+    const classes = useStyles()
+
     const [warningModal, setWarningModal] = useState(false)
     const [message, setMessage] = useState(true)
     const [lottie, setLottie] = useState('')
-    const [page, setPage] = useState(0)
-    const [rowsPerPage, setRowsPerPage] = useState(10)
-    const classes = useStyles()
+    const handleOpenWarningModal = () => setWarningModal(true)
+    const handleCloseWarningModal = () => setWarningModal(false)
+
+    useMemo(() => {
+        const lowerSearch = search.toLowerCase()
+        setFilteredSearch(
+            data?.filter((i) => i.name.toLowerCase().includes(lowerSearch))
+        )
+    }, [search, data])
 
     const handleDelete = (id) => {
         setId(id)
@@ -45,13 +52,13 @@ const SalesList = ({ data, showProducer }) => {
     }
 
     const doDelete = async () => {
-        const response = await api.deleteSale(id)
+        const response = await api.deleteProducer(id)
         if (response.status === 200) {
             handleClose()
-            const filtered = data?.filter((i) => i.id !== id)
+            const filtered = filteredSearch?.filter((i) => i.id !== id)
             setFilteredSearch(filtered)
             setLottie(Success)
-            setMessage('Venda excluída com sucesso!')
+            setMessage('Produtor excluído com sucesso!')
             handleOpenWarningModal()
         } else {
             handleClose()
@@ -70,69 +77,111 @@ const SalesList = ({ data, showProducer }) => {
 
     const handleOpen = () => setOpen(true)
     const handleClose = () => setOpen(false)
-    const handleOpenWarningModal = () => setWarningModal(true)
-    const handleCloseWarningModal = () => setWarningModal(false)
 
     return (
         <Area>
+            <div className='title--box'>
+                <h3>{title}</h3>
+                <TextField
+                    size='small'
+                    color='secondary'
+                    className={classes.margin}
+                    placeholder='Quem você procura?'
+                    InputProps={{
+                        startAdornment: (
+                            <InputAdornment position="start">
+                                <SearchIcon />
+                            </InputAdornment>
+                        ),
+                    }}
+                    value={search}
+                    onChange={ev => setSearch(ev.target.value)}
+                />
+            </div>
             <TableContainer component={Paper}>
                 <Table className={classes.table} size="small" aria-label="a dense table">
                     <TableHead>
                         <TableRow>
-                            {showProducerName?
-                            <TableCell style={{ fontWeight: 'bold' }} align="left">Productor</TableCell>
-                            :<></>}
-                            <TableCell style={{ fontWeight: 'bold' }} align="left">Data</TableCell>
-                            <TableCell style={{ fontWeight: 'bold' }} align="left">Produto</TableCell>
-                            <TableCell style={{ fontWeight: 'bold' }} align="left">Quantidade</TableCell>
-                            <TableCell style={{ fontWeight: 'bold' }} align="left">Valor</TableCell>
-                            <TableCell style={{ fontWeight: 'bold' }} align="left">Vendido Para</TableCell>
+                            <TableCell className='title--table' align="center">Nome</TableCell>
+                            <TableCell className='title--table' align="center">CPF</TableCell>
+                            <TableCell className='title--table' align="center">Telefone</TableCell>
+                            <TableCell className='title--table' align="center">Atividade</TableCell>
+                            <TableCell className='title--table' align="center">Opções</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {data?.map((i, k) => (
-                            <TableRow key={k}>
-                                {showProducerName?
-                                <TableCell align="left">{i.producer.name}</TableCell>
-                                :<></>}
-                                <TableCell
-                                    align="left">{moment(i.date).locale('pt-br').format('D/MM/yyyy')}
+                        {(rowsPerPage > 0
+                            ? filteredSearch?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                            : filteredSearch
+                        )?.map((row) => (
+                            <TableRow key={row.id}>
+                                <TableCell component="th" scope="row">
+                                    {row.name}
                                 </TableCell>
-                                <TableCell
-                                    align="left">{i.product.label}
+                                <TableCell align="center">{row.cpf}</TableCell>
+                                <TableCell align="center">{row.phone}</TableCell>
+                                <TableCell align="center">
+                                    <Tooltip title='Atividade' arrow>
+                                        <Link className='link--activity' to={`/activity-details/${row.farmingActivity?.activityName?.value}`}>
+                                            <Button
+                                                variant="contained"
+                                                startIcon={<WorkIcon />}
+                                                size='small'
+                                            >
+                                                {row.farmingActivity?.activityName?.label}
+                                            </Button>
+                                        </Link>
+                                    </Tooltip>
                                 </TableCell>
-                                <TableCell
-                                    align="left">{i.quantity}
-                                </TableCell>
-                                <TableCell
-                                    align="left">{i.valor}
-                                </TableCell>
-                                <TableCell
-                                    align="left">{i.city}
-                                </TableCell>
-                                <TableCell align="left">
-                                    <IconButton onClick={() => handleDelete(i.id)} color='secondary' aria-label="delete">
-                                        <DeleteIcon />
-                                    </IconButton>
+                                <TableCell align="right">
+                                    <div className='button--group'>
+                                        <Tooltip title='Relatório' arrow>
+                                            <div className='link--table'>
+                                                <a href={`${api.API}/producers/${row.id}/pdf/1`} target="_blank">
+                                                    <IconButton className='button--report'>
+                                                        <PictureAsPdfIcon />
+                                                    </IconButton>
+                                                </a>
+                                            </div>
+                                        </Tooltip>
+
+                                        <Tooltip title='Detalhes' arrow>
+                                            <Link className='link--table' to={`/producer-details/${row.id}`} >
+                                                <IconButton className='button--detail'>
+                                                    <AssessmentIcon />
+                                                </IconButton>
+                                            </Link>
+                                        </Tooltip>
+
+                                        <Tooltip title='Adicionar' arrow>
+                                            <Link className='link--table' to={`/sale-form/${row.id}`} >
+                                                <IconButton className='button--edit'>
+                                                    <AddIcon />
+                                                </IconButton>
+                                            </Link>
+                                        </Tooltip>
+                                    </div>
                                 </TableCell>
                             </TableRow>
                         ))}
+
                     </TableBody>
+
                 </Table>
 
             </TableContainer>
-            {(!data || data?.length === 0) &&
-                <div className={classes.emptylist}>
-                    <h3>Sem vendas no momento</h3>
+            {(!filteredSearch || filteredSearch?.length === 0) &&
+                <div className='emptylist'>
+                    <h3>Nenhuma venda relacionada</h3>
                 </div>
             }
 
             <Grid container
-                direction="row-reverse"
-                justify="space-around"
-                alignItems="center"
-                spacing={2}
-            >
+                    direction="row-reverse"
+                    justify="space-around"
+                    alignItems="center"
+                    spacing={2}
+                >
                 
                 <Grid item xs={12} md={8}>
                     <TablePagination
@@ -145,20 +194,6 @@ const SalesList = ({ data, showProducer }) => {
                         onChangePage={handleChangePage}
                         onChangeRowsPerPage={handleChangeRowsPerPage}
                     />
-                </Grid>
-                
-                <Grid item xs={10} sm={4} md={2}>
-                    <Link className={classes.link} to='/sale-form'>
-                        <Button
-                            variant="contained"
-                            color="primary"
-                            startIcon={<AddIcon />}
-                            className={classes.button}
-                            size='small'
-                        >
-                            Venda
-                        </Button>
-                    </Link>
                 </Grid>
 
                 <Grid item xs={10} sm={4} md={2}>
@@ -181,7 +216,7 @@ const SalesList = ({ data, showProducer }) => {
                     handleClose={handleClose}
                     open={open}
                     doDelete={doDelete}
-                    title='Deseja realmente excluir esta venda?'
+                    title='Deseja realmente excluir este produtor?'
                 />
             }
             {warningModal &&
@@ -224,4 +259,4 @@ const useStyles = makeStyles((theme) => ({
     link: {
         textDecoration: 'none'
     }
-}));
+}))

@@ -1,5 +1,5 @@
-import React, { useState, useContext } from 'react'
-import { useHistory } from 'react-router-dom'
+import React, { useState, useContext, useEffect } from 'react'
+import { useHistory, useParams, } from 'react-router-dom'
 import { useFormik } from 'formik'
 import * as yup from 'yup'
 
@@ -19,18 +19,33 @@ import WarningModal from '../../../../components/Modals/WarningModal'
 import Success from '../../../../assets/lotties/success.json'
 import Fail from '../../../../assets/lotties/fail.json'
 
+import { Area } from './styles'
+
 const SaleForm = () => {
 
     const history = useHistory()
-    const { producers } = useContext(RequestContext)
+    const [producer, setProducer] = useState()
     const [loading, setLoading] = useState(false)
     const classes = useStyles()
+
+    const { id } = useParams()
 
     const [warningModal, setWarningModal] = useState(false)
     const [message, setMessage] = useState(true)
     const [lottie, setLottie] = useState('')
     const handleOpenWarningModal = () => setWarningModal(true)
     const handleCloseWarningModal = () => setWarningModal(false)
+
+    const getProducer = async (id) => {
+        const response = await api.getProducerById(id)
+        setProducer(response.data)
+    }
+
+    useEffect(() => {
+        console.log('aqui')
+        getProducer(id)
+        console.log(producer)
+    }, [])
 
     const initialFormState = {
         valor: '',
@@ -47,7 +62,6 @@ const SaleForm = () => {
         quantity: yup.string().required('Quantidade é obrigatória!'),
         date: yup.string().required('Data é obrigatória!'),
         city: yup.string().required('Cidade é obrigatória!'),
-        product: yup.array().min(1, 'ERROR').required('Selecione pelo menos um produto!'),
         parameter: yup.array().min(1, 'ERROR').required('Selecione pelo menos um produto!')
     })
 
@@ -72,165 +86,147 @@ const SaleForm = () => {
 
     return (
         <>
-            <div className={classes.titleBox}>
-                <h3 className={classes.title}>Cadastrar Venda</h3>
-            </div>
-            <Grid container>
-                <Grid item xs={12}>
-                    <div className={classes.formWrapper}>
-                        <form onSubmit={formik.handleSubmit}>
-                            <Grid container spacing={2}>
-                                <Grid item xs={3}>
-                                    <TextField
-                                        fullWidth
-                                        variant='outlined'
-                                        id="producer"
-                                        name="producer"
-                                        value={formik.values.producer}
-                                        onChange={formik.handleChange}
-                                        label="Produtor"
-                                        error={formik.touched.producer && Boolean(formik.errors.producer)}
-                                        helperText={formik.touched.producer && formik.errors.producer}
-                                        select
-                                        required
-                                    >
-                                        {producers.map((i) =>
-                                            <MenuItem key={i.id} value={i.name}><em>{i.name}</em></MenuItem>
-                                        )}
-                                    </TextField>
-                                </Grid>
-                                
-                                <Grid item xs={3}>
-                                    <TextField
-                                        fullWidth
-                                        variant='outlined'
-                                        id="product"
-                                        name="product"
-                                        value={formik.values.product}
-                                        onChange={formik.handleChange}
-                                        label="Produto"
-                                        error={formik.touched.product && Boolean(formik.errors.product)}
-                                        helperText={formik.touched.product && formik.errors.product}
-                                        select
-                                        required
-                                    >
-                                        {formik.touched.producer != null && formik.values.producer.products.map((i) => (
-                                            <MenuItem key={i.value} value={i.value}><em>{i.label}</em></MenuItem>
-                                        ))}
-                                    </TextField>
-                                </Grid>
-                                
-                                <Grid item xs={4}>
-                                    <TextField
-                                        fullWidth
-                                        variant='outlined'
-                                        id="valor"
-                                        name="valor"
-                                        label="Valor"
-                                        value={formik.values.valor}
-                                        onChange={formik.handleChange}
-                                        error={formik.touched.valor && Boolean(formik.errors.valor)}
-                                        helperText={formik.touched.valor && formik.errors.valor}
-                                        required
-                                    />
-                                </Grid>
+            <Area>
+                <div className={classes.titleBox}>
+                    <h3 className={classes.title}>Cadastrar Venda</h3>
+                </div>
+                <Grid container>
+                    <Grid item xs={12}>
+                        <div className={classes.formWrapper}>
+                            <form onSubmit={formik.handleSubmit}>
+                                <Grid container spacing={2}>                                
+                                    <Grid item xs={3}>
+                                        <TextField
+                                            fullWidth
+                                            variant='outlined'
+                                            id="product"
+                                            name="product"
+                                            value={formik.values.product}
+                                            onChange={formik.handleChange}
+                                            label="Produto"
+                                            error={formik.touched.product && Boolean(formik.errors.product)}
+                                            helperText={formik.touched.product && formik.errors.product}
+                                            select
+                                            required
+                                        >
+                                            {producer.products != null && producer.products.map((i) => (
+                                                <MenuItem key={i.value} value={i.value}><em>{i.label}</em></MenuItem>
+                                            ))}
+                                        </TextField>
+                                    </Grid>
+                                    
+                                    <Grid item xs={4}>
+                                        <TextField
+                                            fullWidth
+                                            variant='outlined'
+                                            id="valor"
+                                            name="valor"
+                                            label="Valor"
+                                            value={formik.values.valor}
+                                            onChange={formik.handleChange}
+                                            error={formik.touched.valor && Boolean(formik.errors.valor)}
+                                            helperText={formik.touched.valor && formik.errors.valor}
+                                            required
+                                        />
+                                    </Grid>
 
-                                <Grid item xs={3}>
-                                    <TextField
-                                        fullWidth
-                                        variant='outlined'
-                                        id="quantity"
-                                        name="quantity"
-                                        label="Quantidade"
-                                        value={formik.values.quantity}
-                                        onChange={formik.handleChange}
-                                        error={formik.touched.quantity && Boolean(formik.errors.quantity)}
-                                        helperText={formik.touched.quantity && formik.errors.quantity}
-                                    />
-                                </Grid>
+                                    <Grid item xs={3}>
+                                        <TextField
+                                            fullWidth
+                                            variant='outlined'
+                                            id="quantity"
+                                            name="quantity"
+                                            label="Quantidade"
+                                            value={formik.values.quantity}
+                                            onChange={formik.handleChange}
+                                            error={formik.touched.quantity && Boolean(formik.errors.quantity)}
+                                            helperText={formik.touched.quantity && formik.errors.quantity}
+                                        />
+                                    </Grid>
 
-                                <Grid item xs={3}>
-                                    <TextField
-                                        fullWidth
-                                        variant='outlined'
-                                        id="parameter"
-                                        name="parameter"
-                                        value={formik.values.parameter}
-                                        onChange={formik.handleChange}
-                                        label="Parâmetro"
-                                        error={formik.touched.parameter && Boolean(formik.errors.parameter)}
-                                        helperText={formik.touched.parameter && formik.errors.parameter}
-                                        select
-                                        required
-                                    >
-                                        {paramiter.map((i) =>
-                                            <MenuItem key={i.value} value={i.value}><em>{i.label}</em></MenuItem>
-                                        )}
-                                    </TextField>
-                                </Grid>
+                                    <Grid item xs={3}>
+                                        <TextField
+                                            fullWidth
+                                            variant='outlined'
+                                            id="parameter"
+                                            name="parameter"
+                                            value={formik.values.parameter}
+                                            onChange={formik.handleChange}
+                                            label="Parâmetro"
+                                            error={formik.touched.parameter && Boolean(formik.errors.parameter)}
+                                            helperText={formik.touched.parameter && formik.errors.parameter}
+                                            select
+                                            required
+                                        >
+                                            {paramiter.map((i) =>
+                                                <MenuItem key={i.value} value={i.value}><em>{i.label}</em></MenuItem>
+                                            )}
+                                        </TextField>
+                                    </Grid>
 
-                                <Grid item xs={3}>
-                                    <TextField
-                                        fullWidth
-                                        variant='outlined'
-                                        id="date"
-                                        name="date"
-                                        label="Data da venda"
-                                        type="date"
-                                        value={formik.values.date}
-                                        onChange={formik.handleChange}
-                                        InputLabelProps={{
-                                            shrink: true,
-                                        }}
-                                        error={formik.touched.date && Boolean(formik.errors.date)}
-                                        helperText={formik.touched.date && formik.errors.date}
-                                        required
-                                    />
-                                </Grid>
+                                    <Grid item xs={3}>
+                                        <TextField
+                                            fullWidth
+                                            variant='outlined'
+                                            id="date"
+                                            name="date"
+                                            label="Data da venda"
+                                            type="date"
+                                            value={formik.values.date}
+                                            onChange={formik.handleChange}
+                                            InputLabelProps={{
+                                                shrink: true,
+                                            }}
+                                            error={formik.touched.date && Boolean(formik.errors.date)}
+                                            helperText={formik.touched.date && formik.errors.date}
+                                            required
+                                        />
+                                    </Grid>
 
-                                <Grid item xs={2}>
-                                    <Button
-                                        onClick={() => history.goBack()}
-                                        className={classes.buttonBack}
-                                        startIcon={<ReplyIcon />}
-                                        color="primary"
-                                        variant="contained"
-                                        fullWidth
-                                    >
-                                        Voltar
-                                    </Button>
-                                </Grid>
+                                    <Grid item xs={2}>
+                                        <Button
+                                            onClick={() => history.goBack()}
+                                            className={classes.buttonBack}
+                                            startIcon={<ReplyIcon />}
+                                            color="primary"
+                                            variant="contained"
+                                            fullWidth
+                                        >
+                                            Voltar
+                                        </Button>
+                                    </Grid>
 
-                                <Grid item xs={10}>
-                                    <Button
-                                        onClick={formik.handleSubmit}
-                                        className={classes.button}
-                                        startIcon={<SaveIcon />}
-                                        color="primary"
-                                        variant="contained"
-                                        fullWidth
-                                        type="submit"
-                                    >
-                                        Cadastrar
-                                    </Button>
-                                </Grid>
+                                    <Grid item xs={10}>
+                                        <Button
+                                            onClick={formik.handleSubmit}
+                                            className={classes.button}
+                                            startIcon={<SaveIcon />}
+                                            color="primary"
+                                            variant="contained"
+                                            fullWidth
+                                            type="submit"
+                                        >
+                                            Cadastrar
+                                        </Button>
+                                    </Grid>
 
 
-                            </Grid>
+                                </Grid>
 
-                        </form>
-                    </div>
+                            </form>
+                        </div>
+                    </Grid>
+
                 </Grid>
-
-            </Grid>
-            {warningModal &&
-                <WarningModal
-                    handleClose={handleCloseWarningModal}
-                    open={warningModal}
-                    message={message}
-                    lottie={lottie}
-                />
-            }
+                {warningModal &&
+                    <WarningModal
+                        handleClose={handleCloseWarningModal}
+                        open={warningModal}
+                        message={message}
+                        lottie={lottie}
+                    />
+                }
+            </Area>
         </ >
     );
 }

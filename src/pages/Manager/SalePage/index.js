@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 
 import api from '../../../services/api'
 import SalesList from '../../../components/SalesList'
@@ -6,56 +6,28 @@ import SalesList from '../../../components/SalesList'
 import { Area } from './styles'
 
 import {
-    Grid, makeStyles, Table, TableBody, TableCell, TableContainer,
-    TableHead, TableRow, Paper, TablePagination, IconButton,
-    Tooltip, TextField, InputAdornment, Button
+    makeStyles, TableContainer, Paper
 } from '@material-ui/core'
-import DeleteIcon from '@material-ui/icons/Delete'
-import EditIcon from '@material-ui/icons/Edit'
-import AssessmentIcon from '@material-ui/icons/Assessment'
-import SearchIcon from '@material-ui/icons/Search'
-import AddIcon from '@material-ui/icons/Add'
-import ReplyIcon from '@material-ui/icons/Reply'
 
 const SalePage = () => {
 
-    const [sales, setSales] = useState([])
-    const classes = useStyles()
-    const [search, setSearch] = useState('')
-
-    const getSales = async () => {
-        const response = await api.getAllSales()
-        setSales(response.data)
-    }
+    const [producers, setProducers] = useState([])
 
     useEffect(() => {
-        getSales()
+        const getProducers = async () => {
+            const response = await api.getAllProducers()
+            setProducers(response.data)
+        }
+        getProducers()
     }, [])
 
     return (
         <Area>
-            <div className='title--box'>
-                <h3>lista de Vendas</h3>
-                <TextField
-                    size='small'
-                    color='secondary'
-                    className={classes.margin}
-                    placeholder='Qual venda procura?'
-                    InputProps={{
-                        startAdornment: (
-                            <InputAdornment position="start">
-                                <SearchIcon />
-                            </InputAdornment>
-                        ),
-                    }}
-                    value={search}
-                    onChange={ev => setSearch(ev.target.value)}
-                />
-            </div>
             <TableContainer component={Paper}>
                 <SalesList 
-                    data={sales}
-                    showProducer={true}
+                    data={producers}
+                    isButton={true}
+                    title={'Lista de Vendas'}
                 />
             </TableContainer>
             

@@ -48,7 +48,7 @@ const Routes = () => {
                 <ProducerForm />
             </RouteHandler>
 
-            <RouteHandler private path='/sale-form'>
+            <RouteHandler private path='/sale-form/:id'>
                 <SaleForm />
             </RouteHandler>
 
