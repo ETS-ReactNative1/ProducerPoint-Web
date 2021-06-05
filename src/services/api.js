@@ -433,7 +433,7 @@ export default {
                     value: product,
                 },
             }
-
+            console.log(data)
             const request = await fetch(`${API}/sales-producers`, {
                 method: 'POST',
                 headers: headers,

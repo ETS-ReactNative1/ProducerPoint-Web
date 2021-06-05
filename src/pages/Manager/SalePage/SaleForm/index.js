@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useHistory, useParams, } from 'react-router-dom'
 import { useFormik } from 'formik'
 import * as yup from 'yup'
@@ -36,15 +36,13 @@ const SaleForm = () => {
     const handleOpenWarningModal = () => setWarningModal(true)
     const handleCloseWarningModal = () => setWarningModal(false)
 
-    const getProducer = async (id) => {
+    const getProducer = async () => {
         const response = await api.getProducerById(id)
         setProducer(response.data)
     }
 
     useEffect(() => {
-        console.log('aqui')
-        getProducer(id)
-        console.log(producer)
+        getProducer()
     }, [])
 
     const initialFormState = {
@@ -67,20 +65,34 @@ const SaleForm = () => {
 
     const formik = useFormik({
         initialValues: initialFormState,
-        validationSchema: validationSchema,
+        validationSchema: null, 
         onSubmit: async (values) => {
+
+            const valor_correct = values.valor?.replace(",", ".")
+            const city_correct = values.city?.toUpperCase()
 
             const response = await api.createSaleProducer(
                 values.date,
                 values.quantity,
-                values.valor,
+                valor_correct,
                 values.parameter,
-                values.city,
-                values.producer,
+                city_correct,
+                producer.id,
                 values.product,
             )
-            
             console.log(response)
+            if (response.data) {
+                setLottie(Success)
+                setMessage('Venda cadastrada com sucesso!')
+                handleOpenWarningModal()
+                setTimeout(() => {
+                    window.location.href = '/sales'
+                }, 2500);
+            } else {
+                setLottie(Fail)
+                setMessage(`Falha inesperada! Erro: ${response.status}`)
+                handleOpenWarningModal()
+            }
         }
     })
 
@@ -88,7 +100,7 @@ const SaleForm = () => {
         <>
             <Area>
                 <div className={classes.titleBox}>
-                    <h3 className={classes.title}>Cadastrar Venda</h3>
+                    <h3 className={classes.title}>Cadastrar Venda - {producer?.name}</h3>
                 </div>
                 <Grid container>
                     <Grid item xs={12}>
@@ -109,13 +121,13 @@ const SaleForm = () => {
                                             select
                                             required
                                         >
-                                            {producer.products != null && producer.products.map((i) => (
+                                            {producer?.products.map((i) => (
                                                 <MenuItem key={i.value} value={i.value}><em>{i.label}</em></MenuItem>
                                             ))}
                                         </TextField>
                                     </Grid>
                                     
-                                    <Grid item xs={4}>
+                                    <Grid item xs={3}>
                                         <TextField
                                             fullWidth
                                             variant='outlined'
@@ -162,6 +174,20 @@ const SaleForm = () => {
                                                 <MenuItem key={i.value} value={i.value}><em>{i.label}</em></MenuItem>
                                             )}
                                         </TextField>
+                                    </Grid>
+
+                                    <Grid item xs={4}>
+                                        <TextField
+                                            fullWidth
+                                            variant='outlined'
+                                            id="city"
+                                            name="city"
+                                            label="Cidade"
+                                            value={formik.values.city}
+                                            onChange={formik.handleChange}
+                                            error={formik.touched.city && Boolean(formik.errors.city)}
+                                            helperText={formik.touched.city && formik.errors.city}
+                                        />
                                     </Grid>
 
                                     <Grid item xs={3}>
