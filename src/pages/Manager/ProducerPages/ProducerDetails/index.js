@@ -7,6 +7,7 @@ import {
 } from '@material-ui/core'
 import ReplyIcon from '@material-ui/icons/Reply'
 import AddIcon from '@material-ui/icons/Add'
+import AssessmentIcon from '@material-ui/icons/Assessment'
 
 import api from '../../../../services/api'
 import moment from 'moment'
@@ -26,7 +27,6 @@ const ProducerDetails = () => {
     const history = useHistory()
     const { id } = useParams()
     const [producer, setProducer] = useState({})
-    const [sales, setSales] = useState([])
     const birth = moment(producer.birthDate).locale('pt-br').format('D/MM/yyyy')
    
     const [open, setOpen] = useState(false)
@@ -61,12 +61,7 @@ const ProducerDetails = () => {
             const response = await api.getProducerById(id)
             setProducer(response.data)
         }
-        const getSales = async (id) => {
-            const response = await api.getSalesByProducer(id)
-            setSales(response)
-        }
         getProducer(id)
-        getSales(id);
     }, [])
 
     const currencyReal = producer.farmingActivity?.averageCash.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })
@@ -236,45 +231,47 @@ const ProducerDetails = () => {
                         </TableBody>
                     </Table>
                 </TableContainer>
-
-                <div className='title--box' style={{ marginTop: 20 }}>
-                    <h3>Vendas</h3>
-                </div>
-                <TableContainer component={Paper}>
-                    <Table className={classes.table} size="small" aria-label="a dense table">
-                        <TableBody>
-                            <TableRow>
-                            {sales?.map((i) =>
-                                    <TableContainer component={Paper}>
-                                        <Table className={classes.table} size="small" aria-label="a dense table">
-                                            <TableHead>
-                                                <TableRow>
-                                                    <TableCell className='title--table' align="left">Produto</TableCell>
-                                                    <TableCell className='title--table' align="left">Parâmetro</TableCell>
-                                                    <TableCell className='title--table' align="left">Quandidade</TableCell>
-                                                    <TableCell className='title--table' align="left">Valor</TableCell>
-                                                    <TableCell className='title--table' align="left">Cidade</TableCell>
-                                                    <TableCell className='title--table' align="left">Data</TableCell>
-                                                </TableRow>
-                                            </TableHead>
-                                            <TableBody>
-                                                <TableRow>
-                                                    <TableCell align="left">{i?.produto}</TableCell>
-                                                    <TableCell align="left">{i?.parameter}</TableCell>
-                                                    <TableCell align="left">{i?.quantity}</TableCell>
-                                                    <TableCell align="left">{i?.valor}</TableCell>
-                                                    <TableCell align="left">{i?.quantity}</TableCell>
-                                                    <TableCell align="left">{i?.valor}</TableCell>
-                                                </TableRow>
-                                            </TableBody>
-                                        </Table>
-                                    </TableContainer>
-                                )}
-                            </TableRow>
-                        </TableBody>
-                    </Table>
-                </TableContainer>
             </Area>
+
+            <Grid container
+                direction="row-reverse"
+                justify="space-around"
+                alignItems="center"
+                spacing={2}
+            >
+                
+                <Grid item xs={12} md={8}>
+
+                </Grid>
+                
+                <Grid item xs={10} sm={4} md={2}>
+                    <Link className={classes.link} to={`/sale-details/${id}`}>
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            startIcon={<AssessmentIcon />}
+                            className={classes.button}
+                            size='small'
+                        >
+                            Vendas
+                        </Button>
+                    </Link>
+                </Grid>
+
+                <Grid item xs={10} sm={4} md={2}>
+                    <Button 
+                        variant="contained"
+                        color="primary"
+                        startIcon={<ReplyIcon />}
+                        className={classes.buttonBack}
+                        onClick={() => history.goBack()}
+                        size='small'
+                    >
+                        Voltar
+                    </Button>
+                </Grid>
+                
+            </Grid>
 
             {open &&
                 <ConfimationModal

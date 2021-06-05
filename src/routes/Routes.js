@@ -25,6 +25,8 @@ import AdminEdit from '../pages/Manager/AdminPage/AdminEdit'
 import AdminList from '../pages/Manager/AdminPage/AdminList'
 import AdminDetails from '../pages/Manager/AdminPage/AdminDetails'
 
+import SaleDetails from '../pages/Manager/SalePage/SaleDetails'
+
 import SalesPage from '../pages/Manager/SalePage'
 import TasksPage from '../pages/Manager/TasksPage'
 import MyProfile from '../pages/Manager/MyProfile'
@@ -50,6 +52,10 @@ const Routes = () => {
 
             <RouteHandler private path='/sale-form/:id'>
                 <SaleForm />
+            </RouteHandler>
+
+            <RouteHandler private path='/sale-details/:id'>
+                <SaleDetails />
             </RouteHandler>
 
             <RouteHandler private path='/producer-edit/:id'>

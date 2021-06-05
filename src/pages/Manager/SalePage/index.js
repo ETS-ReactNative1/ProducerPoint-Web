@@ -23,14 +23,11 @@ const SalePage = () => {
 
     return (
         <Area>
-            <TableContainer component={Paper}>
-                <SalesList 
-                    data={producers}
-                    isButton={true}
-                    title={'Lista de Vendas'}
-                />
-            </TableContainer>
-            
+            <SalesList 
+                data={producers}
+                isButton={true}
+                title={'Lista de Vendas'}
+            />
         </Area>
     );
 }

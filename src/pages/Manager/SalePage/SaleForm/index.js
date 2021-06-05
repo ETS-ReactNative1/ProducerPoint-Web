@@ -107,7 +107,7 @@ const SaleForm = () => {
                         <div className={classes.formWrapper}>
                             <form onSubmit={formik.handleSubmit}>
                                 <Grid container spacing={2}>                                
-                                    <Grid item xs={3}>
+                                    <Grid item xs={12}>
                                         <TextField
                                             fullWidth
                                             variant='outlined'
@@ -126,23 +126,8 @@ const SaleForm = () => {
                                             ))}
                                         </TextField>
                                     </Grid>
-                                    
-                                    <Grid item xs={3}>
-                                        <TextField
-                                            fullWidth
-                                            variant='outlined'
-                                            id="valor"
-                                            name="valor"
-                                            label="Valor"
-                                            value={formik.values.valor}
-                                            onChange={formik.handleChange}
-                                            error={formik.touched.valor && Boolean(formik.errors.valor)}
-                                            helperText={formik.touched.valor && formik.errors.valor}
-                                            required
-                                        />
-                                    </Grid>
 
-                                    <Grid item xs={3}>
+                                    <Grid item xs={4}>
                                         <TextField
                                             fullWidth
                                             variant='outlined'
@@ -156,7 +141,7 @@ const SaleForm = () => {
                                         />
                                     </Grid>
 
-                                    <Grid item xs={3}>
+                                    <Grid item xs={4}>
                                         <TextField
                                             fullWidth
                                             variant='outlined'
@@ -175,8 +160,23 @@ const SaleForm = () => {
                                             )}
                                         </TextField>
                                     </Grid>
-
+                                    
                                     <Grid item xs={4}>
+                                        <TextField
+                                            fullWidth
+                                            variant='outlined'
+                                            id="valor"
+                                            name="valor"
+                                            label="Valor"
+                                            value={formik.values.valor}
+                                            onChange={formik.handleChange}
+                                            error={formik.touched.valor && Boolean(formik.errors.valor)}
+                                            helperText={formik.touched.valor && formik.errors.valor}
+                                            required
+                                        />
+                                    </Grid>
+
+                                    <Grid item xs={8}>
                                         <TextField
                                             fullWidth
                                             variant='outlined'
@@ -190,7 +190,7 @@ const SaleForm = () => {
                                         />
                                     </Grid>
 
-                                    <Grid item xs={3}>
+                                    <Grid item xs={4}>
                                         <TextField
                                             fullWidth
                                             variant='outlined'

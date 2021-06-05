@@ -447,9 +447,4 @@ export default {
         }
 
     },
-
-    deleteSales: async (id) => {
-        const request = await apiFetchDelete(`/sales-producers/${id}`)
-        return request
-    },
 }
