@@ -54,7 +54,6 @@ const SaleDetails = () => {
     
     const getProducer = async () => {
         const response = await api.getProducerById(id)
-        console.log(response)
         setProducer(response)
     }
 
@@ -141,7 +140,7 @@ const SaleDetails = () => {
                 </Table>
 
             </TableContainer>
-            {(!sales || sales?.length === 0) &&
+            {(!sales || sales?.data?.length === 0) &&
                 <div className='emptylist'>
                     <h3>Nenhuma venda relacionada</h3>
                 </div>

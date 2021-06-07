@@ -81,7 +81,7 @@ const SaleForm = () => {
                 values.product,
             )
             console.log(response)
-            if (response.data) {
+            if (response.ok) {
                 setLottie(Success)
                 setMessage('Venda cadastrada com sucesso!')
                 handleOpenWarningModal()
