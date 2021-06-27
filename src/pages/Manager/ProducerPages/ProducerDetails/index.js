@@ -53,7 +53,6 @@ const ProducerDetails = () => {
 
     const loadActivities = async () => {
         const response = await api.getAllActivities()
-
     }
 
     useEffect(() => {
@@ -64,7 +63,9 @@ const ProducerDetails = () => {
         getProducer(id)
     }, [])
 
-    const currencyReal = producer.farmingActivity?.averageCash.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })
+    const currencyReal = (value)=> {
+        return (value || 0 ).toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })
+    }
 
     const handleCreateActivity = async (values) => {
         const response = await api.createActivity(values.label)
@@ -144,47 +145,57 @@ const ProducerDetails = () => {
                             <TableRow>
                                 <TableCell className='title--table' align="left">Apelido</TableCell>
                                 <TableCell className='title--table' align="left">Nascimento</TableCell>
+                                <TableCell className='title--table' align="left">RG</TableCell>
                                 <TableCell className='title--table' align="left">CPF</TableCell>
-                                <TableCell className='title--table' align="left">Telefone</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
                             <TableRow>
                                 <TableCell align="left">{producer.nickname}</TableCell>
                                 <TableCell align="left">{birth}</TableCell>
+                                <TableCell align="left">{producer.rg}</TableCell>
                                 <TableCell align="left">{producer.cpf}</TableCell>
-                                <TableCell align="left">{producer.phone}</TableCell>
                             </TableRow>
                         </TableBody>
                         <TableHead>
                             <TableRow>
+                                <TableCell className='title--table' align="left">Telefone</TableCell>
                                 <TableCell className='title--table' align="left">E-mail</TableCell>
                                 <TableCell className='title--table' align="left">CEP</TableCell>
                                 <TableCell className='title--table' align="left">Estado</TableCell>
-                                <TableCell className='title--table' align="left">Cidade</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
                             <TableRow>
+                                <TableCell align="left">{producer.phone}</TableCell>
                                 <TableCell align="left">{producer.email}</TableCell>
                                 <TableCell align="left">{producer.address?.zipCode}</TableCell>
                                 <TableCell align="left">{producer.address?.uf}</TableCell>
-                                <TableCell align="left">{producer.address?.city}</TableCell>
                             </TableRow>
                         </TableBody>
                         <TableHead>
                             <TableRow>
+                                <TableCell className='title--table' align="left">Cidade</TableCell>
                                 <TableCell className='title--table' align="left">Bairro</TableCell>
                                 <TableCell className='title--table' align="left">Rua</TableCell>
                                 <TableCell className='title--table' align="left">Nº</TableCell>
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            <TableRow>
+                                <TableCell align="left">{producer.address?.city}</TableCell>
+                                <TableCell align="left">{producer.address?.district}</TableCell>
+                                <TableCell align="left">{producer.address?.street}</TableCell>
+                                <TableCell align="left">{producer.address?.houseNumber}</TableCell>
+                            </TableRow>
+                        </TableBody>
+                        <TableHead>
+                            <TableRow>
                                 <TableCell className='title--table' align="left">Referência</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
                             <TableRow>
-                                <TableCell align="left">{producer.address?.district}</TableCell>
-                                <TableCell align="left">{producer.address?.street}</TableCell>
-                                <TableCell align="left">{producer.address?.houseNumber}</TableCell>
                                 <TableCell align="left">{producer.address?.reference}</TableCell>
                             </TableRow>
                         </TableBody>
@@ -199,7 +210,6 @@ const ProducerDetails = () => {
                         <TableHead>
                             <TableRow>
                                 <TableCell className='title--table' align="left">Atividade Principal</TableCell>
-                                <TableCell className='title--table' align="left">Atividade Secundária</TableCell>
                                 <TableCell className='title--table' align="left">Período</TableCell>
                                 <TableCell className='title--table' align="left">Ganho Médio</TableCell>
                             </TableRow>
@@ -207,9 +217,15 @@ const ProducerDetails = () => {
                         <TableBody>
                             <TableRow>
                                 <TableCell align="left">{producer.farmingActivity?.activityName?.label}</TableCell>
-                                <TableCell align="left">Agricultor</TableCell>
                                 <TableCell align="left">{producer.farmingActivity?.period}</TableCell>
-                                <TableCell align="left">{currencyReal}</TableCell>
+                                <TableCell align="left">{currencyReal(producer.farmingActivity?.averageCash)}</TableCell>
+                            </TableRow>
+                        </TableBody>
+                        <TableBody>
+                            <TableRow>
+                                <TableCell align="left">{producer.farmingActivity?.activityName2?.label}</TableCell>
+                                <TableCell align="left">{producer.farmingActivity?.period2}</TableCell>
+                                <TableCell align="left">{currencyReal(producer.farmingActivity?.averageCash2)}</TableCell>
                             </TableRow>
                         </TableBody>
                     </Table>

@@ -42,6 +42,7 @@ const ProducerEdit = () => {
             formik.setFieldValue('name', data?.name)
             formik.setFieldValue('nickname', data?.nickname)
             formik.setFieldValue('birthDate', data?.birthDate)
+            formik.setFieldValue('rg', data?.rg)
             formik.setFieldValue('cpf', data?.cpf)
             formik.setFieldValue('phone', data?.phone)
             formik.setFieldValue('email', data?.email)
@@ -55,6 +56,9 @@ const ProducerEdit = () => {
             formik.setFieldValue('farmingActivity.activityName.value', data?.farmingActivity?.activityName?.value)
             formik.setFieldValue('farmingActivity.period', data?.farmingActivity?.period)
             formik.setFieldValue('farmingActivity.averageCash', data?.farmingActivity?.averageCash)
+            formik.setFieldValue('farmingActivity.activityName2.value', data?.farmingActivity?.activityName2?.value)
+            formik.setFieldValue('farmingActivity.period2', data?.farmingActivity?.period2)
+            formik.setFieldValue('farmingActivity.averageCash2', data?.farmingActivity?.averageCash2)
 
             const productsList = () => {
                 const newArray = []
@@ -76,6 +80,7 @@ const ProducerEdit = () => {
         name: '',
         nickname: '',
         birthDate: '',
+        rg: '',
         cpf: '',
         phone: '',
         email: '',
@@ -93,7 +98,12 @@ const ProducerEdit = () => {
                 value: ''
             },
             averageCash: '',
-            period: ''
+            period: '',
+            activityName2: {
+                value: ''
+            },
+            averageCash2: '',
+            period2: ''
         },
         products: [],
     }
@@ -101,6 +111,7 @@ const ProducerEdit = () => {
     const validationSchema = yup.object().shape({
         name: yup.string().required('Nome é obrigatório!'),
         birthDate: yup.date().required('Data é obrigatória!'),
+        rg: yup.string().required('RG é obrigatório!'),
         cpf: yup.string().required('CPF é obrigatório!'),
         email: yup.string().email('E-mail inválido!'),
         address: yup.object().shape({
@@ -115,6 +126,7 @@ const ProducerEdit = () => {
                 value: yup.string().required('Atividade é obrigatório!')
             }),
             period: yup.string().required('Período é obrigatório!'),
+            
         }),
         products: yup.array().min(1, 'Selecione pelo menos um produto!')
     })
@@ -169,7 +181,7 @@ const ProducerEdit = () => {
                         <form onSubmit={formik.handleSubmit}>
                             <Grid container spacing={2}>
 
-                                <Grid item xs={9}>
+                                <Grid item xs={6}>
                                     <TextField
                                         fullWidth
                                         variant='outlined'
@@ -213,6 +225,21 @@ const ProducerEdit = () => {
                                         }}
                                         error={formik.touched.birthDate && Boolean(formik.errors.birthDate)}
                                         helperText={formik.touched.birthDate && formik.errors.birthDate}
+                                        required
+                                    />
+                                </Grid>
+
+                                <Grid item xs={3}>
+                                    <TextField
+                                        fullWidth
+                                        variant='outlined'
+                                        id="rg"
+                                        name="rg"
+                                        label="RG"
+                                        value={formik.values.rg}
+                                        onChange={formik.handleChange}
+                                        error={formik.touched.rg && Boolean(formik.errors.rg)}
+                                        helperText={formik.touched.rg && formik.errors.rg}
                                         required
                                     />
                                 </Grid>
@@ -374,7 +401,7 @@ const ProducerEdit = () => {
                                         variant='outlined'
                                         id="activityName"
                                         name="farmingActivity.activityName.value"
-                                        label="Atividade Agrícola"
+                                        label="Atividade Agrícola Primária"
                                         value={formik.values.farmingActivity.activityName?.value}
                                         error={formik.touched.farmingActivity?.activityName?.value && Boolean(formik.errors.farmingActivity?.activityName?.value)}
                                         helperText={formik.touched.farmingActivity?.activityName?.value && formik.errors.farmingActivity?.activityName?.value}
@@ -391,7 +418,7 @@ const ProducerEdit = () => {
                                     <TextField
                                         fullWidth
                                         variant='outlined'
-                                        id="activityName"
+                                        id="period"
                                         name="farmingActivity.period"
                                         label="Príodo"
                                         value={formik.values.farmingActivity?.period}
@@ -417,6 +444,58 @@ const ProducerEdit = () => {
                                         onChange={formik.handleChange}
                                         error={formik.touched.farmingActivity?.averageCash && Boolean(formik.errors.farmingActivity?.averageCash)}
                                         helperText={formik.touched.farmingActivity?.averageCash && formik.errors.farmingActivity?.averageCash}
+                                    />
+                                </Grid>
+
+                                <Grid item xs={4}>
+                                    <TextField
+                                        fullWidth
+                                        variant='outlined'
+                                        id="activityName2"
+                                        name="farmingActivity.activityName2.value"
+                                        label="Atividade Agrícola Secundária"
+                                        value={formik.values.farmingActivity.activityName2?.value}
+                                        error={formik.touched.farmingActivity?.activityName2?.value && Boolean(formik.errors.farmingActivity?.activityName2?.value)}
+                                        helperText={formik.touched.farmingActivity?.activityName2?.value && formik.errors.farmingActivity?.activityName2?.value}
+                                        onChange={formik.handleChange}
+                                        select
+                                    >
+                                        {activities.map((i) =>
+                                            <MenuItem key={i.value} value={i.value}><em>{i.label}</em></MenuItem>
+                                        )}
+                                    </TextField>
+                                </Grid>
+
+                                <Grid item xs={4}>
+                                    <TextField
+                                        fullWidth
+                                        variant='outlined'
+                                        id="period2"
+                                        name="farmingActivity.period2"
+                                        label="Príodo"
+                                        value={formik.values.farmingActivity?.period2}
+                                        onChange={formik.handleChange}
+                                        error={formik.touched.farmingActivity?.period2 && Boolean(formik.errors.farmingActivity?.period2)}
+                                        helperText={formik.touched.farmingActivity?.period2 && formik.errors.farmingActivity?.period2}
+                                        select
+                                    >
+                                        {periods.map((i) =>
+                                            <MenuItem key={i.value} value={i.value}><em>{i.label}</em></MenuItem>
+                                        )}
+                                    </TextField>
+                                </Grid>
+
+                                <Grid item xs={4}>
+                                    <TextField
+                                        fullWidth
+                                        variant='outlined'
+                                        id="averageCash2"
+                                        name="farmingActivity.averageCash2"
+                                        label="Renda"
+                                        value={formik.values.farmingActivity?.averageCash2}
+                                        onChange={formik.handleChange}
+                                        error={formik.touched.farmingActivity?.averageCash2 && Boolean(formik.errors.farmingActivity?.averageCash2)}
+                                        helperText={formik.touched.farmingActivity?.averageCash2 && formik.errors.farmingActivity?.averageCash2}
                                     />
                                 </Grid>
 
