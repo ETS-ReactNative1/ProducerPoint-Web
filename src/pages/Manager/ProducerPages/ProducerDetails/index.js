@@ -210,6 +210,7 @@ const ProducerDetails = () => {
                         <TableHead>
                             <TableRow>
                                 <TableCell className='title--table' align="left">Atividade Principal</TableCell>
+                                <TableCell className='title--table' align="left">Atividade Secundária</TableCell>
                                 <TableCell className='title--table' align="left">Período</TableCell>
                                 <TableCell className='title--table' align="left">Ganho Médio</TableCell>
                             </TableRow>
@@ -217,15 +218,9 @@ const ProducerDetails = () => {
                         <TableBody>
                             <TableRow>
                                 <TableCell align="left">{producer.farmingActivity?.activityName?.label}</TableCell>
+                                <TableCell align="left">{producer.farmingActivity?.activityName2?.label}</TableCell>
                                 <TableCell align="left">{producer.farmingActivity?.period}</TableCell>
                                 <TableCell align="left">{currencyReal(producer.farmingActivity?.averageCash)}</TableCell>
-                            </TableRow>
-                        </TableBody>
-                        <TableBody>
-                            <TableRow>
-                                <TableCell align="left">{producer.farmingActivity?.activityName2?.label}</TableCell>
-                                <TableCell align="left">{producer.farmingActivity?.period2}</TableCell>
-                                <TableCell align="left">{currencyReal(producer.farmingActivity?.averageCash2)}</TableCell>
                             </TableRow>
                         </TableBody>
                     </Table>

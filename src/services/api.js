@@ -177,7 +177,6 @@ export default {
     },
 
     createProducer: async (values, products, userId) => {
-
         const data = {
             name: values.name,
             nickname: values.nickname,
@@ -201,12 +200,7 @@ export default {
                 },
                 period: values.farmingActivity.period,
                 averageCash: parseFloat(values.farmingActivity.averageCash),
-
-                activityName2: {
-                    value: values.farmingActivity.activityName2.value
-                },
-                period2: values.farmingActivity.period2,
-                averageCash2: parseFloat(values.farmingActivity.averageCash2)
+                activityName2: values.farmingActivity.activityName2
             },
             products: products,
             manager: {
@@ -243,19 +237,14 @@ export default {
                 },
                 period: values.farmingActivity.period,
                 averageCash: parseFloat(values.farmingActivity.averageCash),
-                
-                activityName2: {
-                    value: values.farmingActivity.activityName2.value
-                },
-                period2: values.farmingActivity.period2,
-                averageCash2: parseFloat(values.farmingActivity.averageCash2)
+                activityName2: values.farmingActivity.activityName2
             },
             products: products,
             manager: {
                 id: userId,
             },
         }
-        alert(JSON.stringify(data))
+
         const request = await apiFetchPut(`/producers/${id}`, data)
         return request
     },

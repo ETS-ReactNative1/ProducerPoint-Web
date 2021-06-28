@@ -55,7 +55,7 @@ const ProductList = () => {
     useMemo(() => {
         const lowerSearch = search.toLowerCase()
         setFilteredSearch(
-            products?.filter((i) => i.label.toLowerCase().includes(lowerSearch))
+            products?.filter((i) => i.label  ===  null ? {} : i.label.toLowerCase().includes(lowerSearch))
         )
     }, [search, products])
 

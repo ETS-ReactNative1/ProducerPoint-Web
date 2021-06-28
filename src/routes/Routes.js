@@ -9,7 +9,7 @@ import NotFound from '../pages/NotFound'
 
 // Forms and Lists
 import ProducerForm from '../pages/Manager/ProducerPages/ProducerForm'
-import ProducerEdit from '../pages/Manager/ProducerPages/ProducerEdit'
+import ProducerEdit from '../pages/Manager/ProducerPages/ProducerForm'
 import ProducerList from '../pages/Manager/ProducerPages/ProducerList'
 import ProducerDetails from '../pages/Manager/ProducerPages/ProducerDetails'
 import SaleForm from '../../src/pages/Manager/SalePage/SaleForm'

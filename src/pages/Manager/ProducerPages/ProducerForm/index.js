@@ -1,30 +1,31 @@
-import React, { useState, useContext } from 'react'
-import { useHistory } from 'react-router-dom'
+import React, { useState, useEffect, useContext } from 'react'
+import { useParams, useHistory } from 'react-router-dom'
 import { useFormik } from 'formik'
 import * as yup from 'yup'
 
+import { makeStyles } from '@material-ui/core/styles';
 import {
-    makeStyles, Grid, TextField, Button, MenuItem, Select,
+    Grid, TextField, Button, MenuItem, Select,
     Input, InputLabel, ListItemText, Checkbox,
-} from '@material-ui/core'
+} from '@material-ui/core';
 import ReplyIcon from '@material-ui/icons/Reply'
-import SaveIcon from '@material-ui/icons/Save'
 
 import api from '../../../../services/api'
 import { RequestContext } from '../../../../contexts/RequestContext'
 import { AuthContext } from '../../../../contexts/AuthContext'
-
 import { periods, ufs } from '../../../../enums'
+import { formatarCEP, phoneMask } from '../../../../components/Helpers'
+
 import WarningModal from '../../../../components/Modals/WarningModal'
 import Success from '../../../../assets/lotties/success.json'
 import Fail from '../../../../assets/lotties/fail.json'
 
-const ProducerForm = () => {
+const ProducerEdit = () => {
 
     const history = useHistory()
     const { products, activities } = useContext(RequestContext)
     const { user } = useContext(AuthContext)
-    const [loading, setLoading] = useState(false)
+    const { id } = useParams()
     const classes = useStyles()
 
     const [warningModal, setWarningModal] = useState(false)
@@ -33,10 +34,55 @@ const ProducerForm = () => {
     const handleOpenWarningModal = () => setWarningModal(true)
     const handleCloseWarningModal = () => setWarningModal(false)
 
+    useEffect(() => {
+        const getProducerById = async (id) => {
+            const response = await api.getProducerById(id)
+            const { data } = response
+
+            formik.setFieldValue('name', data?.name)
+            formik.setFieldValue('nickname', data?.nickname)
+            formik.setFieldValue('birthDate', data?.birthDate)
+            formik.setFieldValue('rg', data?.rg)
+            formik.setFieldValue('cpf', data?.cpf)
+            formik.setFieldValue('phone', data?.phone)
+            formik.setFieldValue('email', data?.email)
+            formik.setFieldValue('address.zipCode', data?.address?.zipCode)
+            formik.setFieldValue('address.uf', data?.address?.uf)
+            formik.setFieldValue('address.city', data?.address?.city)
+            formik.setFieldValue('address.district', data?.address?.district)
+            formik.setFieldValue('address.street', data?.address?.street)
+            formik.setFieldValue('address.houseNumber', data?.address?.houseNumber)
+            formik.setFieldValue('address.reference', data?.address?.reference)
+            formik.setFieldValue('farmingActivity.activityName.value', data?.farmingActivity?.activityName?.value)
+            formik.setFieldValue('farmingActivity.period', data?.farmingActivity?.period)
+            formik.setFieldValue('farmingActivity.averageCash', data?.farmingActivity?.averageCash)
+            formik.setFieldValue('farmingActivity.activityName2.value', data?.farmingActivity?.activityName2?.value)
+            formik.setFieldValue('farmingActivity.period2', data?.farmingActivity?.period2)
+            formik.setFieldValue('farmingActivity.averageCash2', data?.farmingActivity?.averageCash2)
+
+            const productsList = () => {
+                const newArray = []
+                for (let i of data?.products) {
+                    const values = Object.values(i)
+                    newArray.push(values[1])
+                }
+                return newArray
+            }
+
+            const resultList = productsList()
+
+            formik.setFieldValue('products', resultList)
+        }
+        if(!!id) {
+            getProducerById(id)
+        }
+    }, [])
+
     const initialFormState = {
         name: '',
         nickname: '',
         birthDate: '',
+        rg: '',
         cpf: '',
         phone: '',
         email: '',
@@ -53,8 +99,13 @@ const ProducerForm = () => {
             activityName: {
                 value: ''
             },
-            period: '',
             averageCash: '',
+            period: '',
+            activityName2: {
+                value: ''
+            },
+            averageCash2: '',
+            period2: ''
         },
         products: [],
     }
@@ -62,6 +113,7 @@ const ProducerForm = () => {
     const validationSchema = yup.object().shape({
         name: yup.string().required('Nome é obrigatório!'),
         birthDate: yup.date().required('Data é obrigatória!'),
+        rg: yup.string().required('RG é obrigatório!'),
         cpf: yup.string().required('CPF é obrigatório!'),
         email: yup.string().email('E-mail inválido!'),
         address: yup.object().shape({
@@ -76,9 +128,9 @@ const ProducerForm = () => {
                 value: yup.string().required('Atividade é obrigatório!')
             }),
             period: yup.string().required('Período é obrigatório!'),
-            averageCash: yup.string().required('Renda é obrigatória!')
+
         }),
-        products: yup.array().min(1, 'ERROR').required('Selecione pelo menos um produto!')
+        products: yup.array().min(1, 'Selecione pelo menos um produto!')
     })
 
     const formik = useFormik({
@@ -88,7 +140,7 @@ const ProducerForm = () => {
 
             const productsList = () => {
                 const newArray = []
-                const productList = [...values?.products]
+                const productList = [...values.products]
                 for (let i of products) {
                     const values = Object.values(i)
                     for (let j of productList) {
@@ -101,13 +153,23 @@ const ProducerForm = () => {
                 return newArray
             }
 
+            if(values.farmingActivity.activityName2.value === "" || values.farmingActivity.activityName.value === values.farmingActivity.activityName2.value){
+                values.farmingActivity.activityName2 = undefined
+                values.farmingActivity.period2 = undefined
+                values.farmingActivity.averageCash2 = undefined
+            }
+            
             const resultList = productsList()
 
-            const response = await api.createProducer(values, resultList, user?.id)
+            const response = !!id ? 
+            await api.updateProducer(id, values, resultList, user?.id)
+            :
+            await api.createProducer(values, resultList, user?.id)
+            
 
             if (response.data) {
                 setLottie(Success)
-                setMessage('Produtor cadastrado com sucesso!')
+                setMessage('Produtor atualizado com sucesso!')
                 handleOpenWarningModal()
                 setTimeout(() => {
                     window.location.href = '/producer-list'
@@ -123,7 +185,9 @@ const ProducerForm = () => {
     return (
         <>
             <div className={classes.titleBox}>
-                <h3 className={classes.title}>Cadastrar Produtor</h3>
+                <h3 className={classes.title}>
+                    {!!id ? 'Editar' : 'Cadastrar'} Produtor
+                </h3>
             </div>
             <Grid container>
                 <Grid item xs={12}>
@@ -131,7 +195,7 @@ const ProducerForm = () => {
                         <form onSubmit={formik.handleSubmit}>
                             <Grid container spacing={2}>
 
-                                <Grid item xs={9}>
+                                <Grid item xs={6}>
                                     <TextField
                                         fullWidth
                                         variant='outlined'
@@ -175,6 +239,21 @@ const ProducerForm = () => {
                                         }}
                                         error={formik.touched.birthDate && Boolean(formik.errors.birthDate)}
                                         helperText={formik.touched.birthDate && formik.errors.birthDate}
+                                        required
+                                    />
+                                </Grid>
+
+                                <Grid item xs={3}>
+                                    <TextField
+                                        fullWidth
+                                        variant='outlined'
+                                        id="rg"
+                                        name="rg"
+                                        label="RG"
+                                        value={formik.values.rg}
+                                        onChange={formik.handleChange}
+                                        error={formik.touched.rg && Boolean(formik.errors.rg)}
+                                        helperText={formik.touched.rg && formik.errors.rg}
                                         required
                                     />
                                 </Grid>
@@ -330,13 +409,13 @@ const ProducerForm = () => {
                                     />
                                 </Grid>
 
-                                <Grid item xs={4}>
+                                <Grid item xs={3}>
                                     <TextField
                                         fullWidth
                                         variant='outlined'
                                         id="activityName"
                                         name="farmingActivity.activityName.value"
-                                        label="Atividade Agrícola"
+                                        label="Atividade Primária"
                                         value={formik.values.farmingActivity.activityName?.value}
                                         error={formik.touched.farmingActivity?.activityName?.value && Boolean(formik.errors.farmingActivity?.activityName?.value)}
                                         helperText={formik.touched.farmingActivity?.activityName?.value && formik.errors.farmingActivity?.activityName?.value}
@@ -349,11 +428,30 @@ const ProducerForm = () => {
                                     </TextField>
                                 </Grid>
 
-                                <Grid item xs={4}>
+                                <Grid item xs={3}>
                                     <TextField
                                         fullWidth
                                         variant='outlined'
-                                        id="activityName"
+                                        id="activityName2"
+                                        name="farmingActivity.activityName2.value"
+                                        label="Atividade Secundária"
+                                        value={formik.values.farmingActivity.activityName2?.value}
+                                        error={formik.touched.farmingActivity?.activityName2?.value && Boolean(formik.errors.farmingActivity?.activityName2?.value)}
+                                        helperText={formik.touched.farmingActivity?.activityName2?.value && formik.errors.farmingActivity?.activityName2?.value}
+                                        onChange={formik.handleChange}
+                                        select
+                                    >
+                                        {activities.map((i) =>
+                                            <MenuItem key={i.value} value={i.value}><em>{i.label}</em></MenuItem>
+                                        )}
+                                    </TextField>
+                                </Grid>
+
+                                <Grid item xs={3}>
+                                    <TextField
+                                        fullWidth
+                                        variant='outlined'
+                                        id="period"
                                         name="farmingActivity.period"
                                         label="Príodo"
                                         value={formik.values.farmingActivity?.period}
@@ -368,7 +466,7 @@ const ProducerForm = () => {
                                     </TextField>
                                 </Grid>
 
-                                <Grid item xs={4}>
+                                <Grid item xs={3}>
                                     <TextField
                                         fullWidth
                                         variant='outlined'
@@ -379,63 +477,77 @@ const ProducerForm = () => {
                                         onChange={formik.handleChange}
                                         error={formik.touched.farmingActivity?.averageCash && Boolean(formik.errors.farmingActivity?.averageCash)}
                                         helperText={formik.touched.farmingActivity?.averageCash && formik.errors.farmingActivity?.averageCash}
-                                        required
                                     />
                                 </Grid>
 
                                 <Grid item xs={12}>
-                                    <InputLabel id="products">Selecione pelo menos um produto</InputLabel>
+                                    <InputLabel id="demo-mutiple-checkbox-label">Selecione pelo menos um produto</InputLabel>
                                     <Select
                                         id="products"
                                         name="products"
                                         label="Selecione os Produtos"
                                         multiple
-                                        value={formik.values.products}
+                                        value={formik.values?.products}
                                         onChange={formik.handleChange}
                                         input={<Input />}
-                                        variant="outlined"
                                         renderValue={(selected) => selected.join(', ')}
-                                        error={formik.touched.products && Boolean(formik.errors.products)}
-                                        helperText={formik.touched.products && formik.errors.products}
+                                        error={formik.touched?.products && Boolean(formik.errors?.products)}
+                                        helperText={formik.touched?.products && formik.errors?.products}
                                         fullWidth
                                         required
                                     >
-                                        {products.map((i) => (
+                                        {products?.map((i) => (
                                             <MenuItem key={i.value} value={i.label}>
-                                                <Checkbox checked={formik.values.products.indexOf(i.label) > -1} />
+                                                <Checkbox checked={formik.values?.products.indexOf(i.label) > -1} />
                                                 <ListItemText primary={i.label} />
                                             </MenuItem>
                                         ))}
                                     </Select>
                                 </Grid>
 
-                                <Grid item xs={2}>
-                                    <Button
-                                        onClick={() => history.goBack()}
-                                        className={classes.buttonBack}
-                                        startIcon={<ReplyIcon />}
-                                        color="primary"
-                                        variant="contained"
-                                        fullWidth
-                                    >
-                                        Voltar
-                                    </Button>
+                                <Grid container
+                                    direction="row-reverse"
+                                    justify="space-around"
+                                    alignItems="center"
+                                    spacing={2}
+                                >
+                                    <Grid item xs={12} md={8}>
+
+                                    </Grid>
+                                    
+                                    <Grid item xs={10} sm={4} md={2}>
+                                        <Button
+                                            onClick={formik.handleSubmit}
+                                            className={classes.button}
+                                            color="primary"
+                                            variant="contained"
+                                            fullWidth
+                                            type="submit"
+                                            size='small'
+                                        >
+                                            Salvar
+                                        </Button>
+                                    </Grid>
+
+                                    <Grid item xs={10} sm={4} md={2}>
+                                        <Button 
+                                            variant="contained"
+                                            color="primary"
+                                            startIcon={<ReplyIcon />}
+                                            className={classes.buttonBack}
+                                            onClick={() => history.goBack()}
+                                            size='small'
+                                        >
+                                            Voltar
+                                        </Button>
+                                    </Grid>
+                                    
                                 </Grid>
 
-                                <Grid item xs={10}>
-                                    <Button
-                                        onClick={formik.handleSubmit}
-                                        className={classes.button}
-                                        startIcon={<SaveIcon />}
-                                        color="primary"
-                                        variant="contained"
-                                        fullWidth
-                                        type="submit"
-                                    >
-                                        Cadastrar
-                                    </Button>
-                                </Grid>
 
+                                <Grid item xs={12}>
+                                    
+                                </Grid>
 
                             </Grid>
 
@@ -456,23 +568,25 @@ const ProducerForm = () => {
     );
 }
 
-export default ProducerForm
+export default ProducerEdit
 
 const useStyles = makeStyles((theme) => ({
     formWrapper: {
         marginTop: theme.spacing(1),
         marginBottom: theme.spacing(8),
+
     },
     button: {
         backgroundColor: '#070',
-
+        width: '100%',
         '&:hover': {
             background: '#005200'
         },
     },
     buttonBack: {
+        margin: 2,
         backgroundColor: '#458CB8',
-
+        width: '100%',
         '&:hover': {
             background: '#33617D'
         },
