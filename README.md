@@ -10,6 +10,10 @@ Este projeto foi desenvolvido com o intuito de criar um sistema [web](https://gi
 Desde já, ficarei muito feliz se você puder me fornecer algum feedback sobre o projeto, código, estrutura ou qualquer coisa que você possa relatar e que possa me tornar um desenvolvedor melhor!
 
 ## Funcionalidades
+- Administradores
+	- Gerenciamento dos administradores e técnicos;
+	- Cadastro de de técnicos para utilizarem a aplicação mobile.
+
 - Produtores
 	- Realização de cadastro de produtores e os dados pertinentes a suas atividades agrícolas;
 	- Cadastro de vendas com os produtos produzidos pelo mesmo e dados referente a ganhos (quinzenais, mensais e etc), assim como seus produtos (principal e secundário).
@@ -31,9 +35,9 @@ Para executar este projeto você precisará ter um ambiente básico para executa
 
 **Clonando o repositório**
 ```
-$ git clone https://github.com/moizez/Palpiteiros-Web
+$ git clone https://github.com/moizez/ProducerPoint-Web
 
-$ cd Palpiteiros-Web
+$ cd ProducerPoint-Web
 ```
 **Instalando dependências**
 ```
