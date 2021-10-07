@@ -39,4 +39,9 @@ export const menu = [
         path: '/tasks',
         icon: <BiIcons.BiTask size={size} />,
     },
+    {
+        title: '´Sítios',
+        path: '/sites',
+        icon: <BiIcons.BiStreetView size={size} />,
+    },
 ]

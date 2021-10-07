@@ -20,6 +20,9 @@ import ActivityDetails from '../pages/Manager/ActivityPages/ActivityDetails'
 import ProductList from '../pages/Manager/ProductPages/ProductList'
 import ProductDetails from '../pages/Manager/ProductPages/ProductDetails'
 
+import SiteList from '../pages/Manager/SitePages/SiteList'
+import SiteDetails from '../pages/Manager/SitePages/SiteDetails'
+
 import AdminForm from '../pages/Manager/AdminPage/AdminForm'
 import AdminEdit from '../pages/Manager/AdminPage/AdminEdit'
 import AdminList from '../pages/Manager/AdminPage/AdminList'
@@ -68,6 +71,14 @@ const Routes = () => {
 
             <RouteHandler private path='/producer-details/:id'>
                 <ProducerDetails />
+            </RouteHandler>
+
+            <RouteHandler private path='/site-list'>
+                <SiteList />
+            </RouteHandler>
+
+            <RouteHandler private path='/site-details/:id'>
+                <SiteDetails />
             </RouteHandler>
 
             <RouteHandler private path='/product-list'>
