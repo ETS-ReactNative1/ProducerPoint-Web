@@ -12,7 +12,7 @@ import ProducerForm from '../pages/Manager/ProducerPages/ProducerForm'
 import ProducerEdit from '../pages/Manager/ProducerPages/ProducerForm'
 import ProducerList from '../pages/Manager/ProducerPages/ProducerList'
 import ProducerDetails from '../pages/Manager/ProducerPages/ProducerDetails'
-import SaleForm from '../../src/pages/Manager/SalePage/SaleForm'
+import SaleForm from '../pages/Manager/SalePages/SaleForm'
 
 import ActivityList from '../pages/Manager/ActivityPages/ActivityList'
 import ActivityDetails from '../pages/Manager/ActivityPages/ActivityDetails'
@@ -28,9 +28,9 @@ import AdminEdit from '../pages/Manager/AdminPage/AdminEdit'
 import AdminList from '../pages/Manager/AdminPage/AdminList'
 import AdminDetails from '../pages/Manager/AdminPage/AdminDetails'
 
-import SaleDetails from '../pages/Manager/SalePage/SaleDetails'
+import SaleDetails from '../pages/Manager/SalePages/SaleDetails'
 
-import SalesPage from '../pages/Manager/SalePage'
+import SalesPage from '../pages/Manager/SalePages'
 import TasksPage from '../pages/Manager/TasksPage'
 import MyProfile from '../pages/Manager/MyProfile'
 

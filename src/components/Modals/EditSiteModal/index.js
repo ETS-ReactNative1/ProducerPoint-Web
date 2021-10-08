@@ -1,26 +1,34 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useFormik } from 'formik'
 import * as yup from 'yup'
 
 import {
-    makeStyles, Modal, Backdrop, Grid, Slide, TextField, Button
+    makeStyles, Modal, Backdrop, Grid, Fade, TextField
 } from '@material-ui/core'
-import SaveIcon from '@material-ui/icons/Save'
 
-const AddModal = ({ open, handleClose, handleCreate, title, label, labelButton }) => {
+import api from '../../../services/api'
+
+const EditProductModal = ({ open, handleClose, handleUpdate, title, label, labelButton, id }) => {
 
     const classes = useStyles()
-
-    const initialFormState = { label: '' }
+    const initialFormState = { name: '' }
     const validationSchema = yup.object().shape({
-        label: yup.string().required('Nome é obrigatório'),
+        name: yup.string().required('Nome é obrigatório'),
     })
+
+    useEffect(() => {
+        const getSiteById = async (id) => {
+            const response = await api.getSiteById(id)
+            formik.setFieldValue('name', response.data.name)
+        }
+        getSiteById(id)
+    }, [])
 
     const formik = useFormik({
         initialValues: initialFormState,
         validationSchema: validationSchema,
         onSubmit: async (values) => {
-            handleCreate(values)
+            handleUpdate(values)
         }
     })
 
@@ -35,7 +43,7 @@ const AddModal = ({ open, handleClose, handleCreate, title, label, labelButton }
                 timeout: 500,
             }}
         >
-            <Slide direction='up' in={open}>
+            <Fade direction='up' in={open}>
                 <div className={classes.paper}>
                     <h2>{title}</h2>
                     <Grid container >
@@ -47,13 +55,13 @@ const AddModal = ({ open, handleClose, handleCreate, title, label, labelButton }
                                         <TextField
                                             fullWidth
                                             variant='outlined'
-                                            id="label"
-                                            name="label"
+                                            id="name"
+                                            name="name"
                                             label={label}
-                                            value={formik.values.label}
+                                            value={formik.values.name}
                                             onChange={formik.handleChange}
-                                            error={formik.touched.label && Boolean(formik.errors.label)}
-                                            helperText={formik.touched.label && formik.errors.label}
+                                            error={formik.touched.name && Boolean(formik.errors.name)}
+                                            helperText={formik.touched.name && formik.errors.name}
                                             required
                                         />
                                     </Grid>
@@ -63,24 +71,15 @@ const AddModal = ({ open, handleClose, handleCreate, title, label, labelButton }
                         </Grid>
                     </Grid>
                     <div className={classes.buttons}>
-                        <Button
-                            onClick={formik.handleSubmit}
-                            className={classes.yesButton}
-                            startIcon={<SaveIcon />}
-                            color="primary"
-                            variant="contained"
-                            fullWidth
-                        >
-                            {labelButton}
-                        </Button>
+                        <button type='button' onClick={formik.handleSubmit} className={classes.yesButton}>{labelButton}</button>
                     </div>
                 </div>
-            </Slide>
+            </Fade>
         </Modal>
     )
 }
 
-export default AddModal
+export default EditProductModal
 
 const useStyles = makeStyles((theme) => ({
     modal: {
@@ -96,10 +95,20 @@ const useStyles = makeStyles((theme) => ({
         borderRadius: 8,
     },
     yesButton: {
-        backgroundColor: '#007200',
+        color: '#fff',
+        height: 40,
+        width: '100%',
+        fontSize: 16,
+        borderRadius: 5,
+        border: 'none',
+        backgroundColor: '#049DCF',
+        cursor: 'pointer',
+        textTransform: 'uppercase',
+
         '&:hover': {
-            background: '#005200'
+            background: '#016788'
         },
+
     },
     buttons: {
         display: 'flex',

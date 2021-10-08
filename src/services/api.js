@@ -373,6 +373,33 @@ export default {
         return request
     },
 
+    createSite: async (name) => {
+        const data = { name: name}
+        const request = await apiFetchPost('/sites', data)
+        return request
+    },
+
+    getAllSites: async () => {
+        const response = await apiFetchGet('/sites')
+        return response
+    },
+
+    getSiteById: async (id) => {
+        const response = await apiFetchGet(`/sites/${id}`)
+        return response
+    },
+
+    updateSite: async (id, name) => {
+        const data = { id: id, name: name }
+        const request = await apiFetchPut(`/sites/${id}`, data)
+        return request
+    },
+
+    deleteSite: async (id) => {
+        const request = await apiFetchDelete(`/sites/${id}`)
+        return request
+    },
+
     sendEmailRecovery: async (email) => {
         try {
             const headers = new Headers()

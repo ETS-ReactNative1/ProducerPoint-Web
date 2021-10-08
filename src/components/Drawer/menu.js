@@ -41,7 +41,7 @@ export const menu = [
     },
     {
         title: '´Sítios',
-        path: '/sites',
+        path: '/site-list',
         icon: <BiIcons.BiStreetView size={size} />,
     },
 ]

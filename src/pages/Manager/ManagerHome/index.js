@@ -12,6 +12,7 @@ import atividade from '../../../assets/images/atividade.jpg'
 import vendas from '../../../assets/images/vendas.jpg'
 import tarefas from '../../../assets/images/tarefas.jpg'
 import perfil from '../../../assets/images/meuperfil.jpg'
+import site from '../../../assets/images/site.jpg'  
 
 import { AuthContext } from '../../../contexts/AuthContext'
 
@@ -142,6 +143,25 @@ const ManagerHome = () => {
                             <Typography variant="body2" color="textSecondary" component="p">
                                 Mantenha seus dados atualizados e realize alterações
                                 cadastrais caso precise.
+                                </Typography>
+                        </CardContent>
+                    </CardActionArea>
+                </Card>
+            </Grid>
+            <Grid component={Link} to={`/site-list/${user?.id}/${user?.role}`} className={classes.grid} item xs={12} sm={6} md={4}>
+                <Card className={classes.root}>
+                    <CardActionArea>
+                        <CardMedia
+                            className={classes.media}
+                            image={site}
+                            title="Sítios"
+                        />
+                        <CardContent>
+                            <Typography gutterBottom variant="h5" component="h2">
+                                Sítios
+                                </Typography>
+                            <Typography variant="body2" color="textSecondary" component="p">
+                                Cadastre os sítios que serão monitorados.
                                 </Typography>
                         </CardContent>
                     </CardActionArea>
