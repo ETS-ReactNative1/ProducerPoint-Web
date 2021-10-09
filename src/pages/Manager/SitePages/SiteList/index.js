@@ -21,6 +21,7 @@ import Success from '../../../../assets/lotties/success.json'
 import Fail from '../../../../assets/lotties/fail.json'
 import AddModal from '../../../../components/Modals/AddModal'
 import EditSiteModal from '../../../../components/Modals/EditSiteModal'
+import AddRainModal from '../../../../components/Modals/AddRainModal'
 
 import { Area } from './styles'
 
@@ -30,10 +31,12 @@ const SiteList = () => {
     const [sites, setSites] = useState([])
     const [open, setOpen] = useState(false)
     const [id, setId] = useState(null)
+    const [actualSite, setActualSite] = useState({})
     const [search, setSearch] = useState('')
     const [filteredSearch, setFilteredSearch] = useState([])
     const [addModal, setAddModal] = useState(false)
     const [editModal, setEditModal] = useState(false)
+    const [addRainModal, setAddRainModal] = useState(false)
 
     const [page, setPage] = useState(0)
     const [rowsPerPage, setRowsPerPage] = useState(5)
@@ -51,6 +54,12 @@ const SiteList = () => {
         setId(value)
         setEditModal(true)
     }
+    const handleOpenAddRainModal = (site) => {
+        setActualSite(site)
+        setAddRainModal(true)
+    }
+    
+    const handleCloseAddRainModal = () => setAddRainModal(false)
 
     useMemo(() => {
         const lowerSearch = search.toLowerCase()
@@ -67,6 +76,25 @@ const SiteList = () => {
     useEffect(() => {
         loadSites()
     }, [])
+
+    const handleCreateRain = async (values) => {
+        console.log('marcador aqui')
+        const response = await api.createRain(values.date, values.volume, values.site?.id )
+        if (response.data) {
+            handleCloseAddRainModal()
+            setLottie(Success)
+            setMessage('Chuva Adicionada com sucesso!')
+            handleOpenWarningModal()
+            loadSites()
+            setId(null)
+        } else {
+            handleCloseAddRainModal()
+            setLottie(Fail)
+            setMessage(`Falha inesperada! Erro: ${response.status}`)
+            handleOpenWarningModal()
+            setId(null)
+        }
+    }
 
     const handleCreateSite = async (values) => {
         const response = await api.createSite(values.label)
@@ -163,7 +191,8 @@ const SiteList = () => {
                         <TableRow>
                             <TableCell className='title--table' align="left">COD</TableCell>
                             <TableCell className='title--table' align="center">Nome</TableCell>
-                            <TableCell className='title--table' align="center">Opções</TableCell>   
+                            <TableCell className='title--table' align="center">Chuvas</TableCell>
+                            <TableCell className='title--table' align="center">Opções</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -175,6 +204,18 @@ const SiteList = () => {
                                 <TableCell component="th" scope="row">{row.id}</TableCell>
                                 <TableCell component="th" scope="row">
                                     {row.name}
+                                </TableCell>
+                                <TableCell component="th" scope="row">
+                                    <div className='button--group'>
+                                    {row.rains?.length}
+                                    <Tooltip title='Add Chuva' arrow>
+                                        <div className='link--table'>
+                                            <IconButton onClick={() => handleOpenAddRainModal(row)} className='button--add' color='warning' aria-label="add">
+                                                <AddIcon />
+                                            </IconButton>
+                                        </div>
+                                    </Tooltip>
+                                    </div>
                                 </TableCell>
                                 <TableCell align="right">
                                     <div className='button--group'>
@@ -301,6 +342,17 @@ const SiteList = () => {
                     label='Nome do sítio'
                     labelButton='Atualizar'
                     id={id}
+                />
+            }
+            {addRainModal &&
+                <AddRainModal
+                    handleClose={handleCloseAddRainModal}
+                    open={addRainModal}
+                    handleCreate={handleCreateRain}
+                    title='Cadastrar chuva?'
+                    label='Volume em MLs'
+                    labelButton='Cadastrar'
+                    site={actualSite}
                 />
             }
         </Area>

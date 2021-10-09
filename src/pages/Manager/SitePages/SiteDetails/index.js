@@ -156,6 +156,28 @@ const SiteDetails = () => {
                     </Table>
                 </TableContainer>
 
+                <div className='title--box'>
+                    <h4>Chuvas Registradas</h4>
+                </div>
+                <TableContainer component={Paper}>
+                    <Table className={classes.table} size="small" aria-label="a dense table">
+                        <TableHead>
+                            <TableRow>
+                                <TableCell className='title--table' align="left">Data</TableCell>
+                                <TableCell className='title--table' align="left">Volume</TableCell>
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                        {site?.rains?.map(r =>
+                            <TableRow>
+                                <TableCell align="left">{r.date}</TableCell>
+                                <TableCell align="left">{r.volume}</TableCell>
+                            </TableRow>
+                        )}
+                        </TableBody>
+                    </Table>
+                </TableContainer>
+
             </Area>
 
             <Grid container

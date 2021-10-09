@@ -400,6 +400,33 @@ export default {
         return request
     },
 
+    createRain: async (date, volume, siteId) => {
+        const data = { date: date, volume: volume, site: { id: siteId } }
+        const request = await apiFetchPost('/rains', data)
+        return request
+    },
+
+    getAllRains: async () => {
+        const response = await apiFetchGet('/rains')
+        return response
+    },
+
+    getRainById: async (id) => {
+        const response = await apiFetchGet(`/rains/${id}`)
+        return response
+    },
+
+    updateRain: async (id, date, volume) => {
+        const data = { id: id, date: date, volume: volume  }
+        const request = await apiFetchPut(`/rains/${id}`, data)
+        return request
+    },
+
+    deleteSite: async (id) => {
+        const request = await apiFetchDelete(`/sites/${id}`)
+        return request
+    },
+
     sendEmailRecovery: async (email) => {
         try {
             const headers = new Headers()

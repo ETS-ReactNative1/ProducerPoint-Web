@@ -82,6 +82,13 @@ export const Area = styled.div`
                 }
             }
 
+            .button--add {
+                background-color: #DDDD30;
+                &:hover {
+                    background-color: #AAAA00;
+                }
+            }
+
             .button--edit {
                 background-color: #049DCF;
                 &:hover {
