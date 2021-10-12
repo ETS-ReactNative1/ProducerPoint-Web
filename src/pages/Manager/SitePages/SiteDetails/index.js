@@ -7,6 +7,7 @@ import {
 } from '@material-ui/core'
 import ReplyIcon from '@material-ui/icons/Reply'
 import AddIcon from '@material-ui/icons/Add'
+import * as BiIcons from "react-icons/bi"
 import AssessmentIcon from '@material-ui/icons/Assessment'
 
 import api from '../../../../services/api'
@@ -18,7 +19,6 @@ import Success from '../../../../assets/lotties/success.json'
 import Fail from '../../../../assets/lotties/fail.json'
 import AddModal from '../../../../components/Modals/AddSaleModal'
 import EditActivityModal from '../../../../components/Modals/EditActivityModal'
-import SalesList from '../../../../components/SalesList'
 
 import { Area } from './styles'
 
@@ -133,6 +133,7 @@ const SiteDetails = () => {
 
     const handleOpen = () => setOpen(true)
     const handleClose = () => setOpen(false)
+
     return (
         <>
             <Area>
@@ -168,8 +169,9 @@ const SiteDetails = () => {
                             </TableRow>
                         </TableHead>
                         <TableBody>
+                        
                         {site?.rains?.map(r =>
-                            <TableRow>
+                            <TableRow key={r.id}>
                                 <TableCell align="left">{r.date}</TableCell>
                                 <TableCell align="left">{r.volume}</TableCell>
                             </TableRow>
@@ -192,11 +194,11 @@ const SiteDetails = () => {
                 </Grid>
                 
                 <Grid item xs={10} sm={4} md={2}>
-                    <Link className={classes.link} to={`/rains/${id}`}>
+                    <Link className={classes.link} to={`/rain-list/${id}`}>
                         <Button
                             variant="contained"
                             color="primary"
-                            startIcon={<AssessmentIcon />}
+                            startIcon={<BiIcons.BiCloud />}
                             className={classes.button}
                             size='small'
                         >

@@ -9,6 +9,7 @@ import {
 import DeleteIcon from '@material-ui/icons/Delete'
 import EditIcon from '@material-ui/icons/Edit'
 import AddIcon from '@material-ui/icons/Add'
+import * as BiIcons from "react-icons/bi"
 import AssessmentIcon from '@material-ui/icons/Assessment'
 import SearchIcon from '@material-ui/icons/Search'
 import ReplyIcon from '@material-ui/icons/Reply'
@@ -191,6 +192,7 @@ const SiteList = () => {
                         <TableRow>
                             <TableCell className='title--table' align="left">COD</TableCell>
                             <TableCell className='title--table' align="center">Nome</TableCell>
+                            <TableCell className='title--table' align="center">Ultimo Registro</TableCell>
                             <TableCell className='title--table' align="center">Chuvas</TableCell>
                             <TableCell className='title--table' align="center">Opções</TableCell>
                         </TableRow>
@@ -206,6 +208,13 @@ const SiteList = () => {
                                     {row.name}
                                 </TableCell>
                                 <TableCell component="th" scope="row">
+                                    {
+                                        row?.rains?.length > 0 ? 
+                                        row?.rains[row?.rains?.length -1]?.date + " - "+ row?.rains[row?.rains?.length -1]?.volume+'ml'
+                                        : 'Sem registros'
+                                    }   
+                                </TableCell>
+                                <TableCell component="th" scope="row">
                                     <div className='button--group'>
                                     {row.rains?.length}
                                     <Tooltip title='Add Chuva' arrow>
@@ -215,6 +224,7 @@ const SiteList = () => {
                                             </IconButton>
                                         </div>
                                     </Tooltip>
+
                                     </div>
                                 </TableCell>
                                 <TableCell align="right">
@@ -266,7 +276,7 @@ const SiteList = () => {
                     spacing={2}
                 >
                 
-                <Grid item xs={12} md={8}>
+                <Grid item xs={12} md={6}>
                     <TablePagination
                         labelRowsPerPage='Itens por página'
                         rowsPerPageOptions={[5, 10, 15]}
@@ -278,7 +288,8 @@ const SiteList = () => {
                         onChangeRowsPerPage={handleChangeRowsPerPage}
                     />
                 </Grid>
-                
+
+            
                 <Grid item xs={10} sm={4} md={2}>
                     <Button
                         variant="contained"
@@ -290,6 +301,20 @@ const SiteList = () => {
                     >
                         Site
                     </Button>
+                </Grid>
+
+                <Grid item xs={10} sm={4} md={2}>
+                    <Link className={classes.link} to={`/rain-list/${id}`}>
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            startIcon={<BiIcons.BiCloud />}
+                            className={classes.buttonGo}
+                            size='small'
+                        >
+                            Chuvas
+                        </Button>
+                    </Link>
                 </Grid>
 
                 <Grid item xs={10} sm={4} md={2}>
@@ -373,7 +398,7 @@ const useStyles = makeStyles((theme) => ({
         backgroundColor: '#007200',
         width: '100%',
         '&:hover': {
-            background: '#005200'
+            background: '#33617D'
         },
     },
     buttonBack: {
@@ -384,6 +409,16 @@ const useStyles = makeStyles((theme) => ({
             background: '#33617D'
         },
     },
+
+    buttonGo: {
+        margin: theme.spacing(1),
+        backgroundColor: '#222222',
+        width: '100%',
+        '&:hover': {
+            background: '#33617D'
+        },
+    },
+    
     link: {
         textDecoration: 'none'
     }

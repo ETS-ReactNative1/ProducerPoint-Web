@@ -44,4 +44,9 @@ export const menu = [
         path: '/site-list',
         icon: <BiIcons.BiStreetView size={size} />,
     },
+    {
+        title: 'Chuvas',
+        path: '/rain-list',
+        icon: <BiIcons.BiCloud size={size} />,
+    },
 ]

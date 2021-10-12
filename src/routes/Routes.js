@@ -23,6 +23,8 @@ import ProductDetails from '../pages/Manager/ProductPages/ProductDetails'
 import SiteList from '../pages/Manager/SitePages/SiteList'
 import SiteDetails from '../pages/Manager/SitePages/SiteDetails'
 
+import RainList from '../pages/Manager/RainPages/RainList'
+
 import AdminForm from '../pages/Manager/AdminPage/AdminForm'
 import AdminEdit from '../pages/Manager/AdminPage/AdminEdit'
 import AdminList from '../pages/Manager/AdminPage/AdminList'
@@ -79,6 +81,10 @@ const Routes = () => {
 
             <RouteHandler private path='/site-details/:id'>
                 <SiteDetails />
+            </RouteHandler>
+
+            <RouteHandler private path='/rain-list'>
+                <RainList />
             </RouteHandler>
 
             <RouteHandler private path='/product-list'>

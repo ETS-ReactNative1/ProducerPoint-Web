@@ -416,14 +416,19 @@ export default {
         return response
     },
 
+    loadRainsByPereiod: async (start, end) => {
+        const response = await apiFetchGet(`/rains/ByPeriod/${start}/${end}`)
+        return response
+    },
+
     updateRain: async (id, date, volume) => {
         const data = { id: id, date: date, volume: volume  }
         const request = await apiFetchPut(`/rains/${id}`, data)
         return request
     },
 
-    deleteSite: async (id) => {
-        const request = await apiFetchDelete(`/sites/${id}`)
+    deleteeRain: async (id) => {
+        const request = await apiFetchDelete(`/rains/${id}`)
         return request
     },
 
