@@ -10,8 +10,14 @@ import SaveIcon from '@material-ui/icons/Save'
 const AddRainModal = ({ open, handleClose, handleCreate, title, site }) => {
 
     const classes = useStyles()
-
-    const initialFormState = { volume: '', date: '', site: site }
+    let yesterday = new Date()
+    yesterday.setDate(yesterday.getDate() - 1);
+    let year = yesterday.getFullYear()
+    let month = yesterday.getMonth()+1
+    month = month < 10 ? '0'+month : month
+    let day = yesterday.getDate()
+    let yesterdayString = year+'-'+month+'-'+day
+    const initialFormState = { volume: '', date: yesterdayString, site: site }
     const validationSchema = yup.object().shape({
         date: yup.date().required('Data é obrigatória!'),
         volume: yup.number().required('Volume é obrigatória!'),
@@ -21,7 +27,6 @@ const AddRainModal = ({ open, handleClose, handleCreate, title, site }) => {
         initialValues: initialFormState,
         validationSchema: validationSchema,
         onSubmit: async (values) => {
-            
             handleCreate(values)
         }
     })
@@ -64,24 +69,7 @@ const AddRainModal = ({ open, handleClose, handleCreate, title, site }) => {
                                             disabled
                                         />
                                     </Grid>
-
-                                    <Grid item xs={12}>
-                                        <TextField
-                                            fullWidth
-                                            multiline
-                                            rows='1'
-                                            variant='outlined'
-                                            id="volume"
-                                            name="volume"
-                                            label="Volume em MLs"
-                                            value={formik.values.volume}
-                                            onChange={formik.handleChange}
-                                            error={formik.touched.volume && Boolean(formik.errors.volume)}
-                                            helperText={formik.touched.volume && formik.errors.volume}
-                                            required
-                                        />
-                                    </Grid>
-
+                                    
                                     <Grid item xs={12}>
                                         <TextField
                                             fullWidth
@@ -97,6 +85,25 @@ const AddRainModal = ({ open, handleClose, handleCreate, title, site }) => {
                                             }}
                                             error={formik.touched.date && Boolean(formik.errors.date)}
                                             helperText={formik.touched.date && formik.errors.date}
+                                            required
+                                        />
+                                    </Grid>
+
+                                    <Grid item xs={12}>
+                                        <TextField
+                                            inputRef={input => input && input.focus()}
+                                            fullWidth
+                                            multiline
+                                            rows='1'
+                                            variant='outlined'
+                                            id="volume"
+                                            name="volume"
+                                            type="number"
+                                            label="Volume em MLs"
+                                            value={formik.values.volume}
+                                            onChange={formik.handleChange}
+                                            error={formik.touched.volume && Boolean(formik.errors.volume)}
+                                            helperText={formik.touched.volume && formik.errors.volume}
                                             required
                                         />
                                     </Grid>

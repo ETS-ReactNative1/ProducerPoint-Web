@@ -40,7 +40,7 @@ const SiteList = () => {
     const [addRainModal, setAddRainModal] = useState(false)
 
     const [page, setPage] = useState(0)
-    const [rowsPerPage, setRowsPerPage] = useState(5)
+    const [rowsPerPage, setRowsPerPage] = useState(10)
     const classes = useStyles()
 
     const [warningModal, setWarningModal] = useState(false)

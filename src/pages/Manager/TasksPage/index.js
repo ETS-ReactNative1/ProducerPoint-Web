@@ -47,9 +47,6 @@ const NavTabs = () => {
 
     useEffect(() => {
         getTodayTasks()
-    }, [])
-
-    useEffect(() => {
         getFutureTasks()
     }, [])
 
