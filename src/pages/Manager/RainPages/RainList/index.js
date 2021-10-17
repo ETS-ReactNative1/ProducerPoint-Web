@@ -4,7 +4,7 @@ import { Link, useHistory } from 'react-router-dom'
 import {
     Grid, makeStyles, Table, TableBody, TableCell, Checkbox, TableContainer,
     TableHead, TableRow, Paper, TablePagination, IconButton,
-    Button, TextField, InputAdornment
+    Button, TextField, InputAdornment, FormControlLabel
 } from '@material-ui/core'
 import SearchIcon from '@material-ui/icons/Search'
 import ReplyIcon from '@material-ui/icons/Reply'
@@ -17,20 +17,31 @@ import { Area } from './styles'
 
 import {
   BarChart,
+  LineChart,
   Bar,
   XAxis,
   YAxis,
   CartesianGrid,
   Legend,
-  Tooltip
+  Tooltip,
+  Label,
+  Line,
+  Cell,
+  LabelList,
+  Scatter 
 } from 'recharts';
 
 const RainList = () => {
+
+    const AllYears = []
+
+    const months = ['JAN', 'FEV', 'MAR', 'ABR', 'MAI', 'JUN', 'JUL', 'AGO', 'SET', 'OUT', 'NOV', 'DEZ' ] 
     
     const history = useHistory()
     const [sites, setSites] = useState([])
-    const [chart, SetChart] = useState(false)
-    const [allMonths, setAllMonths] = useState([])
+    const [yearsData, setYearsData] = useState([])
+    const [chart, setChart] = useState(false)
+    const [unico, setUnico] = useState(false)
     const [search, setSearch] = useState('')
     const [filteredSearch, setFilteredSearch] = useState([])
 
@@ -57,7 +68,9 @@ const RainList = () => {
     const loadRainsByPereiod = async () => {
         setLottie(true)
         const response = await api.loadRainsByPereiod(startDate, endDate)
-        sum(response.data)
+        let s = await sum(response.data)
+        await setYearsData(await sumByPeriod(s))
+        await setSites(s)
         setLottie(false)
     }
 
@@ -70,6 +83,50 @@ const RainList = () => {
         });
         result?.sort((a, b) => (a?.date > b?.date) ? 1 : -1)
         return result
+    }
+
+    const sumByPeriod = async (newsites) => {
+        const labels = ['JAN', 'FEV', 'MAR', 'ABR', 'MAI', 'JUN', 'JUL', 'AGO', 'SET', 'OUT', 'NOV', 'DEZ' ] 
+        
+        
+        let years = []
+        await newsites?.forEach(async site => {
+            await site?.rains?.sort((a, b) => (a?.date > b?.date) ? 1 : -1)
+            await site?.rains?.forEach(async rain => {
+                let y = rain?.date?.substring(0,4)
+                if(years.indexOf(y) < 0) {
+                    await years.push(y);
+                }
+            })
+        })
+
+        let allYears = []
+        await years.forEach(async year => {
+            let months = [] 
+            for(let i=0; i<12; i++){
+                let mes = i+1
+                mes = mes<10 ? 0+''+mes : mes
+                let monthText=`{"month" : "${mes}", "year": "${year}", "label": "${labels[i]}"` 
+                await newsites?.forEach(async site => {
+                    await site?.years?.forEach(async siteyear => {
+                        await siteyear?.months?.forEach(async sitemonth => {
+                            let y = sitemonth?.month?.substring(0,4)
+                            let m = sitemonth?.month?.substring(5,7)
+                            if(year == y && mes == m){
+                                monthText+=`, "${site.name}": "${sitemonth.volume}"`
+                            }
+                        })
+                    })
+                })
+                monthText+=`}`
+                await months.push(await JSON.parse(monthText))
+            }
+            await allYears.push(
+                { year: year, months: months }
+            )
+        })
+        await setUnico(false)
+        return allYears
     }
 
     const sum = async (newsites) => {
@@ -118,29 +175,20 @@ const RainList = () => {
                 sumYear = 0
             }
             site.years = years
-            site.months = months
         })
-        await setSites(newsites)
-        await setAllMonths(await clearArray(allMonths))
-        console.log(allMonths)
+        return newsites
     }
-
-
 
     useEffect(() => {
         loadRainsByPereiod()
     }, [])
 
-    const handleChangePage = (event, newPage) => { setPage(newPage) }
+    let i = 0
 
-    const handleChangeRowsPerPage = (event) => {
-        setRowsPerPage(parseInt(event.target.value, 10))
-        setPage(0)
-    }
-
-    const months = ['JAN', 'FEV', 'MAR', 'ABR', 'MAI', 'JUN', 'JUL', 'AGO', 'SET', 'OUT', 'NOV', 'DEZ' ] 
+    const colors = ['blue', 'yelow', 'red', 'green', 'gray', 'silver', 'orange', 'cean']
 
     return (
+        
         <Area>
             <div className='title--box'>
                 <h3>
@@ -190,7 +238,7 @@ const RainList = () => {
                 />
                 <Button
                     variant='outlined' 
-                    style={{width: '30%'}}
+                    style={{width: '20%'}}
                     variant="contained"
                     color="primary"
                     startIcon={<SearchIcon />}
@@ -199,12 +247,43 @@ const RainList = () => {
                 >
                     Filtrar
                 </Button>
-                <Checkbox
-                onChange={()=> SetChart(!chart)}
-                /> Gráicos
+                <FormControlLabel
+                    control={<Checkbox
+                    checked={chart}
+                    onChange={()=> setChart(!chart)}
+                    />}
+                    label="Grático"
+                />
+                <FormControlLabel
+                    control={
+                    <Checkbox
+                    checked={unico}
+                    disabled={!chart}
+                    onChange={()=> setUnico(!unico)}
+                    />}
+                    label="Único"
+                />
             </div>
 
             <TableContainer component={Paper}>
+                {chart && unico ?
+                yearsData?.map(year=>
+                    <LineChart width={880} height={600} data={year?.months}>
+                        <Label value="Pages of my website" offset={0} position="center" />
+                        <CartesianGrid strokeDasharray="2 2" />
+                        <XAxis dataKey="label">
+                            <Label value={year.year} offset={0} position="insideBottom" />
+                        </XAxis>
+                        <YAxis type="number" domain={[0, 200]} >
+                            <Label value='Volume em mm' angle={-90} offset={0} position="left" />
+                        </YAxis>
+                        {filteredSearch.map((site, index)=>
+                            <Line dataKey={site.name} unit='mm' stroke={colors[index]} />
+                        )}
+                        <Tooltip/>
+                        <Legend />                
+                    </LineChart> 
+                ) :
                 <Table className={classes.table} size="small" aria-label="a dense table">
                     <TableHead>
                         <TableRow>
@@ -274,13 +353,12 @@ const RainList = () => {
                     </TableBody>
 
                 </Table>
-
+                }
             </TableContainer>
-                                                
 
             {(!filteredSearch || filteredSearch?.length === 0) &&
                 <div className='emptylist'>
-                    <h3>Nenhum Sítio relacionado</h3>
+                    <h3>Nenhum dado relacionado</h3>
                 </div>
             }
 
